@@ -1,0 +1,21 @@
+/*
+	The following fixes png-transparency for IE6.  
+	It is also necessary for png-transparency to cooperate with the fade transition in IE7 & IE8
+	
+	Since IE does not support background-positioning with filters, it is incompatible with CSS sprites.
+	Colorbox preloads the 'previous', 'next', 'close' hover-states to account for this.
+*/
+#contentPrevious{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/previous.png, sizingMethod='crop');}
+#contentPrevious:hover{filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/previousHover.png, sizingMethod='scale');}
+#contentNext{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/next.png, sizingMethod='crop');}
+#contentNext:hover{filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/nextHover.png, sizingMethod='scale');}
+#modalClose{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/close.png, sizingMethod='crop');}
+#modalClose:hover{filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/closeHover.png, sizingMethod='scale');}
+
+/* 
+	Because IE does not support CSS sprites while using the filter attribute 
+	this area is for declaring hover-state backgrounds so they can be preloaded
+*/
+#preloadPrevious{background-image:url(images/previousHover.png);}
+#preloadNext{background-image:url(images/nextHover.png);}
+#preloadClose{background-image:url(images/closeHover.png);}

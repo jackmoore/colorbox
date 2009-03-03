@@ -1,0 +1,27 @@
+/* 
+	ColorBox example user style
+	These rules are ordered and tabbed in a way that represents the order/nesting of the generated HTML, 
+	in hope that this will make the relationship easier to understand. Thanks, jack@colorpowered.com
+*/
+#modalBackgroundOverlay{background:url(images/stripe.png) 0 0 repeat;}
+
+#colorbox{}
+	#borderTopLeft{width:21px; height:21px; background:url(images/borderTopLeft.png) 0 0 no-repeat;}
+	#borderTopCenter{height:21px; background:url(images/borderTopCenter.png) 0 0 repeat-x;}
+	#borderTopRight{width:21px; height:21px; background:url(images/borderTopRight.png) 0 0 no-repeat;}
+	#borderBottomLeft{width:21px; height:21px; background:url(images/borderBottomLeft.png) 0 0 no-repeat;}
+	#borderBottomCenter{height:21px; background:url(images/borderBottomCenter.png) 0 0 repeat-x;}
+	#borderBottomRight{width:21px; height:21px; background:url(images/borderBottomRight.png) 0 0 no-repeat;}
+	#borderMiddleLeft{width:21px; background:url(images/borderMiddleLeft.png) 0 0 repeat-y;}
+	#borderMiddleRight{width:21px; background:url(images/borderMiddleRight.png) 0 0 repeat-y;}
+	#modalContent{background:#fff;}
+		#modalLoadedContent{margin-bottom:28px; border:1px solid #fff;}
+			#contentTitle{position:absolute; bottom:3px; left:0; width:100%; text-align:center; font-weight:bold; color:#949494;}
+			#contentCurrent{position:absolute; bottom:3px; left:58px; font-weight:bold; color:#949494;}
+			#contentPrevious{position:absolute; bottom:0; left:0px; background:url(images/controls.png) -25px 0px no-repeat; width:25px; height:25px; text-indent:-9999px;}
+			#contentPrevious:hover{background-position:-25px -25px;}
+			#contentNext{position:absolute; bottom:0; left:27px; background:url(images/controls.png) 0px 0px no-repeat; width:25px; height:25px; text-indent:-9999px;}
+			#contentNext:hover{background-position:0px -25px;}
+		#modalLoadingOverlay{background:url(images/loading.gif) center center no-repeat #fff;}
+		#modalClose{position:absolute; bottom:0; right:0; background:url(images/controls.png) -50px 0px no-repeat; width:25px; height:25px; text-indent:-9999px;}
+		#modalClose:hover{background-position:-50px -25px;}

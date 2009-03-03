@@ -1,0 +1,25 @@
+/* 
+	ColorBox example user style
+	These rules are ordered and tabbed in a way that represents the order/nesting of the generated HTML, 
+	in hope that this will make the relationship easier to understand. Thanks, jack@colorpowered.com
+*/
+#modalBackgroundOverlay{background:#fff;}
+
+#colorBox{}
+	#borderTopLeft{width:27px; height:27px; background:url(images/borderTopLeft.png) 0 0 no-repeat;}
+	#borderTopCenter{height:27px; background:url(images/borderTopCenter.png) 0 0 repeat-x;}
+	#borderTopRight{width:27px; height:27px; background:url(images/borderTopRight.png) 0 0 no-repeat;}
+	#borderBottomLeft{width:27px; height:27px; background:url(images/borderBottomLeft.png) 0 0 no-repeat;}
+	#borderBottomCenter{height:27px; background:url(images/borderBottomCenter.png) 0 0 repeat-x;}
+	#borderBottomRight{width:27px; height:27px; background:url(images/borderBottomRight.png) 0 0 no-repeat;}
+	#borderMiddleLeft{width:27px; background:url(images/borderMiddleLeft.png) 0 0 repeat-y;}
+	#borderMiddleRight{width:27px; background:url(images/borderMiddleRight.png) 0 0 repeat-y;}
+	#modalContent{background:#fff; }
+		#modalLoadedContent{margin-bottom:20px;}
+			#contentTitle{display:none;}
+			#contentCurrent{position:absolute; bottom:0px; left:65px; font-weight:bold; color:#999;}
+			#contentPrevious{position:absolute; bottom:0px; left:0; font-weight:bold;}
+			#contentNext{position:absolute; bottom:0px; left:110px; font-weight:bold;}
+		#modalLoadingOverlay{background:url(images/loading.gif) 5px 5px no-repeat #fff;}
+		#modalClose{position:absolute; bottom:0; right:0; display:block;  font-weight:bold;}
+		#modalClose:hover{background-position:bottom left;}

@@ -1,0 +1,8 @@
+#modalContent, #borderTopLeft, #borderTopCenter, #borderTopRight, #borderBottomLeft, #borderBottomCenter, #borderBottomRight, #borderMiddleLeft, #borderMiddleRight {position:absolute;}
+#colorbox, #modalBackgroundOverlay{position:absolute; top:0; left:0; z-index:9999; width:100%; height:100%;}
+#modalBackgroundOverlay{position:fixed;}
+#modalClose, #contentPrevious, #contentNext{outline:none; cursor:pointer;}
+#modalLoadedContent iframe{display:block; width:100%; height:100%; border:0;}
+#modalLoadedContent img, #modalLoadedContent embed{display:block;}/* Display:block removes the line-height gap underneath images, iframes, and embedded content */
+#modalLoadingOverlay{position:absolute; width:100%; height:100%; top:0; left:0;}
+#modalInfoBr{display:none;}

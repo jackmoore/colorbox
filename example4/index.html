@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>ColorBox Example</title>
+		<style type="text/css">
+			body{font:12px/1.5 Verdana, Arial, san-serrif;}
+			a:link, a:visited{text-decoration:none; color:#6599CB;}
+		</style>
+		<link type="text/css" media="screen" rel="stylesheet" href="../colorbox/colorbox.css" />
+		<link type="text/css" media="screen" rel="stylesheet" href="colorbox-custom.css" />
+		<!--[if IE]>
+			<link type="text/css" media="screen" rel="stylesheet" href="colorbox-custom-ie.css" />
+		<![endif]-->
+		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+		<script type="text/javascript">google.load("jquery", "1.3.2");</script>
+		<script type="text/javascript" src="../colorbox/jquery.colorbox.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$.fn.colorbox.settings.transition = "fade";
+				$.fn.colorbox.settings.bgOpacity = "0.8";
+				$.fn.colorbox.settings.contentCurrent = "({current}/{total})";
+				$(".cpModal").colorbox();
+				$("#ajax").colorbox({contentWidth:"300px", contentHeight:"195px"});
+				$("#flash").colorbox({contentAjax:"../content/flash.html"});
+				$("#google").colorbox({contentWidth:"750px", contentHeight:"450px", contentIframe:true});
+				$("#inline").colorbox({contentWidth:"500px", contentInline:"#inline-content"});
+			});
+		</script>
+	</head>
+	<body>
+		<p><a class="cpModal" href="../content/marylou.jpg" title="Marylou on Cumberland Island">Single Photo</a></p>
+		<p><a class="cpModal" href="../content/ohoopee1.jpg" rel="family-photos" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a class="cpModal" href="../content/ohoopee2.jpg" rel="family-photos" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a class="cpModal" href="../content/ohoopee3.jpg" rel="family-photos" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+		<p><a id="ajax" href="../content/ajax.html">Ajax HTML</a></p>
+		<p><a id="inline" href="#">Inline HTML</a></p>
+		<p><a id="flash" href="http://www.youtube.com/watch?v=lBvaHZIrt0" title="Royksopp: Remind Me">Flash / Video</a></p>
+		<p><a id="google" href="http://www.google.com">Iframed Content</a></p>
+		<!-- This contains the hidden content for inline calls -->
+		<div style="display:none">
+			<div id="inline-content">
+				<div style="padding:10px">
+				<p>This Info comes from a hidden element loaded in the page</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin molestie orci quis diam. Integer lobortis urna non nisl. Nulla egestas scelerisque odio. Morbi mauris. Sed at pede nec mauris lacinia imperdiet. Aliquam rutrum lobortis sem. Curabitur ipsum. Sed eget lacus. In pellentesque dui in dolor. Maecenas auctor ante id augue. Etiam id purus. Nullam tempus, erat in facilisis dictum, libero ipsum mollis elit, sed congue metus nunc sit amet odio. Donec bibendum, neque ut feugiat varius, nibh enim dignissim mauris, et auctor urna diam non lacus. Donec ac turpis.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin molestie orci quis diam. Integer lobortis urna non nisl. Nulla egestas scelerisque odio. Morbi mauris. Sed at pede nec mauris lacinia imperdiet. Aliquam rutrum lobortis sem. Curabitur ipsum. Sed eget lacus. In pellentesque dui in dolor. Maecenas auctor ante id augue. Etiam id purus. Nullam tempus, erat in facilisis dictum, libero ipsum mollis elit, sed congue metus nunc sit amet odio. Donec bibendum, neque ut feugiat varius, nibh enim dignissim mauris, et auctor urna diam non lacus. Donec ac turpis.</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

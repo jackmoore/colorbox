@@ -1,0 +1,19 @@
+/* 
+	ColorBox example user style
+	These rules are ordered and tabbed in a way that represents the order/nesting of the generated HTML, 
+	in hope that this will make the relationship easier to understand. Thanks, jack@colorpowered.com
+*/
+#modalBackgroundOverlay{background:#000;}
+
+#colorbox{}
+	#modalContent{background:#000;}
+		#modalLoadedContent{background:#fff; border:2px solid #000;}
+			#contentTitle{position:absolute; top:-17px; left:0; color:#000; font-weight:bold;}
+			#contentCurrent{display:none;}
+			#contentPrevious{width:29px; height:32px; display:block; text-indent:-9999px; position:absolute; top:-32px; right:60px; background:url(images/buttons.png) left top no-repeat;}
+			#contentPrevious:hover{background-position:left bottom;}
+			#contentNext{width:29px; height:32px; display:block; text-indent:-9999px; position:absolute; top:-32px; right:28px; background:url(images/buttons.png) right top no-repeat;}
+			#contentNext:hover{background-position:right bottom;}
+		#modalLoadingOverlay{background:url(images/loading.gif) center center no-repeat #000;}
+		#modalClose{position:absolute; top:-32px; right:0px; display:block; background:url(images/buttons.png) -29px 0 no-repeat; width:26px; height:32px; text-indent:-9999px;}
+		#modalClose:hover{background-position:-29px -31px; cursor:pointer;}
