@@ -4,3 +4,9 @@ http://colorpowered.com/colorbox/
 Help:
 Visit the ColorBox mailing list if you have any questions or problems.
 http://groups.google.com/group/colorbox/topics
+
+Version 1.0 - March 03 2009
+First release
+
+Version 1.01 - March 05 2009
+Fixed keydown events (esc, left arrow, right arrow) for Webkit browsers.

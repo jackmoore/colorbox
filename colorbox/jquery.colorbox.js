@@ -70,7 +70,7 @@ function closeModal(){
 		$(modalLoadedContent).empty();
 	});
 	if(loadingElement){$(loadingElement).remove()};
-	$(document).unbind('keypress', keypressEvents);
+	$(document).unbind('keydown', keypressEvents);
 	$(window).unbind('resize scroll', setModalOverlay);
 }
 
@@ -198,7 +198,7 @@ $.fn.colorbox = function(settings) {
 
 		$("a#contentPrevious, a#contentNext").die().live("click", contentNav);
 		
-		$(document).bind('keypress', keypressEvents);
+		$(document).bind('keydown', keypressEvents);
 		if($.browser.msie && $.browser.version < 7){
 			$(window).bind("resize scroll", setModalOverlay);
 		}
