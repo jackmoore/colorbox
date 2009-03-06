@@ -1,12 +1,12 @@
 /*
-	ColorBox v1.0 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.02 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 
 (function($){
 
-var index, related, loadingElement, modal, modalOveraly, modalLoading, modalContent, modalLoadedContent, modalClose, borderTopLeft, borderTopCenter, borderTopRight, borderMiddleLeft, borderMiddleRight, borderBottomLeft, borderBottomCenter, borderBottomRight;
+var index, related, loadingElement, modal, modalOverlay, modalLoading, modalContent, modalLoadedContent, modalClose, borderTopLeft, borderTopCenter, borderTopRight, borderMiddleLeft, borderMiddleRight, borderBottomLeft, borderBottomCenter, borderBottomRight;
 
 $(function(){
 	//Initialize the modal, preload the interface graphics, and wait until called.
@@ -159,15 +159,15 @@ $.fn.colorbox = function(settings) {
 			contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a> "
 			contentInfo += "<a id='contentNext' href='#'>"+settings.contentNext+"</a> "
 		}
-		
-		if (that.href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i)){
+
+		if (settings.contentInline) {
+			centerModal($(settings.contentInline).html(), contentInfo);
+		} else if (settings.contentIframe) {
+			centerModal("<iframe src =" + that.href + "></iframe>", contentInfo);
+		} else if (that.href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i) && !settings.contentAjax){
 			loadingElement = $(new Image()).load(function(){
 				centerModal("<img src='"+that.href+"' alt=''/>", contentInfo);
 			}).attr("src",that.href);
-		} else if (settings.contentInline){
-			centerModal($(settings.contentInline).html(), contentInfo);
-		} else if (settings.contentIframe){
-			centerModal("<iframe src ="+that.href+"></iframe>", contentInfo);
 		}else {
 			loadingElement = $('<div></div>').load(((settings.contentAjax) ? settings.contentAjax : that.href), function(data, textStatus){
 				if(textStatus == "success"){centerModal($(this).html(), contentInfo)
@@ -239,3 +239,4 @@ $.fn.colorbox.settings = {
 }
 
 })(jQuery);
+
