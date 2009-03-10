@@ -1,5 +1,5 @@
 /*
-	ColorBox v1.02 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.03 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -80,7 +80,9 @@ $.fn.colorbox = function(settings) {
 
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
 	function modalPosition(modalWidth, modalHeight, transitionSpeed, callback){
-		var posTop = $(window).height()/2 - modalHeight/2 + $(window).scrollTop();
+		var windowHeight; 
+		(typeof(window.innerHeight)=='number')?windowHeight=window.innerHeight:windowHeight=document.documentElement.clientHeight;
+		var posTop = windowHeight/2 - modalHeight/2 + $(window).scrollTop();
 		var posLeft = $(window).width()/2 - modalWidth/2 + $(window).scrollLeft();
 		if(posTop < $(borderTopLeft).height()){posTop = $(borderTopLeft).height();} //keeps the box from expanding to an inaccessible area offscreen.
 		if(posLeft < $(borderTopLeft).width()){posLeft = $(borderTopLeft).width();}
@@ -185,7 +187,6 @@ $.fn.colorbox = function(settings) {
 		$([modalOverlay, modal, modalLoadingOverlay]).show();
 		$(modalContent).css({width:settings.initialWidth, height:settings.initialHeight});
 		modalPosition($(modalContent).width(), $(modalContent).height(), 0);
-
 		if(this.rel){
 			related = $("a[rel='"+this.rel+"']");
 			index = $(related).index(this);
@@ -193,21 +194,15 @@ $.fn.colorbox = function(settings) {
 			related = $(this);
 			index = 0;
 		}
-
 		buildGallery(related[index]);
-
 		$("a#contentPrevious, a#contentNext").die().live("click", contentNav);
-		
 		$(document).bind('keydown', keypressEvents);
 		if($.browser.msie && $.browser.version < 7){
 			$(window).bind("resize scroll", setModalOverlay);
 		}
-		
 		return false;
 	});
-
 	return this.each(function() { 
-
 	});
 };
 

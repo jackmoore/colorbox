@@ -1,17 +1,27 @@
-Demonstration & Instructions/API:
+DEMONSTRATION AND INSTRUCTIONS/API:
+----------------------------------------------------------------------------------------------------------
 http://colorpowered.com/colorbox/
 
-Help:
+
+HELP:
+----------------------------------------------------------------------------------------------------------
 Visit the ColorBox mailing list if you have any questions or problems.
 http://groups.google.com/group/colorbox/topics
 
+
+RELEASE NOTES:
+----------------------------------------------------------------------------------------------------------
+Version 1.03 - March 10 2009
+* Fixed vertical centering for safari 3.0.x.
+
 Version 1.02 - March 06 2009
-Corrected a typo.
-Changed the content-type check so that it does not assume all links to photos should actually display photos.  This allows for Ajax/inline/and iframe calls on anchors linking to picture file types.
+* Corrected a typo.
+* Changed the content-type check so that it does not assume all links to photos should actually 
+  display photos.  This allows for Ajax/inline/and iframe calls on anchors linking to picture file types.
 
 Version 1.01 - March 05 2009
-Fixed keydown events (esc, left arrow, right arrow) for Webkit browsers.
+* Fixed keydown events (esc, left arrow, right arrow) for Webkit browsers.
 
 Version 1.0 - March 03 2009
-First release
+* First release
 
