@@ -46,7 +46,7 @@ $(function(){
 });
 
 function setModalOverlay(){
-	$([modalOverlay, modal]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
+	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
 
 function keypressEvents(e){
@@ -65,10 +65,10 @@ function keypressEvents(e){
 }
 
 function closeModal(){
-	//$([modalOverlay, modal]).hide();
 	$(modal).removeData("open");
 	$([modalOverlay, modal]).fadeOut("fast", function(){
 		$(modalLoadedContent).empty();
+		$([modalOverlay, modal]).hide();//Seems unnecessary, but sometimes IE6 does not hide the modal.
 	});
 	if(loadingElement){$(loadingElement).remove()};
 	$(document).unbind('keydown', keypressEvents);
@@ -87,7 +87,14 @@ $.fn.colorbox = function(settings) {
 		var posLeft = $(window).width()/2 - modalWidth/2 + $(window).scrollLeft();
 		if(posTop < $(borderTopLeft).height()){posTop = $(borderTopLeft).height();} //keeps the box from expanding to an inaccessible area offscreen.
 		if(posLeft < $(borderTopLeft).width()){posLeft = $(borderTopLeft).width();}
-		
+		/*
+		var colorboxHeight = modalHeight + $(borderTopLeft).height() + $(borderBottomLeft).height()
+		if (colorboxHeight > $(document).height()) {
+			$(modal).css({"height":colorboxHeight});
+		} else {
+			$(modal).css({"height":"100%"});
+		}
+		*/
 		//each part is animated seperately to keep them from disappearing during the animation process, which is what would happen if they were positioned relative to a single element being animated.
 		$(borderMiddleLeft).animate({top:posTop, left:posLeft-$(borderMiddleLeft).width(), height:modalHeight}, transitionSpeed);
 		$(borderMiddleRight).animate({top:posTop, left:posLeft+modalWidth, height:modalHeight}, transitionSpeed);
@@ -132,8 +139,7 @@ $.fn.colorbox = function(settings) {
 				modalPosition($(modalLoadedContent).outerWidth(true), $(modalLoadedContent).outerHeight(true), 0);
 				$(modalLoadedContent).show();
 				$(modalLoadingOverlay).hide();
-				$(modal).fadeTo(settings.transitionSpeed,1, function(){
-				});
+				$(modal).fadeTo(settings.transitionSpeed,1);
 			});
 		}
 		
