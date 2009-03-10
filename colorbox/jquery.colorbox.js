@@ -1,5 +1,5 @@
 /*
-	ColorBox v1.03 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.04 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -66,6 +66,7 @@ function keypressEvents(e){
 
 function closeModal(){
 	//$([modalOverlay, modal]).hide();
+	$(modal).removeData("open");
 	$([modalOverlay, modal]).fadeOut("fast", function(){
 		$(modalLoadedContent).empty();
 	});
@@ -180,28 +181,45 @@ $.fn.colorbox = function(settings) {
 		}
 	};
 	
-	$(this).click(function () {
-		$(modalLoadedContent).empty().css({"height":"auto","width":"auto"});
-		$(modalClose).html(settings.modalClose);
-		$(modalOverlay).css({"opacity":settings.bgOpacity});
-		$([modalOverlay, modal, modalLoadingOverlay]).show();
-		$(modalContent).css({width:settings.initialWidth, height:settings.initialHeight});
-		modalPosition($(modalContent).width(), $(modalContent).height(), 0);
-		if(this.rel){
-			related = $("a[rel='"+this.rel+"']");
-			index = $(related).index(this);
-		} else {
-			related = $(this);
-			index = 0;
-		}
-		buildGallery(related[index]);
-		$("a#contentPrevious, a#contentNext").die().live("click", contentNav);
-		$(document).bind('keydown', keypressEvents);
-		if($.browser.msie && $.browser.version < 7){
-			$(window).bind("resize scroll", setModalOverlay);
+	$(this).bind("click.colorbox", function () {
+		if ($(modal).data("open") != true) {
+			$(modal).data("open", true);
+			$(modalLoadedContent).empty().css({
+				"height": "auto",
+				"width": "auto"
+			});
+			$(modalClose).html(settings.modalClose);
+			$(modalOverlay).css({
+				"opacity": settings.bgOpacity
+			});
+			$([modalOverlay, modal, modalLoadingOverlay]).show();
+			$(modalContent).css({
+				width: settings.initialWidth,
+				height: settings.initialHeight
+			});
+			modalPosition($(modalContent).width(), $(modalContent).height(), 0);
+			if (this.rel) {
+				related = $("a[rel='" + this.rel + "']");
+				index = $(related).index(this);
+			}
+			else {
+				related = $(this);
+				index = 0;
+			}
+			buildGallery(related[index]);
+			$("a#contentPrevious, a#contentNext").die().live("click", contentNav);
+			$(document).bind('keydown', keypressEvents);
+			if ($.browser.msie && $.browser.version < 7) {
+				$(window).bind("resize scroll", setModalOverlay);
+			}
 		}
 		return false;
 	});
+
+	if(settings.open==true && $(modal).data("open")!=true){
+		$(this).triggerHandler('click.colorbox');
+	}
+
 	return this.each(function() { 
 	});
 };
@@ -230,7 +248,8 @@ $.fn.colorbox.settings = {
 	contentCurrent : "{current} of {total}", // the format of the contentCurrent information
 	contentPrevious : "previous", // the anchor text for the previous link in a shared relation group (same values for 'rel').
 	contentNext : "next", // the anchor text for the next link in a shared relation group (same 'rel' attribute').
-	modalClose : "close" // the anchor text for the close link.  Esc will also close the modal.
+	modalClose : "close", // the anchor text for the close link.  Esc will also close the modal.
+	open : false //Automatically opens ColorBox. (fires the click.colorbox event without waiting for user input).
 }
 
 })(jQuery);
