@@ -1,5 +1,5 @@
 /*
-	ColorBox v1.04 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.05 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -81,30 +81,31 @@ $.fn.colorbox = function(settings) {
 
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
 	function modalPosition(modalWidth, modalHeight, transitionSpeed, callback){
-		var windowHeight; 
+		var windowHeight;
 		(typeof(window.innerHeight)=='number')?windowHeight=window.innerHeight:windowHeight=document.documentElement.clientHeight;
-		var posTop = windowHeight/2 - modalHeight/2 + $(window).scrollTop();
-		var posLeft = $(window).width()/2 - modalWidth/2 + $(window).scrollLeft();
-		if(posTop < $(borderTopLeft).height()){posTop = $(borderTopLeft).height();} //keeps the box from expanding to an inaccessible area offscreen.
-		if(posLeft < $(borderTopLeft).width()){posLeft = $(borderTopLeft).width();}
-		/*
-		var colorboxHeight = modalHeight + $(borderTopLeft).height() + $(borderBottomLeft).height()
-		if (colorboxHeight > $(document).height()) {
-			$(modal).css({"height":colorboxHeight});
-		} else {
-			$(modal).css({"height":"100%"});
+		var colorboxHeight = modalHeight + $(borderTopLeft).height() + $(borderBottomLeft).height();
+		var colorboxWidth = modalWidth + $(borderTopLeft).width() + $(borderBottomLeft).width();
+		var posTop = windowHeight/2 - colorboxHeight/2 + $(window).scrollTop();
+		var posLeft = $(window).width()/2 - colorboxWidth/2 + $(window).scrollLeft();
+		if(colorboxHeight > windowHeight){
+			posTop -=(colorboxHeight - windowHeight);
 		}
-		*/
+		if(posTop < 0){posTop = 0;} //keeps the box from expanding to an inaccessible area offscreen.
+		if(posLeft < 0){posLeft = 0;}
+		$(modal).animate({height:colorboxHeight, top:posTop, left:posLeft, width:colorboxWidth}, transitionSpeed);
+
 		//each part is animated seperately to keep them from disappearing during the animation process, which is what would happen if they were positioned relative to a single element being animated.
-		$(borderMiddleLeft).animate({top:posTop, left:posLeft-$(borderMiddleLeft).width(), height:modalHeight}, transitionSpeed);
-		$(borderMiddleRight).animate({top:posTop, left:posLeft+modalWidth, height:modalHeight}, transitionSpeed);
-		$(borderTopLeft).animate({top:posTop-$(borderTopLeft).height(), left:posLeft-$(borderTopLeft).width()}, transitionSpeed);
-		$(borderTopCenter).animate({top:posTop-$(borderTopCenter).height(), left:posLeft, width:modalWidth}, transitionSpeed);
-		$(borderTopRight).animate({top:posTop-$(borderTopRight).height(), left:posLeft+modalWidth}, transitionSpeed);
-		$(borderBottomLeft).animate({top:posTop+modalHeight, left:posLeft-$(borderBottomLeft).width()}, transitionSpeed);
-		$(borderBottomCenter).animate({top:posTop+modalHeight, left:posLeft, width:modalWidth}, transitionSpeed);
-		$(borderBottomRight).animate({top:posTop+modalHeight, left:posLeft+modalWidth}, transitionSpeed);
-		$(modalContent).animate({height:modalHeight, width:modalWidth, top:posTop, left:posLeft}, transitionSpeed, function(){
+		$(borderMiddleLeft).animate({top:$(borderTopLeft).height(), left:0, height:modalHeight}, transitionSpeed);
+		$(borderMiddleRight).animate({top:$(borderTopRight).height(), left:colorboxWidth-$(borderMiddleRight).width(), height:modalHeight}, transitionSpeed);
+
+		$(borderTopLeft).animate({top:0, left:0}, transitionSpeed);
+		$(borderTopCenter).animate({top:0, left:$(borderTopLeft).width(), width:modalWidth}, transitionSpeed);
+		$(borderTopRight).animate({top: 0, left: colorboxWidth - $(borderTopRight).width()}, transitionSpeed);
+
+		$(borderBottomLeft).animate({top:colorboxHeight-$(borderBottomLeft).height(), left:0}, transitionSpeed);
+		$(borderBottomCenter).animate({top:colorboxHeight-$(borderBottomLeft).height(), left:$(borderBottomLeft).width(), width:modalWidth}, transitionSpeed);
+		$(borderBottomRight).animate({top: colorboxHeight - $(borderBottomLeft).height(),	left: colorboxWidth - $(borderBottomRight).width()}, transitionSpeed);
+		$(modalContent).animate({height:modalHeight, width:modalWidth, top:$(borderTopLeft).height(), left:$(borderTopLeft).width()}, transitionSpeed, function(){
 			if(callback){callback();}
 			if($.browser.msie && $.browser.version < 7){
 				setModalOverlay();
@@ -127,24 +128,23 @@ $.fn.colorbox = function(settings) {
 		$(modalLoadedContent).hide().html(contentHtml).append(contentInfo);
 		if(settings.contentWidth){$(modalLoadedContent).css({"width":settings.contentWidth})}
 		if(settings.contentHeight){$(modalLoadedContent).css({"height":settings.contentHeight})}
-		if(settings.transition == "elastic"){
+		if (settings.transition == "elastic") {
 			modalPosition($(modalLoadedContent).outerWidth(true), $(modalLoadedContent).outerHeight(true), settings.transitionSpeed, function(){
 				$(modalLoadedContent).show();
-				$(modalLoadingOverlay).hide();	
-			});	
+				$(modalLoadingOverlay).hide();
+			});
 			
 		}
-		else{
-			$(modal).fadeTo(settings.transitionSpeed, 0, function(){
-				modalPosition($(modalLoadedContent).outerWidth(true), $(modalLoadedContent).outerHeight(true), 0);
-				$(modalLoadedContent).show();
-				$(modalLoadingOverlay).hide();
-				$(modal).fadeTo(settings.transitionSpeed,1);
+		else {
+			$(modal).animate({"opacity":0}, settings.transitionSpeed, function(){
+				modalPosition($(modalLoadedContent).outerWidth(true), $(modalLoadedContent).outerHeight(true), 0, function(){
+					$(modalLoadedContent).show();
+					$(modalLoadingOverlay).hide();
+					$(modal).animate({"opacity":1}, settings.transitionSpeed);
+				});
 			});
 		}
-		
 		var preloads = preload();
-
 	}
 	
 	function contentNav(){
