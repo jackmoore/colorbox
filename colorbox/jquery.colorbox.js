@@ -6,7 +6,34 @@
 
 (function($){
 
-var index, related, loadingElement, modal, modalOverlay, modalLoading, modalContent, modalLoadedContent, modalClose, borderTopLeft, borderTopCenter, borderTopRight, borderMiddleLeft, borderMiddleRight, borderBottomLeft, borderBottomCenter, borderBottomRight;
+var index, related, closeModal, loadingElement, modal, modalOverlay, modalLoadingOverlay, modalContent, modalLoadedContent, modalClose, borderTopLeft, borderTopCenter, borderTopRight, borderMiddleLeft, borderMiddleRight, borderBottomLeft, borderBottomCenter, borderBottomRight;
+
+function setModalOverlay(){
+	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
+}
+
+function keypressEvents(e){
+	if(e.keyCode == 27){
+		closeModal();
+	}
+	else if(e.keyCode == 37){
+		$("a#contentPrevious").click();
+	}
+	else if(e.keyCode == 39){
+		$("a#contentNext").click();
+	}
+}
+
+closeModal = function(){
+	$(modal).removeData("open");
+	$([modalOverlay, modal]).fadeOut("fast", function(){
+		$(modalLoadedContent).empty();
+		$([modalOverlay, modal]).hide();//Seems unnecessary, but sometimes IE6 does not hide the modal.
+	});
+	if(loadingElement){$(loadingElement).remove();}
+	$(document).unbind('keydown', keypressEvents);
+	$(window).unbind('resize scroll', setModalOverlay);
+};
 
 $(function(){
 	//Initialize the modal, preload the interface graphics, and wait until called.
@@ -45,44 +72,13 @@ $(function(){
 	});
 });
 
-function setModalOverlay(){
-	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
-}
-
-function keypressEvents(e){
-	if(e.keyCode == 27){
-		closeModal();
-		return false;
-	}
-	else if(e.keyCode == 37){
-		$("a#contentPrevious").click();
-		return false;
-	}
-	else if(e.keyCode == 39){
-		$("a#contentNext").click();
-		return false
-	}
-}
-
-function closeModal(){
-	$(modal).removeData("open");
-	$([modalOverlay, modal]).fadeOut("fast", function(){
-		$(modalLoadedContent).empty();
-		$([modalOverlay, modal]).hide();//Seems unnecessary, but sometimes IE6 does not hide the modal.
-	});
-	if(loadingElement){$(loadingElement).remove()};
-	$(document).unbind('keydown', keypressEvents);
-	$(window).unbind('resize scroll', setModalOverlay);
-}
-
 $.fn.colorbox = function(settings) {
 
 	settings = $.extend({}, $.fn.colorbox.settings, settings);
 
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
 	function modalPosition(modalWidth, modalHeight, transitionSpeed, callback){
-		var windowHeight;
-		(typeof(window.innerHeight)=='number')?windowHeight=window.innerHeight:windowHeight=document.documentElement.clientHeight;
+		var windowHeight = typeof window.innerHeight == 'number' ? window.innerHeight : document.documentElement.clientHeight;
 		var colorboxHeight = modalHeight + $(borderTopLeft).height() + $(borderBottomLeft).height();
 		var colorboxWidth = modalWidth + $(borderTopLeft).width() + $(borderBottomLeft).width();
 		var posTop = windowHeight/2 - colorboxHeight/2 + $(window).scrollTop();
@@ -116,18 +112,18 @@ $.fn.colorbox = function(settings) {
 	var preloads = [];
 
 	function preload(){
-		if(settings.preloading == true && related.length>1){
+		if(settings.preloading !== false && related.length>1){
 			var previous, next;
-			index > 0 ? previous = related[index-1].href : previous = related[related.length-1].href;
-			index < related.length-1 ? next = related[index+1].href : next = related[0].href;
-			return [$(new Image()).attr("src", next), $(new Image()).attr("src", previous)];
+			previous = index > 0 ? related[index-1].href : related[related.length-1].href;
+			next = index < related.length-1 ? related[index+1].href : related[0].href;
+			return [$("<img />").attr("src", next), $("<img />").attr("src", previous)];
 		}
 	}
 	
 	function centerModal(contentHtml, contentInfo){
 		$(modalLoadedContent).hide().html(contentHtml).append(contentInfo);
-		if(settings.contentWidth){$(modalLoadedContent).css({"width":settings.contentWidth})}
-		if(settings.contentHeight){$(modalLoadedContent).css({"height":settings.contentHeight})}
+		if(settings.contentWidth){$(modalLoadedContent).css({"width":settings.contentWidth});}
+		if(settings.contentHeight){$(modalLoadedContent).css({"height":settings.contentHeight});}
 		if (settings.transition == "elastic") {
 			modalPosition($(modalLoadedContent).outerWidth(true), $(modalLoadedContent).outerHeight(true), settings.transitionSpeed, function(){
 				$(modalLoadedContent).show();
@@ -146,27 +142,16 @@ $.fn.colorbox = function(settings) {
 		}
 		var preloads = preload();
 	}
-	
-	function contentNav(){
-		$(modalLoadingOverlay).show();
-		if($(this).attr("id") == "contentPrevious"){
-			index > 0 ? index-- : index=related.length-1;
-		} else {
-			index < related.length-1 ? index++ : index = 0;
-		}
-		buildGallery(related[index]);
-		return false;	
-	}
-	
+
 	function buildGallery(that){
 
 		var contentInfo = "<br id='modalInfoBr'/><span id='contentTitle'>"+that.title+"</span>";
 		
 		if(related.length>1){
-			contentInfo += "<span id='contentCurrent'> " + settings.contentCurrent + "</span>"
-			contentInfo = contentInfo.replace(/{current}/, index+1).replace(/{total}/, related.length)
-			contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a> "
-			contentInfo += "<a id='contentNext' href='#'>"+settings.contentNext+"</a> "
+			contentInfo += "<span id='contentCurrent'> " + settings.contentCurrent + "</span>";
+			contentInfo = contentInfo.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length);
+			contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a> ";
+			contentInfo += "<a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
 		}
 
 		if (settings.contentInline) {
@@ -174,21 +159,33 @@ $.fn.colorbox = function(settings) {
 		} else if (settings.contentIframe) {
 			centerModal("<iframe src =" + that.href + "></iframe>", contentInfo);
 		} else if (that.href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i) && !settings.contentAjax){
-			loadingElement = $(new Image()).load(function(){
+			loadingElement = $("<img />").load(function(){
 				centerModal("<img src='"+that.href+"' alt=''/>", contentInfo);
 			}).attr("src",that.href);
 		}else {
 			loadingElement = $('<div></div>').load(((settings.contentAjax) ? settings.contentAjax : that.href), function(data, textStatus){
-				if(textStatus == "success"){centerModal($(this).html(), contentInfo)
+				if(textStatus == "success"){
+					centerModal($(this).html(), contentInfo);
 				} else {
-				centerModal("<p>Ajax request unsuccessful</p>");
+					centerModal("<p>Ajax request unsuccessful</p>");
 				}
 			});
 		}
-	};
+	}
+	
+	function contentNav(){
+		$(modalLoadingOverlay).show();
+		if($(this).attr("id") == "contentPrevious"){
+			index = index > 0 ? index-1 : related.length-1;
+		} else {
+			index = index < related.length-1 ? index+1 : 0;
+		}
+		buildGallery(related[index]);
+		return false;	
+	}
 	
 	$(this).bind("click.colorbox", function () {
-		if ($(modal).data("open") != true) {
+		if ($(modal).data("open") !== true) {
 			$(modal).data("open", true);
 			$(modalLoadedContent).empty().css({
 				"height": "auto",
@@ -222,7 +219,7 @@ $.fn.colorbox = function(settings) {
 		return false;
 	});
 
-	if(settings.open==true && $(modal).data("open")!=true){
+	if(settings.open===true && $(modal).data("open")!==true){
 		$(this).triggerHandler('click.colorbox');
 	}
 
@@ -256,7 +253,7 @@ $.fn.colorbox.settings = {
 	contentNext : "next", // the anchor text for the next link in a shared relation group (same 'rel' attribute').
 	modalClose : "close", // the anchor text for the close link.  Esc will also close the modal.
 	open : false //Automatically opens ColorBox. (fires the click.colorbox event without waiting for user input).
-}
+};
 
 })(jQuery);
 
