@@ -21,10 +21,10 @@
 				$.fn.colorbox.settings.bgOpacity = "0.9";
 				$.fn.colorbox.settings.contentCurrent = "image {current} of {total}";
 				$(".cpModal").colorbox();
-				$("#ajax").colorbox({contentWidth:"300px", contentHeight:"195px"});
+				$("#ajax").colorbox({fixedWidth:"300px", fixedHeight:"195px"});
 				$("#flash").colorbox({contentAjax:"../content/flash.html"});
-				$("#google").colorbox({contentWidth:"750px", contentHeight:"450px", contentIframe:true});
-				$("#inline").colorbox({contentWidth:"500px", contentInline:"#inline-content"});
+				$("#google").colorbox({fixedWidth:"750px", fixedHeight:"450px", contentIframe:true});
+				$("#inline").colorbox({fixedWidth:"500px", contentInline:"#inline-content"});
 			});
 		</script>
 	</head>

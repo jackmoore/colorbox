@@ -15,7 +15,7 @@
 	#borderMiddleLeft{width:21px; background:url(images/borderMiddleLeft.png) 0 0 repeat-y;}
 	#borderMiddleRight{width:21px; background:url(images/borderMiddleRight.png) 0 0 repeat-y;}
 	#modalContent{background:#fff;}
-		#modalLoadedContent{margin-bottom:28px; border:1px solid #fff;}
+		#modalLoadedContent{margin-bottom:28px;}
 			#contentTitle{position:absolute; bottom:3px; left:0; width:100%; text-align:center; font-weight:bold; color:#949494;}
 			#contentCurrent{position:absolute; bottom:3px; left:58px; font-weight:bold; color:#949494;}
 			#contentPrevious{position:absolute; bottom:0; left:0px; background:url(images/controls.png) -25px 0px no-repeat; width:25px; height:25px; text-indent:-9999px;}
