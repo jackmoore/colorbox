@@ -5,25 +5,20 @@
 */
 
 (function($){
-
-var index, related, closeModal, loadingElement, modal, modalOverlay, modalLoadingOverlay, modalContent, modalLoadedContent, modalClose, borderTopLeft, borderTopCenter, borderTopRight, borderMiddleLeft, borderMiddleRight, borderBottomLeft, borderBottomCenter, borderBottomRight;
-
+var interfaceHeight, interfaceWidth, loadedHeight, loadedWidth, index, related, closeModal, loadingElement, modal, modalOverlay, modalLoadingOverlay, modalContent, modalLoadedContent, modalClose, borderTopLeft, borderTopCenter, borderTopRight, borderMiddleLeft, borderMiddleRight, borderBottomLeft, borderBottomCenter, borderBottomRight;
 function setModalOverlay(){
 	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
-
 function keypressEvents(e){
-	if(e.keyCode == 27){
-		closeModal();
-	}
-	else if(e.keyCode == 37){
+	if(e.keyCode == 37){
 		$("a#contentPrevious").click();
+		$(document).unbind('keydown', keypressEvents);
 	}
 	else if(e.keyCode == 39){
 		$("a#contentNext").click();
+		$(document).unbind('keydown', keypressEvents);
 	}
 }
-
 closeModal = function(){
 	$(modal).removeData("open");
 	$([modalOverlay, modal]).fadeOut("fast", function(){
@@ -34,16 +29,21 @@ closeModal = function(){
 	$(document).unbind('keydown', keypressEvents);
 	$(window).unbind('resize scroll', setModalOverlay);
 };
+// Convert % values to pixels
+function setSize(size, dimension){
+	return (typeof size == 'string') ? (size.match(/%/) ? (dimension/100)*parseInt(size) : parseInt(size)) : size;
+}
+function windowHeight(){return typeof window.innerHeight == 'number' ? window.innerHeight : document.documentElement.clientHeight;}
+function windowWidth(){return typeof window.innerWidth == 'number' ? window.innerWidth : document.documentElement.clientWidth;}
 
+//Initialize the modal: store common calculations, preload the interface graphics, append the html.
 $(function(){
-	//Initialize the modal, preload the interface graphics, and wait until called.
 	$("body").append(
 		$([
 			modalOverlay = $('<div id="modalBackgroundOverlay" />')[0], 
 			modal = $('<div id="colorbox" />')[0]
 		]).hide()
 	);
-
 	$(modal).append(
 		$([
 			borderTopLeft = $('<div id="borderTopLeft" />')[0],
@@ -57,7 +57,6 @@ $(function(){
 			modalContent = $('<div id="modalContent" />')[0]
 		])
 	);
-	
 	$(modalContent).append(
 		$([
 			modalLoadedContent = $('<div id="modalLoadedContent"><a id="contentPrevious" href="#"></a><a id="contentNext" href="#"></a><span id="contentCurrent"></span><br id="modalInfoBr"/><span id="contentTitle"></span><div id="preloadPrevious"></div><div id="preloadNext"></div><div id="preloadClose"></div></div>')[0], 
@@ -65,11 +64,23 @@ $(function(){
 			modalClose = $('<a id="modalClose" href="#"></a>')[0]
 		])
 	);
-
 	$(modalClose).click(function(){
 		closeModal();
 		return false;
 	});
+	$(document).bind('keydown', function(e){if(e.keyCode == 27){closeModal();}});
+
+	$(modal).css("opacity", 0).show();
+	loadedHeight = $(modalLoadedContent).outerHeight(true);
+	loadedWidth = $(modalLoadedContent).outerWidth(true);
+	interfaceHeight = $(borderTopCenter).height()+$(borderBottomCenter).height() + loadedHeight;
+	interfaceWidth = $(borderMiddleLeft).width()+$(borderMiddleRight).width() + loadedWidth; 
+	$(borderMiddleLeft).css({top:$(borderTopLeft).height()});
+	$(borderMiddleRight).css({top:$(borderTopRight).height()});
+	$(borderTopCenter).css({left:$(borderTopLeft).width()});
+	$(borderBottomCenter).css({left:$(borderBottomLeft).width()});
+	$(modalContent).css({top:$(borderTopLeft).height(), left:$(borderTopLeft).width()});
+	$(modal).hide().css("opacity", 1);
 });
 
 $.fn.colorbox = function(settings) {
@@ -78,35 +89,26 @@ $.fn.colorbox = function(settings) {
 
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
 	function modalPosition(modalWidth, modalHeight, transitionSpeed, callback){
-		var windowHeight = typeof window.innerHeight == 'number' ? window.innerHeight : document.documentElement.clientHeight;
-		var colorboxHeight = modalHeight + $(borderTopLeft).height() + $(borderBottomLeft).height();
-		var colorboxWidth = modalWidth + $(borderTopLeft).width() + $(borderBottomLeft).width();
-		var posTop = windowHeight/2 - colorboxHeight/2 + $(window).scrollTop();
+		var winHeight = windowHeight();
+		var colorboxHeight = modalHeight + interfaceHeight;
+		var colorboxWidth = modalWidth + interfaceWidth;
+
+		var posTop = winHeight/2 - colorboxHeight/2 + $(window).scrollTop();
 		var posLeft = $(window).width()/2 - colorboxWidth/2 + $(window).scrollLeft();
-		if(colorboxHeight > windowHeight){
-			posTop -=(colorboxHeight - windowHeight);
+		if(colorboxHeight > winHeight){
+			posTop -=(colorboxHeight - winHeight);
 		}
 		if(posTop < 0){posTop = 0;} //keeps the box from expanding to an inaccessible area offscreen.
 		if(posLeft < 0){posLeft = 0;}
-		$(modal).animate({height:colorboxHeight, top:posTop, left:posLeft, width:colorboxWidth}, transitionSpeed);
-
 		//each part is animated seperately to keep them from disappearing during the animation process, which is what would happen if they were positioned relative to a single element being animated.
-		$(borderMiddleLeft).animate({top:$(borderTopLeft).height(), left:0, height:modalHeight}, transitionSpeed);
-		$(borderMiddleRight).animate({top:$(borderTopRight).height(), left:colorboxWidth-$(borderMiddleRight).width(), height:modalHeight}, transitionSpeed);
-
-		$(borderTopLeft).animate({top:0, left:0}, transitionSpeed);
-		$(borderTopCenter).animate({top:0, left:$(borderTopLeft).width(), width:modalWidth}, transitionSpeed);
-		$(borderTopRight).animate({top: 0, left: colorboxWidth - $(borderTopRight).width()}, transitionSpeed);
-
-		$(borderBottomLeft).animate({top:colorboxHeight-$(borderBottomLeft).height(), left:0}, transitionSpeed);
-		$(borderBottomCenter).animate({top:colorboxHeight-$(borderBottomLeft).height(), left:$(borderBottomLeft).width(), width:modalWidth}, transitionSpeed);
-		$(borderBottomRight).animate({top: colorboxHeight - $(borderBottomLeft).height(),	left: colorboxWidth - $(borderBottomRight).width()}, transitionSpeed);
-		$(modalContent).animate({height:modalHeight, width:modalWidth, top:$(borderTopLeft).height(), left:$(borderTopLeft).width()}, transitionSpeed, function(){
+		$(modal).animate({top:posTop, left:posLeft, height:modalHeight + interfaceHeight, width:modalWidth + interfaceWidth}, transitionSpeed);
+		$([borderMiddleLeft, borderMiddleRight]).animate({height:modalHeight+loadedHeight}, transitionSpeed);
+		$([borderTopCenter, borderBottomCenter]).animate({width:modalWidth+loadedWidth}, transitionSpeed);
+		$(modalContent).animate({height:modalHeight+loadedHeight, width:modalWidth+loadedWidth}, transitionSpeed, function(){
 			if(callback){callback();}
-			if($.browser.msie && $.browser.version < 7){
-				setModalOverlay();
-			}
-		});	
+			$(document).bind('keydown', keypressEvents);
+			if($.browser.msie && $.browser.version < 7){setModalOverlay();}
+		});
 	}
 	
 	var preloads = [];
@@ -122,14 +124,15 @@ $.fn.colorbox = function(settings) {
 	
 	function centerModal(contentHtml, contentInfo){
 		$(modalLoadedContent).hide().html(contentHtml).append(contentInfo);
-		if(settings.contentWidth){$(modalLoadedContent).css({"width":settings.contentWidth});}
-		if(settings.contentHeight){$(modalLoadedContent).css({"height":settings.contentHeight});}
+
+		if(settings.fixedWidth){$(modalLoadedContent).css({"width":settings.fixedWidth - interfaceWidth}); }
+		if(settings.fixedHeight){$(modalLoadedContent).css({"height":settings.fixedHeight - interfaceHeight});}
+
 		if (settings.transition == "elastic") {
-			modalPosition($(modalLoadedContent).outerWidth(true), $(modalLoadedContent).outerHeight(true), settings.transitionSpeed, function(){
+			modalPosition($(modalLoadedContent).width(), $(modalLoadedContent).height(), settings.transitionSpeed, function(){
 				$(modalLoadedContent).show();
 				$(modalLoadingOverlay).hide();
 			});
-			
 		}
 		else {
 			$(modal).animate({"opacity":0}, settings.transitionSpeed, function(){
@@ -192,15 +195,15 @@ $.fn.colorbox = function(settings) {
 				"width": "auto"
 			});
 			$(modalClose).html(settings.modalClose);
-			$(modalOverlay).css({
-				"opacity": settings.bgOpacity
-			});
-			$([modalOverlay, modal, modalLoadingOverlay]).show();
-			$(modalContent).css({
-				width: settings.initialWidth,
-				height: settings.initialHeight
-			});
-			modalPosition($(modalContent).width(), $(modalContent).height(), 0);
+			$(modalOverlay).css({"opacity": settings.bgOpacity});
+			
+			$([modal, modalLoadingOverlay, modalOverlay]).show();
+
+			if(settings.fixedWidth){ settings.fixedWidth = setSize(settings.fixedWidth, windowWidth());}
+			if(settings.fixedHeight){ settings.fixedHeight = setSize(settings.fixedHeight, windowHeight());}
+
+			modalPosition(setSize(settings.initialWidth, windowWidth()), setSize(settings.initialHeight, windowHeight()), 0);
+
 			if (this.rel) {
 				related = $("a[rel='" + this.rel + "']");
 				index = $(related).index(this);
@@ -219,7 +222,7 @@ $.fn.colorbox = function(settings) {
 		return false;
 	});
 
-	if(settings.open===true && $(modal).data("open")!==true){
+	if(settings.open!==false && $(modal).data("open")!==true){
 		$(this).triggerHandler('click.colorbox');
 	}
 
@@ -234,15 +237,15 @@ $.fn.colorbox = function(settings) {
 	
 	Please do not change these settings here, instead overwrite these settings when attaching the colorbox() event to your anchors.
 	Example (Global)	: $.fn.colorbox.settings.transition = "fade"; //changes the transition to fade for all colorBox() events proceeding it's declaration.
-	Example (Specific)	: $("a[href='http://www.google.com']").colorbox({contentWidth:"700px", contentHeight:"450px", contentIframe:true});
+	Example (Specific)	: $("a[href='http://www.google.com']").colorbox({fixedWidth:"700px", fixedHeight:"450px", contentIframe:true});
 */
 $.fn.colorbox.settings = {
 	transition : "elastic", // "elastic" or "fade". Set transitionSpeed to 0 for no transition.
-	transitionSpeed : 350, // Sets the speed of the fade and elastic transition, in milliseconds. Set to 0 for no transition.
-	initialWidth : 300, // Set the initial width of the modal, prior to any content being loaded.
-	initialHeight : 100, // Set the initial height of the modal, prior to any content being loaded.
-	contentWidth : false, // Set a fixed width for div#modalLoadedContent.  Example: "500px"
-	contentHeight : false, // Set a fixed height for div#modalLoadedContent.  Example: "500px"
+	transitionSpeed : 250, // Sets the speed of the fade and elastic transition, in milliseconds. Set to 0 for no transition.
+	initialWidth : "50%", // Set the initial width of the modal, prior to any content being loaded.
+	initialHeight : "50%", // Set the initial height of the modal, prior to any content being loaded.
+	fixedWidth : false, // Set a fixed width for div#modalLoadedContent.  Example: "500px"
+	fixedHeight : false, // Set a fixed height for div#modalLoadedContent.  Example: "500px"
 	contentAjax : false, // Set this to the file, or file+selector of content that will be loaded through an external file.  Example "include.html" or "company.inc.php div#ceo_bio"
 	contentInline : false, // Set this to the selector, in jQuery selector format, of inline content to be displayed.  Example "#myHiddenDiv".
 	contentIframe : false, // If 'true' specifies that content should be displayed in an iFrame.
