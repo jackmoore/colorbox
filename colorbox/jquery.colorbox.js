@@ -87,6 +87,8 @@ $.fn.colorbox = function(settings) {
 
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
 	function modalPosition(modalWidth, modalHeight, transitionSpeed, callback){
+		
+		//if MSIE6 & modalHeight==odd, add 1.
 		var winHeight = windowHeight();
 		var posTop = winHeight/2 - modalHeight/2 + $(window).scrollTop();
 		var posLeft = $(window).width()/2 - modalWidth/2 + $(window).scrollLeft();

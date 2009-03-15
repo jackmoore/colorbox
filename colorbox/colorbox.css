@@ -7,3 +7,14 @@
 #modalLoadedContent img, #modalLoadedContent embed{display:block;}/* Display:block removes the line-height gap underneath images, iframes, and embedded content */
 #modalLoadingOverlay{position:absolute; width:100%; height:100%; top:0; left:0;}
 #modalInfoBr{display:none;}
+
+#borderTopLeft{top:0; left:0;}
+#borderTopCenter{top:0;}
+#borderTopRight{top:0; right:0;}
+
+#borderMiddleLeft{left:0;}
+#borderMiddleRight{right:0;}
+
+#borderBottomLeft{bottom:0; left:0;}
+#borderBottomCenter{bottom:0;}
+#borderBottomRight{bottom:0; right:0;}
