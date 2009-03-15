@@ -91,12 +91,11 @@ $.fn.colorbox = function(settings) {
 		var posTop = winHeight/2 - modalHeight/2 + $(window).scrollTop();
 		var posLeft = $(window).width()/2 - modalWidth/2 + $(window).scrollLeft();
 		
+		//keeps the box from expanding to an inaccessible area offscreen.
 		if(modalHeight > winHeight){posTop -=(modalHeight - winHeight);}
-		if(posTop < 0){posTop = 0;} //keeps the box from expanding to an inaccessible area offscreen.
+		if(posTop < 0){posTop = 0;} 
 		if(posLeft < 0){posLeft = 0;}
-		posTop = 0;
-		posLeft = 0;
-		//each part is animated seperately to keep them from disappearing during the animation process, which is what would happen if they were positioned relative to a single element being animated.
+
 		$(modal).animate({top:posTop, left:posLeft, height:modalHeight, width:modalWidth}, transitionSpeed);
 		$([borderMiddleLeft, borderMiddleRight]).animate({height:modalHeight-interfaceHeight}, transitionSpeed);
 		$([borderTopCenter, borderBottomCenter]).animate({width:modalWidth-interfaceWidth}, transitionSpeed);
