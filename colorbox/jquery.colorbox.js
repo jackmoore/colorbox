@@ -98,14 +98,17 @@ $.fn.colorbox = function(settings) {
 		if(posTop < 0){posTop = 0;} 
 		if(posLeft < 0){posLeft = 0;}
 
-		$(modal).animate({top:posTop, left:posLeft, height:modalHeight, width:modalWidth}, transitionSpeed);
-		$([borderMiddleLeft, borderMiddleRight]).animate({height:modalHeight-interfaceHeight}, transitionSpeed);
-		$([borderTopCenter, borderBottomCenter]).animate({width:modalWidth-interfaceWidth}, transitionSpeed);
-		$(modalContent).animate({height:modalHeight-interfaceHeight, width:modalWidth-interfaceWidth}, transitionSpeed, function(){
-			if(callback){callback();}
+		$([borderMiddleLeft, borderMiddleRight, modalContent]).animate({height:modalHeight-interfaceHeight}, {queue: false,duration: transitionSpeed});
+		$([borderTopCenter, borderBottomCenter, modalContent]).animate({width:modalWidth-interfaceWidth}, {queue: false,duration: transitionSpeed});
+		$(modal).animate({top:posTop, left:posLeft, height:modalHeight, width:modalWidth}, {duration: transitionSpeed, complete: function(){
+			if (callback) {
+				callback();
+			}
 			$(document).bind('keydown', keypressEvents);
-			if($.browser.msie && $.browser.version < 7){setModalOverlay();}
-		});
+			if ($.browser.msie && $.browser.version < 7) {
+				setModalOverlay();
+			}
+		}});
 	}
 	
 	var preloads = [];
