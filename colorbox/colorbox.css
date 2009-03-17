@@ -1,15 +1,17 @@
-#colorbox, #modalBackgroundOverlay, #modalTemp{position:absolute; top:0; left:0; z-index:9999;}
+#colorbox, #modalBackgroundOverlay, #modalWrap{position:absolute; top:0; left:0; z-index:9999;}
 #modalBackgroundOverlay{position:fixed; width:100%; height:100%}
 
 #modalContent, #borderTopLeft, #borderTopCenter, #borderTopRight, #borderBottomLeft, #borderBottomCenter, #borderBottomRight, #borderMiddleLeft, #borderMiddleRight {float:left;}
 
-#modalContent{position:relative;}
+#modalContent{position:relative; overflow:hidden;}/*hidden crops off margins and such that should not be poking out of the modalLoadedContent div */
 #borderMiddleLeft, #borderBottomLeft{clear:left;}
-#modalTemp{z-index:0;}
+
+#colorbox{overflow:hidden;}
+#modalWrap{width:9000px; height:9000px;}
 
 #modalBackgroundOverlay{position:fixed;}
 #modalClose, #contentPrevious, #contentNext{outline:none; cursor:pointer;}
-#modalLoadedContent{overflow:auto;}
-#modalLoadedContent iframe{display:block; width:100%; height:100%; border:0;}
+#modalLoadedContent{overflow:auto; display:inline;}
+#modalLoadedContent iframe{display:block; width:100%; height:100%;}
 #modalLoadedContent img, #modalLoadedContent embed{display:block;}/* Display:block removes the line-height gap underneath images, iframes, and embedded content */
 #modalLoadingOverlay{position:absolute; width:100%; height:100%; top:0; left:0;}

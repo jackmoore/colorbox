@@ -5,7 +5,7 @@
 */
 
 (function($){
-var interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalOverlay, modalLoadingOverlay, modalContent, modalLoadedContent, modalClose, borderTopLeft, borderTopCenter, borderTopRight, borderMiddleLeft, borderMiddleRight, borderBottomLeft, borderBottomCenter, borderBottomRight;
+var loadedHeight, loadedWidth, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalOverlay, modalLoadingOverlay, modalContent, modalLoadedContent, modalClose, btl, btc, btr, bml, bmr, bbl, bbc, bbr;
 function setModalOverlay(){
 	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
@@ -41,24 +41,27 @@ $(function(){
 	$("body").append(
 		$([
 			modalOverlay = $('<div id="modalBackgroundOverlay" />')[0], 
-			modal = $('<div id="colorbox" />')[0],
-			modalTemp = $('<div id="modalTemp" />')[0]
+			modal = $('<div id="colorbox" />')[0]
 		]).hide()
 	);
-
 	$(modal).append(
 		$([
-			borderTopLeft = $('<div id="borderTopLeft" />')[0],
-			borderTopCenter = $('<div id="borderTopCenter" />')[0],
-			borderTopRight = $('<div id="borderTopRight" />')[0],
+			modalWrap = $('<div id="modalWrap" />')[0]
+		])
+	);
+	$(modalWrap).append(
+		$([
+			btl = $('<div id="borderTopLeft" />')[0],
+			btc = $('<div id="borderTopCenter" />')[0],
+			btr = $('<div id="borderTopRight" />')[0],
 			$("<br />")[0],
-			borderMiddleLeft = $('<div id="borderMiddleLeft" />')[0],
+			bml = $('<div id="borderMiddleLeft" />')[0],
 			modalContent = $('<div id="modalContent" />')[0],
-			borderMiddleRight = $('<div id="borderMiddleRight" />')[0],
+			bmr = $('<div id="borderMiddleRight" />')[0],
 			$("<br />")[0],
-			borderBottomLeft = $('<div id="borderBottomLeft" />')[0],
-			borderBottomCenter = $('<div id="borderBottomCenter" />')[0],
-			borderBottomRight = $('<div id="borderBottomRight" />')[0]
+			bbl = $('<div id="borderBottomLeft" />')[0],
+			bbc = $('<div id="borderBottomCenter" />')[0],
+			bbr = $('<div id="borderBottomRight" />')[0]
 		])
 	);
 	$(modalContent).append(
@@ -75,9 +78,11 @@ $(function(){
 	$(document).bind('keydown', function(e){if(e.keyCode == 27){closeModal();}});
 
 	$(modal).css("opacity", 0).show();
-	interfaceHeight = $(borderTopCenter).height()+$(borderBottomCenter).height();
-	interfaceWidth = $(borderMiddleLeft).width()+$(borderMiddleRight).width();
-	$(modal).hide();
+	interfaceHeight = $(btc).height()+$(bbc).height();
+	interfaceWidth = $(bml).width()+$(bmr).width();
+	loadedHeight = $(modalLoadedContent).outerHeight(true);
+	loadedWidth = $(modalLoadedContent).outerWidth(true);
+	$(modal).css({"padding-top":interfaceHeight,"padding-left":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
 });
 
 $.fn.colorbox = function(settings) {
@@ -86,44 +91,35 @@ $.fn.colorbox = function(settings) {
 
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
 	function modalPosition(modalWidth, modalHeight, transitionSpeed, callback){
-
 		var winHeight = windowHeight();
 		var posTop = winHeight/2 - modalHeight/2 + $(window).scrollTop();
 		var posLeft = $(window).width()/2 - modalWidth/2 + $(window).scrollLeft();
-		
 		//keeps the box from expanding to an inaccessible area offscreen.
 		if(modalHeight > winHeight){posTop -=(modalHeight - winHeight);}
 		if(posTop < 0){posTop = 0;} 
 		if(posLeft < 0){posLeft = 0;}
 
+		modalWidth = modalWidth - interfaceWidth;
+		modalHeight = modalHeight - interfaceHeight;
+
 		function modalDimensions(that){
-			modalContent.style.width = borderTopCenter.style.width = borderBottomCenter.style.width = $(modalTemp).width()-interfaceWidth+"px";
-			modalContent.style.height = borderMiddleLeft.style.height = borderMiddleRight.style.height = $(modalTemp).height()-interfaceHeight+"px";
-			modal.style.top = that.style.top;
-			modal.style.left = that.style.left;
-			//modal.style.height = that.style.height;
-			//modal.style.width = that.style.width;			
+			modalContent.style.width = btc.style.width = bbc.style.width = that.style.width;
+			modalContent.style.height = bml.style.height = bmr.style.height = that.style.height;
 		}
 
-		$('#modalTemp').css({"opacity":0, "width":$(modal).width(), "height":$(modal).height()})
-		.appendTo('body').stop().animate({height:modalHeight, width:modalWidth, top:posTop, left:posLeft}, {duration: transitionSpeed,
+		$(modal).animate({height:modalHeight, width:modalWidth, top:posTop, left:posLeft}, {duration: transitionSpeed,
 			complete: function(){
-				if (callback) {
-					callback();
-				}
+				if (callback) {callback();}
 				modalDimensions(this);
 				$(document).bind('keydown', keypressEvents);
-				//modalDimensions(this);
-				if ($.browser.msie && $.browser.version < 7) {
-					setModalOverlay();
-				}
+				if ($.browser.msie && $.browser.version < 7) {setModalOverlay();}
 			},
 			step: function(){
 				modalDimensions(this);		
 			}
 		});
 	}
-	
+
 	var preloads = [];
 
 	function preload(){
@@ -136,11 +132,15 @@ $.fn.colorbox = function(settings) {
 	}
 	
 	function centerModal(contentHtml, contentInfo){
-		$(modalLoadedContent).hide().html(contentHtml).append(contentInfo);
-
+		$(modalLoadedContent).hide().css({"height":"auto", "width":"auto", "display":"inline"}).html(contentHtml).append(contentInfo);
 		var modalWidth = settings.fixedWidth ? settings.fixedWidth : $(modalLoadedContent).outerWidth(true)+interfaceWidth;
 		var modalHeight = settings.fixedHeight ? settings.fixedHeight : $(modalLoadedContent).outerHeight(true)+interfaceHeight;
-
+		if(settings.fixedHeight){
+			$(modalLoadedContent).css({height:modalHeight - loadedHeight});
+		}
+		if(settings.fixedWidth){
+			$(modalLoadedContent).css({height:modalWidth - loadedWidth});
+		}
 		if (settings.transition == "elastic") {
 			modalPosition(modalWidth, modalHeight, settings.transitionSpeed, function(){
 				$(modalLoadedContent).show();
@@ -173,7 +173,7 @@ $.fn.colorbox = function(settings) {
 		if (settings.contentInline) {
 			centerModal($(settings.contentInline).html(), contentInfo);
 		} else if (settings.contentIframe) {
-			centerModal("<iframe src =" + that.href + "></iframe>", contentInfo);
+			centerModal("<iframe  frameborder=0 src =" + that.href + "></iframe>", contentInfo);
 		} else if (that.href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i) && !settings.contentAjax){
 			loadingElement = $("<img />").load(function(){
 				centerModal("<img src='"+that.href+"' alt=''/>", contentInfo);
@@ -199,7 +199,7 @@ $.fn.colorbox = function(settings) {
 		buildGallery(related[index]);
 		return false;	
 	}
-	
+
 	$(this).bind("click.colorbox", function () {
 		if ($(modal).data("open") !== true) {
 			$(modal).data("open", true);
@@ -207,10 +207,6 @@ $.fn.colorbox = function(settings) {
 			if(settings.fixedWidth){ settings.fixedWidth = setSize(settings.fixedWidth, windowWidth());}
 			if(settings.fixedHeight){ settings.fixedHeight = setSize(settings.fixedHeight, windowHeight());}
 
-			$(modalLoadedContent).empty().css({
-				"height": "auto",
-				"width": "auto"
-			});
 			$(modalClose).html(settings.modalClose);
 			$(modalOverlay).css({"opacity": settings.bgOpacity});
 			$([modal, modalLoadingOverlay, modalOverlay]).show();
