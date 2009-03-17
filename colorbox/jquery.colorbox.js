@@ -82,7 +82,7 @@ $(function(){
 	interfaceWidth = $(bml).width()+$(bmr).width();
 	loadedHeight = $(modalLoadedContent).outerHeight(true);
 	loadedWidth = $(modalLoadedContent).outerWidth(true);
-	$(modal).css({"padding-top":interfaceHeight,"padding-left":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
+	$(modal).css({"padding-bottom":interfaceHeight,"padding-right":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
 });
 
 $.fn.colorbox = function(settings) {
@@ -132,24 +132,29 @@ $.fn.colorbox = function(settings) {
 	}
 	
 	function centerModal(contentHtml, contentInfo){
-		$(modalLoadedContent).hide().css({"height":"auto", "width":"auto", "display":"inline"}).html(contentHtml).append(contentInfo);
-		var modalWidth = settings.fixedWidth ? settings.fixedWidth : $(modalLoadedContent).outerWidth(true)+interfaceWidth;
-		var modalHeight = settings.fixedHeight ? settings.fixedHeight : $(modalLoadedContent).outerHeight(true)+interfaceHeight;
 		if(settings.fixedHeight){
-			$(modalLoadedContent).css({height:modalHeight - loadedHeight});
+			$(modalLoadedContent).css({"height":settings.fixedHeight - loadedHeight - interfaceHeight});
+		} else {
+			$(modalLoadedContent).css({"height":"auto"});
 		}
+
 		if(settings.fixedWidth){
-			$(modalLoadedContent).css({height:modalWidth - loadedWidth});
+			$(modalLoadedContent).css({"width":settings.fixedWidth - loadedWidth - interfaceWidth});
+		} else {
+			$(modalLoadedContent).css({"width":"auto"});
 		}
+
+		$(modalLoadedContent).hide().html(contentHtml).append(contentInfo);
+
 		if (settings.transition == "elastic") {
-			modalPosition(modalWidth, modalHeight, settings.transitionSpeed, function(){
+			modalPosition($(modalLoadedContent).outerWidth(true)+interfaceWidth, $(modalLoadedContent).outerHeight(true)+interfaceHeight, settings.transitionSpeed, function(){
 				$(modalLoadedContent).show();
 				$(modalLoadingOverlay).hide();
 			});
 		}
 		else {
 			$(modal).animate({"opacity":0}, settings.transitionSpeed, function(){
-				modalPosition(modalWidth, modalHeight, 0, function(){
+				modalPosition($(modalLoadedContent).outerWidth(true)+interfaceWidth, $(modalLoadedContent).outerHeight(true)+interfaceHeight, 0, function(){
 					$(modalLoadedContent).show();
 					$(modalLoadingOverlay).hide();
 					$(modal).animate({"opacity":1}, settings.transitionSpeed);
