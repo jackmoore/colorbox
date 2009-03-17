@@ -5,7 +5,7 @@
 */
 
 (function($){
-var loadedHeight, loadedWidth, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalOverlay, modalLoadingOverlay, modalContent, modalLoadedContent, modalClose, btl, btc, btr, bml, bmr, bbl, bbc, bbr;
+var loadedHeight, loadedWidth, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btl, btc, btr, bml, bmr, bbl, bbc, bbr;
 function setModalOverlay(){
 	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
@@ -22,7 +22,7 @@ function keypressEvents(e){
 closeModal = function(){
 	$(modal).removeData("open");
 	$([modalOverlay, modal]).fadeOut("fast", function(){
-		$(modalLoadedContent).empty();
+		$(loaded).empty();
 		$([modalOverlay, modal]).hide();//Seems unnecessary, but sometimes IE6 does not hide the modal.
 	});
 	if(loadingElement){$(loadingElement).remove();}
@@ -66,7 +66,7 @@ $(function(){
 	);
 	$(modalContent).append(
 		$([
-			modalLoadedContent = $('<div id="modalLoadedContent"><a id="contentPrevious" href="#"></a><a id="contentNext" href="#"></a><span id="contentCurrent"></span><br id="modalInfoBr"/><span id="contentTitle"></span><div id="preloadPrevious"></div><div id="preloadNext"></div><div id="preloadClose"></div></div>')[0], 
+			loaded = $('<div id="modalLoadedContent"><a id="contentPrevious" href="#"></a><a id="contentNext" href="#"></a><span id="contentCurrent"></span><br id="modalInfoBr"/><span id="contentTitle"></span><div id="preloadPrevious"></div><div id="preloadNext"></div><div id="preloadClose"></div></div>')[0], 
 			modalLoadingOverlay = $('<div id="modalLoadingOverlay" />')[0],
 			modalClose = $('<a id="modalClose" href="#"></a>')[0]
 		])
@@ -80,8 +80,8 @@ $(function(){
 	$(modal).css("opacity", 0).show();
 	interfaceHeight = $(btc).height()+$(bbc).height();
 	interfaceWidth = $(bml).width()+$(bmr).width();
-	loadedHeight = $(modalLoadedContent).outerHeight(true);
-	loadedWidth = $(modalLoadedContent).outerWidth(true);
+	loadedHeight = $(loaded).outerHeight(true);
+	loadedWidth = $(loaded).outerWidth(true);
 	$(modal).css({"padding-bottom":interfaceHeight,"padding-right":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
 });
 
@@ -132,30 +132,21 @@ $.fn.colorbox = function(settings) {
 	}
 	
 	function centerModal(contentHtml, contentInfo){
-		if(settings.fixedHeight){
-			$(modalLoadedContent).css({"height":settings.fixedHeight - loadedHeight - interfaceHeight});
-		} else {
-			$(modalLoadedContent).css({"height":"auto"});
-		}
-
-		if(settings.fixedWidth){
-			$(modalLoadedContent).css({"width":settings.fixedWidth - loadedWidth - interfaceWidth});
-		} else {
-			$(modalLoadedContent).css({"width":"auto"});
-		}
-
-		$(modalLoadedContent).hide().html(contentHtml).append(contentInfo);
+		$(loaded)
+		.css({"height":(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:"auto", "width":(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:"auto"})
+		.hide().html(contentHtml).append(contentInfo);
 
 		if (settings.transition == "elastic") {
-			modalPosition($(modalLoadedContent).outerWidth(true)+interfaceWidth, $(modalLoadedContent).outerHeight(true)+interfaceHeight, settings.transitionSpeed, function(){
-				$(modalLoadedContent).show();
+			modalPosition($(loaded).outerWidth(true)+interfaceWidth, $(loaded).outerHeight(true)+interfaceHeight, settings.transitionSpeed, function(){
+				$(loaded).show();
 				$(modalLoadingOverlay).hide();
 			});
 		}
 		else {
+			if(settings.transition=="none"){settings.transitionSpeed = 0}
 			$(modal).animate({"opacity":0}, settings.transitionSpeed, function(){
-				modalPosition($(modalLoadedContent).outerWidth(true)+interfaceWidth, $(modalLoadedContent).outerHeight(true)+interfaceHeight, 0, function(){
-					$(modalLoadedContent).show();
+				modalPosition($(loaded).outerWidth(true)+interfaceWidth, $(loaded).outerHeight(true)+interfaceHeight, 0, function(){
+					$(loaded).show();
 					$(modalLoadingOverlay).hide();
 					$(modal).animate({"opacity":1}, settings.transitionSpeed);
 				});
@@ -181,7 +172,7 @@ $.fn.colorbox = function(settings) {
 			centerModal("<iframe  frameborder=0 src =" + that.href + "></iframe>", contentInfo);
 		} else if (that.href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i) && !settings.contentAjax){
 			loadingElement = $("<img />").load(function(){
-				centerModal("<img src='"+that.href+"' alt=''/>", contentInfo);
+				centerModal("<a id='imageNext' href='#'><img src='"+that.href+"' alt='' /></a>", contentInfo);
 			}).attr("src",that.href);
 		}else {
 			loadingElement = $('<div></div>').load(((settings.contentAjax) ? settings.contentAjax : that.href), function(data, textStatus){
@@ -228,7 +219,7 @@ $.fn.colorbox = function(settings) {
 			}
 			$(modal).css({"opacity":1});
 			buildGallery(related[index]);
-			$("a#contentPrevious, a#contentNext").die().live("click", contentNav);
+			$("a#contentPrevious, a#contentNext, a#imageNext").die().live("click", contentNav);
 			$(document).bind('keydown', keypressEvents);
 			if ($.browser.msie && $.browser.version < 7) {
 				$(window).bind("resize scroll", setModalOverlay);
@@ -236,6 +227,10 @@ $.fn.colorbox = function(settings) {
 		}
 		return false;
 	});
+
+	if(settings.overlayClose!==false){
+		$(modalOverlay).css({"cursor":"pointer"}).click(function(){closeModal();});
+	}
 
 	if(settings.open!==false && $(modal).data("open")!==true){
 		$(this).triggerHandler('click.colorbox');
@@ -255,11 +250,11 @@ $.fn.colorbox = function(settings) {
 	Example (Specific)	: $("a[href='http://www.google.com']").colorbox({fixedWidth:"700px", fixedHeight:"450px", contentIframe:true});
 */
 $.fn.colorbox.settings = {
-	transition : "elastic", // "elastic" or "fade". Set transitionSpeed to 0 for no transition.
-	transitionSpeed : 350, // Sets the speed of the fade and elastic transition, in milliseconds. Set to 0 for no transition.
+	transition : "elastic", // Transition types: "elastic", "fade", or "none".
+	transitionSpeed : 350, // Sets the speed of the fade and elastic transitions, in milliseconds.
 	initialWidth : "50%", // Set the initial width of the modal, prior to any content being loaded.
 	initialHeight : "50%", // Set the initial height of the modal, prior to any content being loaded.
-	fixedWidth : false, // Set a fixed width for div#modalLoadedContent.  Example: "500px"
+	fixedWidth : false, // Set a fixed width for div#loaded.  Example: "500px"
 	fixedHeight : false, // Set a fixed height for div#modalLoadedContent.  Example: "500px"
 	contentAjax : false, // Set this to the file, or file+selector of content that will be loaded through an external file.  Example "include.html" or "company.inc.php div#ceo_bio"
 	contentInline : false, // Set this to the selector, in jQuery selector format, of inline content to be displayed.  Example "#myHiddenDiv".
@@ -270,7 +265,8 @@ $.fn.colorbox.settings = {
 	contentPrevious : "previous", // the anchor text for the previous link in a shared relation group (same values for 'rel').
 	contentNext : "next", // the anchor text for the next link in a shared relation group (same 'rel' attribute').
 	modalClose : "close", // the anchor text for the close link.  Esc will also close the modal.
-	open : false //Automatically opens ColorBox. (fires the click.colorbox event without waiting for user input).
+	open : false, //Automatically opens ColorBox. (fires the click.colorbox event without waiting for user input).
+	overlayClose : false  //If true, enables closing ColorBox by clicking on the background overlay.
 };
 
 })(jQuery);
