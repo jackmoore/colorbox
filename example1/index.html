@@ -6,6 +6,7 @@
 		<style type="text/css">
 			body{font:12px/1.5 Verdana, Arial, san-serrif;}
 			a:link, a:visited{text-decoration:none; color:#6599CB;}
+			h2{font-size:13px;}
 		</style>
 		<link type="text/css" media="screen" rel="stylesheet" href="../colorbox/colorbox.css" />
 		<link type="text/css" media="screen" rel="stylesheet" href="colorbox-custom.css" />
@@ -17,23 +18,50 @@
 		<script type="text/javascript" src="../colorbox/jquery.colorbox.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
-				$.fn.colorbox.settings.transition = "fade";
 				$.fn.colorbox.settings.bgOpacity = "0.9";
 				$.fn.colorbox.settings.contentCurrent = "image {current} of {total}";
-				$(".cpModal").colorbox();
+
+				$("#cumberland").colorbox({fixedWidth:"75%",fixedHeight:"75%"});
+
+				$("a[rel='jack']").colorbox({transition:"fade"});
+				$("a[rel='dogs']").colorbox({transition:"elastic"});
+				$("a[rel='marylou']").colorbox({transition:"none"});
+				$("a[rel='brandy']").colorbox({fixedWidth:850, fixedHeight:"600px"});
+
 				$("#ajax").colorbox();
-				$("#flash").colorbox({contentAjax:"../content/flash.html"});
-				$("#google").colorbox({fixedWidth:"750px", fixedHeight:"450px", contentIframe:true});
-				$("#inline").colorbox({fixedWidth:"500px", contentInline:"#inline-content"});
+				$("#flash").colorbox({href:"../content/flash.html"});
+				$("#google").colorbox({fixedWidth:"750px", fixedHeight:500, iframe:true});
+				$("#inline").colorbox({fixedWidth:"50%", inline:true, href:"#inline-content"});
 			});
 		</script>
 	</head>
 	<body>
-		<p><a class="cpModal" href="../content/marylou.jpg" title="Marylou on Cumberland Island">Single Photo</a></p>
-		<p><a class="cpModal" href="../content/ohoopee1.jpg" rel="family-photos" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
-		<p><a class="cpModal" href="../content/ohoopee2.jpg" rel="family-photos" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
-		<p><a class="cpModal" href="../content/ohoopee3.jpg" rel="family-photos" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
-		<p><a id="ajax" href="../content/ajax.html">Ajax HTML</a></p>
+		
+		<h2>Grouped Photos: Fade Transition</h2>
+		<p><a href="../content/ohoopee1.jpg" rel="jack" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee2.jpg" rel="jack" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a href="../content/ohoopee3.jpg" rel="jack" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+		
+		<h2>Grouped Photos: Elastic Transition</h2>
+		<p><a href="../content/ohoopee1.jpg" rel="dogs" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee2.jpg" rel="dogs" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a href="../content/ohoopee3.jpg" rel="dogs" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+
+		<h2>Grouped Photos: No Transition</h2>
+		<p><a href="../content/ohoopee1.jpg" rel="marylou" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee2.jpg" rel="marylou" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a href="../content/ohoopee3.jpg" rel="marylou" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+
+		<h2>Grouped Photos: Fixed Size (800x550)</h2>
+		<p><a href="../content/ohoopee1.jpg" rel="brandy" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee2.jpg" rel="brandy" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a href="../content/ohoopee3.jpg" rel="brandy" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+
+		<h2>Single Photo: Fixed Size (75% of Screen Size)</h2>
+		<p><a id="cumberland" href="../content/marylou.jpg" title="Marylou on Cumberland Island">Single Photo</a></p>
+
+		<h2>Other Content Types</h2>
+		<p><a id="ajax" href="../content/ajax.html">Ajax</a></p>
 		<p><a id="inline" href="#">Inline HTML</a></p>
 		<p><a id="flash" href="http://www.youtube.com/watch?v=lBvaHZIrt0" title="Royksopp: Remind Me">Flash / Video</a></p>
 		<p><a id="google" href="http://www.google.com">Iframed Content</a></p>
