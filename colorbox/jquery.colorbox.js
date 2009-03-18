@@ -5,18 +5,18 @@
 */
 
 (function($){
-var loadedHeight, loadedWidth, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btl, btc, btr, bml, bmr, bbl, bbc, bbr;
+var loadedHeight, loadedWidth, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btl, btc, btr, bml, bmr, bbl, bbc, bbr;
 function setModalOverlay(){
 	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
 function keypressEvents(e){
 	if(e.keyCode == 37){
-		$("a#contentPrevious").click();
 		$(document).unbind('keydown', keypressEvents);
+		$("a#contentPrevious").click();
 	}
 	else if(e.keyCode == 39){
-		$("a#contentNext").click();
 		$(document).unbind('keydown', keypressEvents);
+		$("a#contentNext").click();
 	}
 }
 closeModal = function(){
@@ -31,7 +31,7 @@ closeModal = function(){
 };
 // Convert % values to pixels
 function setSize(size, dimension){
-	return (typeof size == 'string') ? (size.match(/%/) ? (dimension/100)*parseInt(size) : parseInt(size)) : size;
+	return (typeof size == 'string') ? (size.match(/%/) ? (dimension/100)*parseInt(size, 10) : parseInt(size, 10)) : size;
 }
 function windowHeight(){return typeof window.innerHeight == 'number' ? window.innerHeight : document.documentElement.clientHeight;}
 function windowWidth(){return typeof window.innerWidth == 'number' ? window.innerWidth : document.documentElement.clientWidth;}
@@ -90,7 +90,7 @@ $.fn.colorbox = function(settings) {
 	settings = $.extend({}, $.fn.colorbox.settings, settings);
 
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
-	function modalPosition(modalWidth, modalHeight, transitionSpeed, callback){
+	function modalPosition(modalWidth, modalHeight, speed, callback){
 		var winHeight = windowHeight();
 		var posTop = winHeight/2 - modalHeight/2 + $(window).scrollTop();
 		var posLeft = $(window).width()/2 - modalWidth/2 + $(window).scrollLeft();
@@ -107,7 +107,7 @@ $.fn.colorbox = function(settings) {
 			modalContent.style.height = bml.style.height = bmr.style.height = that.style.height;
 		}
 
-		$(modal).animate({height:modalHeight, width:modalWidth, top:posTop, left:posLeft}, {duration: transitionSpeed,
+		$(modal).animate({height:modalHeight, width:modalWidth, top:posTop, left:posLeft}, {duration: speed,
 			complete: function(){
 				if (callback) {callback();}
 				modalDimensions(this);
@@ -132,23 +132,24 @@ $.fn.colorbox = function(settings) {
 	}
 	
 	function centerModal(contentHtml, contentInfo){
+		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
 		$(loaded)
 		.css({"height":(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:"auto", "width":(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:"auto"})
 		.hide().html(contentHtml).append(contentInfo);
 
 		if (settings.transition == "elastic") {
-			modalPosition($(loaded).outerWidth(true)+interfaceWidth, $(loaded).outerHeight(true)+interfaceHeight, settings.transitionSpeed, function(){
+			modalPosition($(loaded).outerWidth(true)+interfaceWidth, $(loaded).outerHeight(true)+interfaceHeight, speed, function(){
 				$(loaded).show();
 				$(modalLoadingOverlay).hide();
 			});
 		}
 		else {
-			if(settings.transition=="none"){settings.transitionSpeed = 0}
-			$(modal).animate({"opacity":0}, settings.transitionSpeed, function(){
+			
+			$(modal).animate({"opacity":0}, speed, function(){
 				modalPosition($(loaded).outerWidth(true)+interfaceWidth, $(loaded).outerHeight(true)+interfaceHeight, 0, function(){
 					$(loaded).show();
 					$(modalLoadingOverlay).hide();
-					$(modal).animate({"opacity":1}, settings.transitionSpeed);
+					$(modal).animate({"opacity":1}, speed);
 				});
 			});
 		}
@@ -156,7 +157,7 @@ $.fn.colorbox = function(settings) {
 	}
 
 	function buildGallery(that){
-
+		var href = settings.href ? settings.href : that.href;
 		var contentInfo = "<span id='contentTitle'>"+that.title+"</span>";
 		
 		if(related.length>1){
@@ -166,20 +167,20 @@ $.fn.colorbox = function(settings) {
 			contentInfo += "<a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
 		}
 
-		if (settings.contentInline) {
-			centerModal($(settings.contentInline).html(), contentInfo);
-		} else if (settings.contentIframe) {
-			centerModal("<iframe  frameborder=0 src =" + that.href + "></iframe>", contentInfo);
-		} else if (that.href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i) && !settings.contentAjax){
+		if (settings.inline) {
+			centerModal($(href).html(), contentInfo);
+		} else if (settings.iframe) {
+			centerModal("<iframe  frameborder=0 src =" + href + "></iframe>", contentInfo);
+		} else if (href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i)){
 			loadingElement = $("<img />").load(function(){
-				centerModal("<a id='imageNext' href='#'><img src='"+that.href+"' alt='' /></a>", contentInfo);
-			}).attr("src",that.href);
+				centerModal("<img id='imageNext' src='"+href+"' alt='' "+(settings.fixedWidth ? "style='margin:auto'" : "")+" />", contentInfo);
+			}).attr("src",href);
 		}else {
-			loadingElement = $('<div></div>').load(((settings.contentAjax) ? settings.contentAjax : that.href), function(data, textStatus){
+			loadingElement = $('<div></div>').load(href, function(data, textStatus){
 				if(textStatus == "success"){
 					centerModal($(this).html(), contentInfo);
 				} else {
-					centerModal("<p>Ajax request unsuccessful</p>");
+					centerModal("<p>Request unsuccessful.</p>");
 				}
 			});
 		}
@@ -199,10 +200,8 @@ $.fn.colorbox = function(settings) {
 	$(this).bind("click.colorbox", function () {
 		if ($(modal).data("open") !== true) {
 			$(modal).data("open", true);
-
 			if(settings.fixedWidth){ settings.fixedWidth = setSize(settings.fixedWidth, windowWidth());}
 			if(settings.fixedHeight){ settings.fixedHeight = setSize(settings.fixedHeight, windowHeight());}
-
 			$(modalClose).html(settings.modalClose);
 			$(modalOverlay).css({"opacity": settings.bgOpacity});
 			$([modal, modalLoadingOverlay, modalOverlay]).show();
@@ -219,7 +218,7 @@ $.fn.colorbox = function(settings) {
 			}
 			$(modal).css({"opacity":1});
 			buildGallery(related[index]);
-			$("a#contentPrevious, a#contentNext, a#imageNext").die().live("click", contentNav);
+			$("a#contentPrevious, a#contentNext, #imageNext").die().live("click", contentNav);
 			$(document).bind('keydown', keypressEvents);
 			if ($.browser.msie && $.browser.version < 7) {
 				$(window).bind("resize scroll", setModalOverlay);
@@ -256,9 +255,10 @@ $.fn.colorbox.settings = {
 	initialHeight : "50%", // Set the initial height of the modal, prior to any content being loaded.
 	fixedWidth : false, // Set a fixed width for div#loaded.  Example: "500px"
 	fixedHeight : false, // Set a fixed height for div#modalLoadedContent.  Example: "500px"
-	contentAjax : false, // Set this to the file, or file+selector of content that will be loaded through an external file.  Example "include.html" or "company.inc.php div#ceo_bio"
-	contentInline : false, // Set this to the selector, in jQuery selector format, of inline content to be displayed.  Example "#myHiddenDiv".
-	contentIframe : false, // If 'true' specifies that content should be displayed in an iFrame.
+	inline : false, // Set this to the selector, in jQuery selector format, of inline content to be displayed.  Example "#myHiddenDiv".
+	iframe : false, // If 'true' specifies that content should be displayed in an iFrame.
+	href : false, 
+	loadingAnimationSteps:15,
 	bgOpacity : 0.85, // The modalBackgroundOverlay opacity level. Range: 0 to 1.
 	preloading : true, // Allows for preloading of 'Next' and 'Previous' content in a shared relation group (same values for the 'rel' attribute), after the current content has finished loading.  Set to 'false' to disable.
 	contentCurrent : "{current} of {total}", // the format of the contentCurrent information
