@@ -1,5 +1,5 @@
 #colorbox, #modalBackgroundOverlay, #modalWrap{position:absolute; top:0; left:0; z-index:9999;}
-#modalBackgroundOverlay{position:fixed; width:100%; height:100%}
+#modalBackgroundOverlay{position:fixed; width:100%; height:100%;}
 #colorbox{overflow:hidden; padding:1px; margin-top:-1px; margin-left:-1px;}/*padding fixes a ghosting issue in IE7, the negative margin compensates */
 	#modalWrap{width:9000px; height:9000px;}
 		#modalContent, #borderTopLeft, #borderTopCenter, #borderTopRight, #borderBottomLeft, #borderBottomCenter, #borderBottomRight, #borderMiddleLeft, #borderMiddleRight {float:left;}
@@ -11,5 +11,4 @@
 			#modalLoadedContent img#imageNext{display:block; border:0; cursor:pointer;}
 			#modalLoadedContent embed{display:block; border:0;}/* Display:block removes the line-height gap underneath images, iframes, and embedded content */
 			#modalLoadingOverlay{position:absolute; width:100%; height:100%; top:0; left:0;}
-			
 			#modalTemp{position:absolute; top:0; left:0; display:none;}

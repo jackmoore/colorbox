@@ -21,9 +21,8 @@ function keypressEvents(e){
 }
 closeModal = function(){
 	$(modal).removeData("open");
-	$([modalOverlay, modal]).fadeOut("fast", function(){
-		$(loaded).empty();
-		$([modalOverlay, modal]).hide();//Seems unnecessary, but sometimes IE6 does not hide the modal.
+	$([modalOverlay, modal]).css({cursor:"auto"}).fadeOut("fast", function(){
+		$([loaded, modalTemp]).empty();
 	});
 	if(loadingElement){$(loadingElement).remove();}
 	$(document).unbind('keydown', keypressEvents);
@@ -82,6 +81,8 @@ $(function(){
 	interfaceHeight = $(btc).height()+$(bbc).height();
 	interfaceWidth = $(bml).width()+$(bmr).width();
 	$(modal).css({"padding-bottom":interfaceHeight,"padding-right":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
+
+	if ($.browser.msie && $.browser.version > 7) {$(modalWrap).css({position:"static"});}//IE8 creates a completely unnecessary horizontal scrollbar.  I've submitted a bug report with the details - hopefully MS will fix this for the public release.
 });
 
 $.fn.colorbox = function(settings) {
@@ -131,12 +132,11 @@ $.fn.colorbox = function(settings) {
 	}
 	
 	function centerModal(contentHtml, contentInfo){
-
 		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
 		$(loaded).hide().css({width:0, height:0});
 		$(modalTemp).css({width:(settings.fixedWidth)?settings.fixedWidth - $(loaded).outerWidth(true) - interfaceWidth:"auto", height:(settings.fixedHeight)?settings.fixedHeight - $(loaded).outerHeight(true) - interfaceHeight:"auto"}).html(contentHtml);
 		$(loaded).html(contentHtml).append(contentInfo).css({height:$(modalTemp).height(), width:$(modalTemp).width()});
-
+		
 		function setPosition(s){
 			modalPosition($(loaded).outerWidth(true)+interfaceWidth, $(loaded).outerHeight(true)+interfaceHeight, s, function(){
 				$(loaded).show();
@@ -219,12 +219,12 @@ $.fn.colorbox = function(settings) {
 				$(window).bind("resize scroll", setModalOverlay);
 			}
 		}
+		if(settings.overlayClose!==false){
+			$(modalOverlay).css({"cursor":"pointer"}).click(function(){closeModal();});
+		}
 		return false;
 	});
 
-	if(settings.overlayClose!==false){
-		$(modalOverlay).css({"cursor":"pointer"}).click(function(){closeModal();});
-	}
 
 	if(settings.open!==false && $(modal).data("open")!==true){
 		$(this).triggerHandler('click.colorbox');
@@ -246,8 +246,8 @@ $.fn.colorbox = function(settings) {
 $.fn.colorbox.settings = {
 	transition : "elastic", // Transition types: "elastic", "fade", or "none".
 	transitionSpeed : 350, // Sets the speed of the fade and elastic transitions, in milliseconds.
-	initialWidth : "50%", // Set the initial width of the modal, prior to any content being loaded.
-	initialHeight : "50%", // Set the initial height of the modal, prior to any content being loaded.
+	initialWidth : "500", // Set the initial width of the modal, prior to any content being loaded.
+	initialHeight : "500", // Set the initial height of the modal, prior to any content being loaded.
 	fixedWidth : false, // Set a fixed width for div#loaded.  Example: "500px"
 	fixedHeight : false, // Set a fixed height for div#modalLoadedContent.  Example: "500px"
 	inline : false, // Set this to the selector, in jQuery selector format, of inline content to be displayed.  Example "#myHiddenDiv".
@@ -261,7 +261,7 @@ $.fn.colorbox.settings = {
 	contentNext : "next", // the anchor text for the next link in a shared relation group (same 'rel' attribute').
 	modalClose : "close", // the anchor text for the close link.  Esc will also close the modal.
 	open : false, //Automatically opens ColorBox. (fires the click.colorbox event without waiting for user input).
-	overlayClose : false  //If true, enables closing ColorBox by clicking on the background overlay.
+	overlayClose : true  //If true, enables closing ColorBox by clicking on the background overlay.
 };
 
 })(jQuery);
