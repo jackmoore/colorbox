@@ -5,7 +5,7 @@
 */
 
 (function($){
-var interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btl, btc, btr, bml, bmr, bbl, bbc, bbr;
+var clone, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btl, btc, btr, bml, bmr, bbl, bbc, bbr;
 function setModalOverlay(){
 	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
@@ -21,6 +21,12 @@ function keypressEvents(e){
 }
 closeModal = function(){
 	$(modal).removeData("open");
+
+	if(clone){
+		$(clone).insertAfter(loadingElement);
+		clone = null;
+	}
+
 	$([modalOverlay, modal]).css({cursor:"auto"}).fadeOut("fast", function(){
 		$([loaded, modalTemp]).empty();
 	});
@@ -131,12 +137,13 @@ $.fn.colorbox = function(settings) {
 		}
 	}
 	
-	function centerModal(contentHtml, contentInfo){
+	function centerModal(object, contentInfo){
 		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
-		$(loaded).hide().css({width:0, height:0});
-		$(modalTemp).css({width:(settings.fixedWidth)?settings.fixedWidth - $(loaded).outerWidth(true) - interfaceWidth:"auto", height:(settings.fixedHeight)?settings.fixedHeight - $(loaded).outerHeight(true) - interfaceHeight:"auto"}).html(contentHtml);
-		$(loaded).html(contentHtml).append(contentInfo).css({height:$(modalTemp).height(), width:$(modalTemp).width()});
-		
+
+		$(loaded).hide().empty().css({width:0, height:0});
+		$(object).hide().appendTo('body').css({width:(settings.fixedWidth)?settings.fixedWidth - $(loaded).outerWidth(true) - interfaceWidth:"auto", height:(settings.fixedHeight)?settings.fixedHeight - $(loaded).outerHeight(true) - interfaceHeight:"auto"})
+		$(loaded).css({height:$(object).height(), width:$(object).width()}).append($(object).show()).append(contentInfo);
+
 		function setPosition(s){
 			modalPosition($(loaded).outerWidth(true)+interfaceWidth, $(loaded).outerHeight(true)+interfaceHeight, s, function(){
 				$(loaded).show();
@@ -162,20 +169,23 @@ $.fn.colorbox = function(settings) {
 			contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a> ";
 			contentInfo += "<a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
 		}
+
 		if (settings.inline) {
-			centerModal($(href).html(), contentInfo);
+			loadingElement = $('<div id="colorboxInlineTemp" />').hide().insertBefore($(href));
+			clone = $(href).clone(true);
+			centerModal($(href), contentInfo);
 		} else if (settings.iframe) {
-			centerModal("<iframe  frameborder=0 src =" + href + "></iframe>", contentInfo);
+			centerModal($("<div><iframe  frameborder=0 src =" + href + "></iframe></div>"), contentInfo);
 		} else if (href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i)){
 			loadingElement = $("<img />").load(function(){
-				centerModal("<img id='imageNext' src='"+href+"' alt='' "+(settings.fixedWidth ? "style='margin:auto'" : "")+" />", contentInfo);
+				centerModal($("<div><img id='imageNext' src='"+href+"' alt='' "+(settings.fixedWidth ? "style='margin:auto'" : "")+" /></div>"), contentInfo);
 			}).attr("src",href);
 		}else {
 			loadingElement = $('<div></div>').load(href, function(data, textStatus){
 				if(textStatus == "success"){
-					centerModal($(this).html(), contentInfo);
+					centerModal($(this), contentInfo);
 				} else {
-					centerModal("<p>Request unsuccessful.</p>");
+					centerModal($("<p>Request unsuccessful.</p>"));
 				}
 			});
 		}
