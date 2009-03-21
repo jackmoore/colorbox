@@ -36,11 +36,10 @@ closeModal = function(){
 function setSize(size, dimension){
 	return (typeof size == 'string') ? (size.match(/%/) ? (dimension/100)*parseInt(size, 10) : parseInt(size, 10)) : size;
 }
-function windowHeight(){return typeof window.innerHeight == 'number' ? window.innerHeight : document.documentElement.clientHeight;}
-function windowWidth(){return typeof window.innerWidth == 'number' ? window.innerWidth : document.documentElement.clientWidth;}
 
 //Initialize the modal: store common calculations, preload the interface graphics, append the html.
 $(function(){
+	
 	$("body").append(
 		$([
 			modalOverlay = $('<div id="modalBackgroundOverlay" />')[0], 
@@ -96,9 +95,9 @@ $.fn.colorbox = function(settings, callback) {
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
 	function modalPosition(mWidth, mHeight, speed, loadedCallback){
 
-		var winHeight = windowHeight();
+		var winHeight = document.documentElement.clientHeight;
 		var posTop = winHeight/2 - mHeight/2 + $(window).scrollTop();
-		var posLeft = $(window).width()/2 - mWidth/2 + $(window).scrollLeft();
+		var posLeft = document.documentElement.clientWidth/2 - mWidth/2 + $(window).scrollLeft();
 		//keeps the box from expanding to an inaccessible area offscreen.
 		if(mHeight > winHeight){posTop -=(mHeight - winHeight);}
 		if(posTop < 0){posTop = 0;} 
@@ -205,13 +204,13 @@ $.fn.colorbox = function(settings, callback) {
 		if ($(modal).data("open") !== true) {
 			$(modal).data("open", true);
 
-			if(settings.fixedWidth){ settings.fixedWidth = setSize(settings.fixedWidth, windowWidth());}
-			if(settings.fixedHeight){ settings.fixedHeight = setSize(settings.fixedHeight, windowHeight());}
+			if(settings.fixedWidth){ settings.fixedWidth = setSize(settings.fixedWidth, document.documentElement.clientWidth);}
+			if(settings.fixedHeight){ settings.fixedHeight = setSize(settings.fixedHeight, document.documentElement.clientHeight);}
 			$(modalClose).html(settings.modalClose);
 			$(modalOverlay).css({"opacity": settings.bgOpacity});
 			$([modal, modalLoadingOverlay, modalOverlay]).show();
 
-			modalPosition(setSize(settings.initialWidth, windowWidth()), setSize(settings.initialHeight, windowHeight()), 0);
+			modalPosition(setSize(settings.initialWidth, document.documentElement.clientWidth), setSize(settings.initialHeight, document.documentElement.clientHeight), 0);
 
 			if (this.rel) {
 				related = $("a[rel='" + this.rel + "']");
