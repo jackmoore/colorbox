@@ -39,7 +39,6 @@ function setSize(size, dimension){
 
 //Initialize the modal: store common calculations, preload the interface graphics, append the html.
 $(function(){
-	
 	$("body").append(
 		$([
 			modalOverlay = $('<div id="modalBackgroundOverlay" />')[0], 
@@ -138,11 +137,12 @@ $.fn.colorbox = function(settings, callback) {
 		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
 		$(loaded).remove();
 		loaded = object;
-		$(loaded).hide().appendTo('body').css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width(), height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:"auto"})
+
+		$(loaded).hide().appendTo('body').css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width()}).css({height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:$(loaded).height()})
 		.attr({id:"modalLoadedContent"}).append(contentInfo).prependTo($(modalContent));
 
 		function setPosition(s){
-			modalPosition($(loaded).outerWidth(true)+interfaceWidth, $(loaded).outerHeight(true)+interfaceHeight, s, function(){
+			modalPosition(parseInt(loaded.style.width)+loadedWidth+interfaceWidth, parseInt(loaded.style.height)+loadedHeight+interfaceHeight, s, function(){
 				$(loaded).show();
 				$(modalLoadingOverlay).hide();
 				if (callback) {callback();}
@@ -176,7 +176,7 @@ $.fn.colorbox = function(settings, callback) {
 			centerModal($("<div><iframe  frameborder=0 src =" + href + "></iframe></div>"), contentInfo);
 		} else if (href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i)){
 			loadingElement = $("<img />").load(function(){
-				centerModal($("<div><img id='imageNext' src='"+href+"' alt='' "+(settings.fixedWidth ? "style='margin:auto'" : "")+" /></div>"), contentInfo);
+				centerModal($("<div style='display: table-cell; vertical-align: middle; position: static;'><img id='modalPhoto' src='"+href+"' alt='' "+(settings.fixedWidth ? "style='margin:auto'" : "")+" /></div>"), contentInfo);
 			}).attr("src",href);
 		}else {
 			loadingElement = $('<div></div>').load(href, function(data, textStatus){
@@ -209,9 +209,7 @@ $.fn.colorbox = function(settings, callback) {
 			$(modalClose).html(settings.modalClose);
 			$(modalOverlay).css({"opacity": settings.bgOpacity});
 			$([modal, modalLoadingOverlay, modalOverlay]).show();
-
 			modalPosition(setSize(settings.initialWidth, document.documentElement.clientWidth), setSize(settings.initialHeight, document.documentElement.clientHeight), 0);
-
 			if (this.rel) {
 				related = $("a[rel='" + this.rel + "']");
 				index = $(related).index(this);
@@ -222,7 +220,7 @@ $.fn.colorbox = function(settings, callback) {
 			}
 			$(modal).css({"opacity":1});
 			buildGallery(related[index]);
-			$("a#contentPrevious, a#contentNext, #imageNext").die().live("click", contentNav);
+			$("a#contentPrevious, a#contentNext, #modalPhoto").die().live("click", contentNav);
 			$(document).bind('keydown', keypressEvents);
 			if ($.browser.msie && $.browser.version < 7) {
 				$(window).bind("resize scroll", setModalOverlay);
@@ -250,7 +248,7 @@ $.fn.colorbox = function(settings, callback) {
 	
 	Please do not change these settings here, instead overwrite these settings when attaching the colorbox() event to your anchors.
 	Example (Global)	: $.fn.colorbox.settings.transition = "fade"; //changes the transition to fade for all colorBox() events proceeding it's declaration.
-	Example (Specific)	: $("a[href='http://www.google.com']").colorbox({fixedWidth:"700px", fixedHeight:"450px", contentIframe:true});
+	Example (Specific)	: $("a[href='http://www.google.com']").colorbox({fixedWidth:"90%", fixedHeight:"450px", iframe:true});
 */
 $.fn.colorbox.settings = {
 	transition : "elastic", // Transition types: "elastic", "fade", or "none".
@@ -259,13 +257,12 @@ $.fn.colorbox.settings = {
 	initialHeight : "400", // Set the initial height of the modal, prior to any content being loaded.
 	fixedWidth : false, // Set a fixed width for div#loaded.  Example: "500px"
 	fixedHeight : false, // Set a fixed height for div#modalLoadedContent.  Example: "500px"
-	inline : false, // Set this to the selector, in jQuery selector format, of inline content to be displayed.  Example "#myHiddenDiv".
+	inline : false, // Set this to the selector of inline content to be displayed.  Example "#myHiddenDiv" or "body p".
 	iframe : false, // If 'true' specifies that content should be displayed in an iFrame.
-	href : false, 
-	loadingAnimationSteps:15,
+	href : false, // This can be used as an alternate anchor URL for ColorBox to use, or can be used to assign a URL for non-anchor elments such as images or form buttons.
 	bgOpacity : 0.85, // The modalBackgroundOverlay opacity level. Range: 0 to 1.
 	preloading : true, // Allows for preloading of 'Next' and 'Previous' content in a shared relation group (same values for the 'rel' attribute), after the current content has finished loading.  Set to 'false' to disable.
-	contentCurrent : "{current} of {total}", // the format of the contentCurrent information
+	contentCurrent : "image {current} of {total}", // the format of the contentCurrent information
 	contentPrevious : "previous", // the anchor text for the previous link in a shared relation group (same values for 'rel').
 	contentNext : "next", // the anchor text for the next link in a shared relation group (same 'rel' attribute').
 	modalClose : "close", // the anchor text for the close link.  Esc will also close the modal.

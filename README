@@ -11,9 +11,40 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
+Version 1.1.0 - March 21 2009
+Major Changes:
+* Animation is now much smoother and less resource intensive.
+* Added support for % sizing.
+* Callback option added
+* Inline content now preserves JavaScript events, and changes made while ColorBox is open are also preserved.
+* Added 'href' setting to add the ability to set an alternative href for any anchor, or to assign the
+  ColorBox event to non-anchors.  
+  Example: $('button').colorbox({'href':'process.php'})
+  Example: $('a[href='http://msn.com']).colorbox({'href':'http://google.com', iframe:true});
+  
+Minor Changes:
+* Photos are now horizontally centered if they are smaller than the lightbox size.  Also vertically centered
+  for browsers newer than IE7.
+* Buttons in the examples are now included in the 'protected zone'.  The lightbox will never expand it's 
+  borders or buttons beyond an accessible area of the screen.
+* Keypress events don't queue up by holding down the arrow keys.
+* Added option to close ColorBox by clicking on the background overlay.
+* Added 'none' transition setting.
+* Changed 'contentIframe' and 'contentInline' to 'inline' and 'iframe'.  Removed 'contentAjax' because it
+  is automatically assumed for non-image file types.
+* Changed 'contentWidth' and 'contentHeight' to 'fixedWidth' and 'fixedHeight'.  These sizes now reflect
+  the total size of the lightbox, not just the inner content.  This is so users can accurately anticipate
+  % sizes without fear of creating scrollbars.
+* Clicking on a photo will now switch to the next photo in a set.
+* Loading.gif is more stable in it's position.
+* Added a minified version.
+* Code passes JSLint.
+
+
 Version 1.0.5 - March 11 2009
 * Redo: Fixed a bug where IE would cut off the bottom portion of a photo, if the photo was larger than 
   the document dimensions.
+
 
 Version 1.0.4 - March 10 2009
 * Added an option to allow users to automatically open the lightbox.  
@@ -21,16 +52,20 @@ Version 1.0.4 - March 10 2009
 * Fixed a bug where IE would cut off the bottom portion of a photo, 
   if the photo was larger than the document dimensions.
 
+
 Version 1.0.3 - March 09 2009
 * Fixed vertical centering for Safari 3.0.x.
+
 
 Version 1.0.2 - March 06 2009
 * Corrected a typo.
 * Changed the content-type check so that it does not assume all links to photos should actually 
   display photos.  This allows for Ajax/inline/and iframe calls on anchors linking to picture file types.
 
+
 Version 1.0.1 - March 05 2009
 * Fixed keydown events (esc, left arrow, right arrow) for Webkit browsers.
+
 
 Version 1.0 - March 03 2009
 * First release

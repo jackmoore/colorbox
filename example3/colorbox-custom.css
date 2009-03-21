@@ -7,7 +7,7 @@
 
 #colorbox{}
 	#modalContent{background:#000; margin-top:20px;}
-		#modalLoadedContent{background:#fff; border:10px solid #000;}
+		#modalLoadedContent{background:#000; padding:10px;}
 			#contentTitle{position:absolute; top:-20px; left:0; color:#fff;}
 			#contentCurrent{display:none;}
 			#contentPrevious{position:absolute; top:50%; left:10px; margin-top:-41px; background:url(images/controls.png) top left no-repeat; width:38px; height:81px; text-indent:-9999px;}

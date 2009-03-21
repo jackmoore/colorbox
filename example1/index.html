@@ -5,7 +5,7 @@
 		<title>ColorBox Example</title>
 		<style type="text/css">
 			body{font:12px/1.5 Verdana, Arial, san-serrif;}
-			a:link, a:visited{text-decoration:none; color:#6599CB;}
+			a:link, a:visited{text-decoration:none; color:#416CE5; border-bottom:1px solid #416CE5;}
 			h2{font-size:13px;}
 		</style>
 		<link type="text/css" media="screen" rel="stylesheet" href="../colorbox/colorbox.css" />
@@ -17,81 +17,64 @@
 		<script type="text/javascript">google.load("jquery", "1.3.2");</script>
 		<script type="text/javascript" src="../colorbox/jquery.colorbox.js"></script>
 		<script type="text/javascript">
+			//This hides the inline content if JavaScript is supported.
+			document.write("<style type='text/css'>.hidden{display:none;}<\/style>");
+			
 			$(document).ready(function(){
+				//Examples of Global Changes
 				$.fn.colorbox.settings.bgOpacity = "0.9";
-				$.fn.colorbox.settings.contentCurrent = "image {current} of {total}";
 
-				$("#cumberland").colorbox({fixedWidth:"100%",fixedHeight:"100%"}, function(){alert('hi!');});
-
+				//Examples of how to assign the ColorBox event to elements.
 				$("a[rel='jack']").colorbox({transition:"fade"});
-				$("a[rel='dogs']").colorbox({transition:"elastic"});
-				$("a[rel='marylou']").colorbox({transition:"none", fixedHeight:"100%"});
-				$("a[rel='brandy']").colorbox({fixedWidth:"100%", fixedHeight:"600px"});
-
-				$("#ajax").colorbox();
-				$("#click").click(function(){ $('#click').css({"background-color":"#f00"}) });
-				
-				
+				$("a[rel='dogs']").colorbox({transition:"elastic", contentCurrent:"{current} / {total}"});
+				$(".colorbox").colorbox({transition:"none", fixedWidth:"75%",fixedHeight:"75%", initialWidth:"75%", initialHeight:"75%"});
+				$("a.single").colorbox({}, function(){
+					alert('Howdy, this is an example callback.');
+				});
+				$("a[title='Homer Defined']").colorbox();
 				$("#flash").colorbox({href:"../content/flash.html"});
-				$("#google").colorbox({fixedWidth:"800px", fixedHeight:550, iframe:true});
-				//$("#inline").colorbox({fixedWidth:"50%", inline:true, href:"#inline-content p"});
-				$("#inline").colorbox({fixedWidth:"50%", inline:true, href:"#inline-content"});
-				
-				$("area").colorbox();
+				$("a[href='http://google.com']").colorbox({fixedWidth:"80%", fixedHeight:550, iframe:true});
+				$("#inline").colorbox({fixedWidth:"50%", inline:true, href:"#inline_example"});
+
+				//Example of preserving a JavaScript event for inline calls.
+				$("#click").click(function(){ 
+					$('#click').css({"background-color":"#f00", "color":"#fff", "cursor":"inherit"}).text("Open this window again and this message will still be here.");
+				});
 			});
 		</script>
 	</head>
 	<body>
-
-<img src="planets.gif" width="145" height="126" alt="Planets" usemap="#planetmap" />
-
-<map name="planetmap">
-  <area shape="rect" coords="0,0,82,126" alt="Sun" href="../content/ohoopee1.jpg" />
-  <area shape="circle" coords="90,58,3" alt="Mercury" href="../content/ohoopee2.jpg" />
-  <area shape="circle" coords="124,58,8" alt="Venus" href="../content/ohoopee3.jpg" />
-</map>
-
-		<h2>Grouped Photos: Fade Transition</h2>
+		<h1>ColorBox Examples</h1>
+		<h2>fade transition</h2>
 		<p><a href="../content/ohoopee1.jpg" rel="jack" title="Me and my grandfather on the Ohoopee">Grouped Photo 1</a></p>
 		<p><a href="../content/ohoopee2.jpg" rel="jack" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
 		<p><a href="../content/ohoopee3.jpg" rel="jack" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
 		
-		<h2>Grouped Photos: Elastic Transition</h2>
+		<h2>elastic transition + changed default photo numbering</h2>
 		<p><a href="../content/ohoopee1.jpg" rel="dogs" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
 		<p><a href="../content/ohoopee2.jpg" rel="dogs" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
 		<p><a href="../content/ohoopee3.jpg" rel="dogs" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
 
-		<h2>Grouped Photos: No Transition</h2>
-		<p><a href="../content/ohoopee1.jpg" rel="marylou" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
-		<p><a href="../content/ohoopee2.jpg" rel="marylou" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
-		<p><a href="../content/ohoopee3.jpg" rel="marylou" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+		<h2>no transition + fixed width and height (75% of screen size)</h2>
+		<p><a href="../content/ohoopee1.jpg" rel="marylou"  class='colorbox' title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee2.jpg" rel="marylou"  class='colorbox' title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a href="../content/ohoopee3.jpg" rel="marylou"  class='colorbox' title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
 
-		<h2>Grouped Photos: Fixed Size (800x550)</h2>
-		<p><a href="../content/ohoopee1.jpg" rel="brandy" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
-		<p><a href="../content/ohoopee2.jpg" rel="brandy" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
-		<p><a href="../content/ohoopee3.jpg" rel="brandy" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
-
-		<h2>Single Photo: Fixed Size (75% of Screen Size)</h2>
-		<p><a id="cumberland" href="../content/marylou.jpg" title="Marylou on Cumberland Island">Single Photo</a></p>
+		<h2>Single photo with callback example</h2>
+		<p><a class='single' href="../content/marylou.jpg" title="Marylou on Cumberland Island">Single Photo</a></p>
 
 		<h2>Other Content Types</h2>
-		<p><a id="ajax" title="Homer Defined" href="../content/ajax.html">Ajax</a></p>
+		<p><a href="http://google.com">Outside webpage (IFrame)</a></p>
+		<p><a title="Homer Defined" href="../content/ajax.html">Outside HTML (Ajax)</a></p>
 		<p><a id="inline" href="#">Inline HTML</a></p>
 		<p><a id="flash" href="http://www.youtube.com/watch?v=lBvaHZIrt0" title="Royksopp: Remind Me">Flash / Video</a></p>
-		<p><a id="google" href="http://www.google.com">Iframed Content</a></p>
+
 		<!-- This contains the hidden content for inline calls -->
-		<div>
-			<div id="inline-content">
-			<p>This Info comes from a hidden element loaded in the page</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin molestie orci quis diam. Integer lobortis urna non nisl. Nulla egestas scelerisque odio. Morbi mauris. Sed at pede nec mauris lacinia imperdiet. Aliquam rutrum lobortis sem. Curabitur ipsum. Sed eget lacus. In pellentesque dui in dolor. Maecenas auctor ante id augue. Etiam id purus. Nullam tempus, erat in facilisis dictum, libero ipsum mollis elit, sed congue metus nunc sit amet odio. Donec bibendum, neque ut feugiat varius, nibh enim dignissim mauris, et auctor urna diam non lacus. Donec ac turpis.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin molestie orci quis diam. Integer lobortis urna non nisl. Nulla egestas scelerisque odio. Morbi mauris. Sed at pede nec mauris lacinia imperdiet. Aliquam rutrum lobortis sem. Curabitur ipsum. Sed eget lacus. In pellentesque dui in dolor. Maecenas auctor ante id augue. Etiam id purus. Nullam tempus, erat in facilisis dictum, libero ipsum mollis elit, sed congue metus nunc sit amet odio. Donec bibendum, neque ut feugiat varius, nibh enim dignissim mauris, et auctor urna diam non lacus. Donec ac turpis.</p>
-			<a id="click" href="#">Close</a>
-			<select>
-			  <option value="volvo">Volvo</option>
-			  <option value="saab">Saab</option>
-			  <option value="mercedes">Mercedes</option>
-			  <option value="audi">Audi</option>
-			</select>
+		<div class='hidden'>
+			<div id='inline_example' style='padding:10px; background:#fff;'>
+			<p><strong>This content comes from a hidden element on this page.</strong></p>
+			<p>The inline option now moves content out of it's place in the document flow when ColorBox is opened.  It preserves bound JavaScript events and changes, and it puts the content back where it came from when it is closed.</p>
+			<a id="click" href="#" style='padding:5px; background:#ccc;'>Click me, it will be preserved!</a>
 			</div>
 		</div>
 	</body>
