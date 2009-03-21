@@ -136,7 +136,7 @@ $.fn.colorbox = function(settings, callback) {
 	function centerModal(object, contentInfo){
 		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
 		$(loaded).remove();
-		loaded = object;
+		loaded = $(object)[0];
 
 		$(loaded).hide().appendTo('body').css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width()}).css({height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:$(loaded).height()})
 		.attr({id:"modalLoadedContent"}).append(contentInfo).prependTo($(modalContent));
@@ -160,7 +160,7 @@ $.fn.colorbox = function(settings, callback) {
 	function buildGallery(that){
 		var href = settings.href ? settings.href : that.href;
 		var contentInfo = "<p id='contentTitle'>"+that.title+"</p>";
-		
+
 		if(related.length>1){
 			contentInfo += "<span id='contentCurrent'> " + settings.contentCurrent + "</span>";
 			contentInfo = contentInfo.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length);
