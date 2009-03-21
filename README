@@ -15,7 +15,7 @@ Version 1.1.0 - March 21 2009
 Major Changes:
 * Animation is now much smoother and less resource intensive.
 * Added support for % sizing.
-* Callback option added
+* Callback option added.
 * Inline content now preserves JavaScript events, and changes made while ColorBox is open are also preserved.
 * Added 'href' setting to add the ability to set an alternative href for any anchor, or to assign the
   ColorBox event to non-anchors.  
