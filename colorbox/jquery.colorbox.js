@@ -121,9 +121,7 @@ $.fn.colorbox = function(settings, callback) {
 			}
 		});
 	}
-
 	var preloads = [];
-
 	function preload(){
 		if(settings.preloading !== false && related.length>1){
 			var previous, next;
@@ -132,7 +130,6 @@ $.fn.colorbox = function(settings, callback) {
 			return [$("<img />").attr("src", next), $("<img />").attr("src", previous)];
 		}
 	}
-	
 	function centerModal(object, contentInfo){
 		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
 		$(loaded).remove();
