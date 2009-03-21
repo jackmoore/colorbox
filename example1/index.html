@@ -21,24 +21,38 @@
 				$.fn.colorbox.settings.bgOpacity = "0.9";
 				$.fn.colorbox.settings.contentCurrent = "image {current} of {total}";
 
-				$("#cumberland").colorbox({fixedWidth:"75%",fixedHeight:"75%"});
+				$("#cumberland").colorbox({fixedWidth:"100%",fixedHeight:"100%"}, function(){alert('hi!');});
 
 				$("a[rel='jack']").colorbox({transition:"fade"});
 				$("a[rel='dogs']").colorbox({transition:"elastic"});
-				$("a[rel='marylou']").colorbox({transition:"none"});
-				$("a[rel='brandy']").colorbox({fixedWidth:850, fixedHeight:"600px"});
+				$("a[rel='marylou']").colorbox({transition:"none", fixedHeight:"100%"});
+				$("a[rel='brandy']").colorbox({fixedWidth:"100%", fixedHeight:"600px"});
 
 				$("#ajax").colorbox();
+				$("#click").click(function(){ $('#click').css({"background-color":"#f00"}) });
+				
+				
 				$("#flash").colorbox({href:"../content/flash.html"});
-				$("#google").colorbox({fixedWidth:"750px", fixedHeight:500, iframe:true});
+				$("#google").colorbox({fixedWidth:"800px", fixedHeight:550, iframe:true});
+				//$("#inline").colorbox({fixedWidth:"50%", inline:true, href:"#inline-content p"});
 				$("#inline").colorbox({fixedWidth:"50%", inline:true, href:"#inline-content"});
+				
+				$("area").colorbox();
 			});
 		</script>
 	</head>
 	<body>
-		
+
+<img src="planets.gif" width="145" height="126" alt="Planets" usemap="#planetmap" />
+
+<map name="planetmap">
+  <area shape="rect" coords="0,0,82,126" alt="Sun" href="../content/ohoopee1.jpg" />
+  <area shape="circle" coords="90,58,3" alt="Mercury" href="../content/ohoopee2.jpg" />
+  <area shape="circle" coords="124,58,8" alt="Venus" href="../content/ohoopee3.jpg" />
+</map>
+
 		<h2>Grouped Photos: Fade Transition</h2>
-		<p><a href="../content/ohoopee1.jpg" rel="jack" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee1.jpg" rel="jack" title="Me and my grandfather on the Ohoopee">Grouped Photo 1</a></p>
 		<p><a href="../content/ohoopee2.jpg" rel="jack" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
 		<p><a href="../content/ohoopee3.jpg" rel="jack" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
 		
@@ -61,18 +75,23 @@
 		<p><a id="cumberland" href="../content/marylou.jpg" title="Marylou on Cumberland Island">Single Photo</a></p>
 
 		<h2>Other Content Types</h2>
-		<p><a id="ajax" href="../content/ajax.html">Ajax</a></p>
+		<p><a id="ajax" title="Homer Defined" href="../content/ajax.html">Ajax</a></p>
 		<p><a id="inline" href="#">Inline HTML</a></p>
 		<p><a id="flash" href="http://www.youtube.com/watch?v=lBvaHZIrt0" title="Royksopp: Remind Me">Flash / Video</a></p>
 		<p><a id="google" href="http://www.google.com">Iframed Content</a></p>
 		<!-- This contains the hidden content for inline calls -->
-		<div style="display:none">
+		<div>
 			<div id="inline-content">
-				<div style="padding:10px">
-				<p>This Info comes from a hidden element loaded in the page</p>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin molestie orci quis diam. Integer lobortis urna non nisl. Nulla egestas scelerisque odio. Morbi mauris. Sed at pede nec mauris lacinia imperdiet. Aliquam rutrum lobortis sem. Curabitur ipsum. Sed eget lacus. In pellentesque dui in dolor. Maecenas auctor ante id augue. Etiam id purus. Nullam tempus, erat in facilisis dictum, libero ipsum mollis elit, sed congue metus nunc sit amet odio. Donec bibendum, neque ut feugiat varius, nibh enim dignissim mauris, et auctor urna diam non lacus. Donec ac turpis.</p>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin molestie orci quis diam. Integer lobortis urna non nisl. Nulla egestas scelerisque odio. Morbi mauris. Sed at pede nec mauris lacinia imperdiet. Aliquam rutrum lobortis sem. Curabitur ipsum. Sed eget lacus. In pellentesque dui in dolor. Maecenas auctor ante id augue. Etiam id purus. Nullam tempus, erat in facilisis dictum, libero ipsum mollis elit, sed congue metus nunc sit amet odio. Donec bibendum, neque ut feugiat varius, nibh enim dignissim mauris, et auctor urna diam non lacus. Donec ac turpis.</p>
-				</div>
+			<p>This Info comes from a hidden element loaded in the page</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin molestie orci quis diam. Integer lobortis urna non nisl. Nulla egestas scelerisque odio. Morbi mauris. Sed at pede nec mauris lacinia imperdiet. Aliquam rutrum lobortis sem. Curabitur ipsum. Sed eget lacus. In pellentesque dui in dolor. Maecenas auctor ante id augue. Etiam id purus. Nullam tempus, erat in facilisis dictum, libero ipsum mollis elit, sed congue metus nunc sit amet odio. Donec bibendum, neque ut feugiat varius, nibh enim dignissim mauris, et auctor urna diam non lacus. Donec ac turpis.</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin molestie orci quis diam. Integer lobortis urna non nisl. Nulla egestas scelerisque odio. Morbi mauris. Sed at pede nec mauris lacinia imperdiet. Aliquam rutrum lobortis sem. Curabitur ipsum. Sed eget lacus. In pellentesque dui in dolor. Maecenas auctor ante id augue. Etiam id purus. Nullam tempus, erat in facilisis dictum, libero ipsum mollis elit, sed congue metus nunc sit amet odio. Donec bibendum, neque ut feugiat varius, nibh enim dignissim mauris, et auctor urna diam non lacus. Donec ac turpis.</p>
+			<a id="click" href="#">Close</a>
+			<select>
+			  <option value="volvo">Volvo</option>
+			  <option value="saab">Saab</option>
+			  <option value="mercedes">Mercedes</option>
+			  <option value="audi">Audi</option>
+			</select>
 			</div>
 		</div>
 	</body>

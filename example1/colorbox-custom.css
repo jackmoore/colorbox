@@ -16,7 +16,7 @@
 	#borderMiddleRight{width:21px; background:url(images/borderMiddleRight.png) 0 0 repeat-y;}
 	#modalContent{background:#fff;}
 		#modalLoadedContent{margin-bottom:28px;}
-			#contentTitle{position:absolute; bottom:3px; left:0; width:100%; text-align:center; font-weight:bold; color:#949494;}
+			#contentTitle{position:absolute; bottom:3px; left:0; text-align:center; width:100%; background:#fff; font-weight:bold; color:#949494;}
 			#contentCurrent{position:absolute; bottom:3px; left:58px; font-weight:bold; color:#949494;}
 			#contentPrevious{position:absolute; bottom:0; left:0px; background:url(images/controls.png) -25px 0px no-repeat; width:25px; height:25px; text-indent:-9999px;}
 			#contentPrevious:hover{background-position:-25px -25px;}

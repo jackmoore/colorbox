@@ -5,7 +5,7 @@
 */
 
 (function($){
-var clone, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btl, btc, btr, bml, bmr, bbl, bbc, bbr;
+var clone, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btc, bml, bmr, bbc;
 function setModalOverlay(){
 	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
@@ -21,14 +21,12 @@ function keypressEvents(e){
 }
 closeModal = function(){
 	$(modal).removeData("open");
-
-	if(clone){
-		$(clone).insertAfter(loadingElement);
-		clone = null;
+	
+	if($("#colorboxInlineTemp").length > 0){
+		$(loaded).children().insertAfter("#colorboxInlineTemp");
 	}
-
 	$([modalOverlay, modal]).css({cursor:"auto"}).fadeOut("fast", function(){
-		$([loaded, modalTemp]).empty();
+		$(loaded).remove();
 	});
 	if(loadingElement){$(loadingElement).remove();}
 	$(document).unbind('keydown', keypressEvents);
@@ -46,8 +44,7 @@ $(function(){
 	$("body").append(
 		$([
 			modalOverlay = $('<div id="modalBackgroundOverlay" />')[0], 
-			modal = $('<div id="colorbox" />')[0],
-			modalTemp = $('<div id="modalTemp" />')[0]
+			modal = $('<div id="colorbox" />')[0]
 		]).hide()
 	);
 	$(modal).append(
@@ -57,17 +54,11 @@ $(function(){
 	);
 	$(modalWrap).append(
 		$([
-			btl = $('<div id="borderTopLeft" />')[0],
-			btc = $('<div id="borderTopCenter" />')[0],
-			btr = $('<div id="borderTopRight" />')[0],
-			$("<br />")[0],
+			$('<div><div id="borderTopLeft"></div><div id="borderTopCenter"></div><div id="borderTopRight"></div></div>')[0],
 			bml = $('<div id="borderMiddleLeft" />')[0],
 			modalContent = $('<div id="modalContent" />')[0],
 			bmr = $('<div id="borderMiddleRight" />')[0],
-			$("<br />")[0],
-			bbl = $('<div id="borderBottomLeft" />')[0],
-			bbc = $('<div id="borderBottomCenter" />')[0],
-			bbr = $('<div id="borderBottomRight" />')[0]
+			$('<div><div id="borderBottomLeft"></div><div id="borderBottomCenter"></div><div id="borderBottomRight"></div></div>')[0]
 		])
 	);
 	$(modalContent).append(
@@ -81,22 +72,29 @@ $(function(){
 		closeModal();
 		return false;
 	});
+	
+	btc = $("#borderTopCenter")[0];
+	bbc = $("#borderBottomCenter")[0];
+	
 	$(document).bind('keydown', function(e){if(e.keyCode == 27){closeModal();}});
 
 	$(modal).css("opacity", 0).show();
-	interfaceHeight = $(btc).height()+$(bbc).height();
-	interfaceWidth = $(bml).width()+$(bmr).width();
-	$(modal).css({"padding-bottom":interfaceHeight,"padding-right":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
 
-	if ($.browser.msie && $.browser.version > 7) {$(modalWrap).css({position:"static"});}//IE8 creates a completely unnecessary horizontal scrollbar.  I've submitted a bug report with the details - hopefully MS will fix this for the public release.
+	interfaceHeight = $(btc).height()+$(bbc).height()+$(modalContent).outerHeight(true) - $(modalContent).height();//Subtraction needed for IE6
+	interfaceWidth = $(bml).width()+$(bmr).width()+$(modalContent).outerWidth(true) - $(modalContent).width();
+
+	loadedHeight = $(loaded).outerHeight(true);
+	loadedWidth = $(loaded).outerWidth(true);
+	$(loaded).empty();
+	$(modal).css({"padding-bottom":interfaceHeight,"padding-right":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
 });
 
-$.fn.colorbox = function(settings) {
+$.fn.colorbox = function(settings, callback) {
 
 	settings = $.extend({}, $.fn.colorbox.settings, settings);
 
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
-	function modalPosition(mWidth, mHeight, speed, callback){
+	function modalPosition(mWidth, mHeight, speed, loadedCallback){
 
 		var winHeight = windowHeight();
 		var posTop = winHeight/2 - mHeight/2 + $(window).scrollTop();
@@ -115,7 +113,7 @@ $.fn.colorbox = function(settings) {
 		}
 		$(modal).animate({height:mHeight, width:mWidth, top:posTop, left:posLeft}, {duration: speed,
 			complete: function(){
-				if (callback) {callback();}
+				if (loadedCallback) {loadedCallback();}
 				modalDimensions(this);
 				$(document).bind('keydown', keypressEvents);
 				if ($.browser.msie && $.browser.version < 7) {setModalOverlay();}
@@ -139,15 +137,16 @@ $.fn.colorbox = function(settings) {
 	
 	function centerModal(object, contentInfo){
 		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
-
-		$(loaded).hide().empty().css({width:0, height:0});
-		$(object).hide().appendTo('body').css({width:(settings.fixedWidth)?settings.fixedWidth - $(loaded).outerWidth(true) - interfaceWidth:"auto", height:(settings.fixedHeight)?settings.fixedHeight - $(loaded).outerHeight(true) - interfaceHeight:"auto"})
-		$(loaded).css({height:$(object).height(), width:$(object).width()}).append($(object).show()).append(contentInfo);
+		$(loaded).remove();
+		loaded = object;
+		$(loaded).hide().appendTo('body').css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width(), height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:"auto"})
+		.attr({id:"modalLoadedContent"}).append(contentInfo).prependTo($(modalContent));
 
 		function setPosition(s){
 			modalPosition($(loaded).outerWidth(true)+interfaceWidth, $(loaded).outerHeight(true)+interfaceHeight, s, function(){
 				$(loaded).show();
 				$(modalLoadingOverlay).hide();
+				if (callback) {callback();}
 				if (settings.transition == "fade"){$(modal).animate({"opacity":1}, speed);}
 			});
 		}
@@ -161,7 +160,7 @@ $.fn.colorbox = function(settings) {
 
 	function buildGallery(that){
 		var href = settings.href ? settings.href : that.href;
-		var contentInfo = "<span id='contentTitle'>"+that.title+"</span>";
+		var contentInfo = "<p id='contentTitle'>"+that.title+"</p>";
 		
 		if(related.length>1){
 			contentInfo += "<span id='contentCurrent'> " + settings.contentCurrent + "</span>";
@@ -171,9 +170,9 @@ $.fn.colorbox = function(settings) {
 		}
 
 		if (settings.inline) {
-			loadingElement = $('<div id="colorboxInlineTemp" />').hide().insertBefore($(href));
+			loadingElement = $('<div id="colorboxInlineTemp" />').hide().insertBefore($(href)[0]);
 			clone = $(href).clone(true);
-			centerModal($(href), contentInfo);
+			centerModal($(href).wrapAll("<div></div>").parent(), contentInfo);
 		} else if (settings.iframe) {
 			centerModal($("<div><iframe  frameborder=0 src =" + href + "></iframe></div>"), contentInfo);
 		} else if (href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i)){
@@ -205,6 +204,7 @@ $.fn.colorbox = function(settings) {
 	$(this).bind("click.colorbox", function () {
 		if ($(modal).data("open") !== true) {
 			$(modal).data("open", true);
+
 			if(settings.fixedWidth){ settings.fixedWidth = setSize(settings.fixedWidth, windowWidth());}
 			if(settings.fixedHeight){ settings.fixedHeight = setSize(settings.fixedHeight, windowHeight());}
 			$(modalClose).html(settings.modalClose);
@@ -256,8 +256,8 @@ $.fn.colorbox = function(settings) {
 $.fn.colorbox.settings = {
 	transition : "elastic", // Transition types: "elastic", "fade", or "none".
 	transitionSpeed : 350, // Sets the speed of the fade and elastic transitions, in milliseconds.
-	initialWidth : "500", // Set the initial width of the modal, prior to any content being loaded.
-	initialHeight : "500", // Set the initial height of the modal, prior to any content being loaded.
+	initialWidth : "400", // Set the initial width of the modal, prior to any content being loaded.
+	initialHeight : "400", // Set the initial height of the modal, prior to any content being loaded.
 	fixedWidth : false, // Set a fixed width for div#loaded.  Example: "500px"
 	fixedHeight : false, // Set a fixed height for div#modalLoadedContent.  Example: "500px"
 	inline : false, // Set this to the selector, in jQuery selector format, of inline content to be displayed.  Example "#myHiddenDiv".
