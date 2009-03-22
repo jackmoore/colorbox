@@ -20,13 +20,12 @@ function keypressEvents(e){
 	}
 }
 closeModal = function(){
-	$(modal).removeData("open");
-	
 	if($("#colorboxInlineTemp").length > 0){
 		$(loaded).children().insertAfter("#colorboxInlineTemp");
 	}
 	$([modalOverlay, modal]).css({cursor:"auto"}).fadeOut("fast", function(){
 		$(loaded).remove();
+		$(modal).removeData("open");
 	});
 	if(loadingElement){$(loadingElement).remove();}
 	$(document).unbind('keydown', keypressEvents);
@@ -173,7 +172,7 @@ $.fn.colorbox = function(settings, callback) {
 			centerModal($("<div><iframe  frameborder=0 src =" + href + "></iframe></div>"), contentInfo);
 		} else if (href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i)){
 			loadingElement = $("<img />").load(function(){
-				centerModal($("<div style='display: table-cell; vertical-align: middle; position: static;'><img id='modalPhoto' src='"+href+"' alt='' "+(settings.fixedWidth ? "style='margin:auto'" : "")+" /></div>"), contentInfo);
+				centerModal($("<div style='display: table-cell; vertical-align: middle; position: static;'><img id='modalPhoto' "+((related.length > 1)?"style='cursor:pointer;' class='modalPhoto'":"")+" src='"+href+"' alt='' /></div>"), contentInfo);
 			}).attr("src",href);
 		}else {
 			loadingElement = $('<div></div>').load(href, function(data, textStatus){
@@ -217,7 +216,7 @@ $.fn.colorbox = function(settings, callback) {
 			}
 			$(modal).css({"opacity":1});
 			buildGallery(related[index]);
-			$("a#contentPrevious, a#contentNext, #modalPhoto").die().live("click", contentNav);
+			$("a#contentPrevious, a#contentNext, .modalPhoto").die().live("click", contentNav);
 			$(document).bind('keydown', keypressEvents);
 			if ($.browser.msie && $.browser.version < 7) {
 				$(window).bind("resize scroll", setModalOverlay);
