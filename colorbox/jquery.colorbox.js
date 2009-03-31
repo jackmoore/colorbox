@@ -147,7 +147,7 @@ $.fn.colorbox = function(settings, callback) {
 		} else {
 			setPosition(speed);
 		}
-		var preloads = preload();
+		//var preloads = preload();
 	}
 
 	function buildGallery(that){
