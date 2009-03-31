@@ -1,5 +1,5 @@
 /*
-	ColorBox v1.1 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.1.1 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -87,9 +87,7 @@ $(function(){
 });
 
 $.fn.colorbox = function(settings, callback) {
-
 	settings = $.extend({}, $.fn.colorbox.settings, settings);
-
 	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
 	function modalPosition(mWidth, mHeight, speed, loadedCallback){
 
@@ -133,12 +131,11 @@ $.fn.colorbox = function(settings, callback) {
 		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
 		$(loaded).remove();
 		loaded = $(object)[0];
-
 		$(loaded).hide().appendTo('body').css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width()}).css({height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:$(loaded).height()})
 		.attr({id:"modalLoadedContent"}).append(contentInfo).prependTo($(modalContent));
 
 		function setPosition(s){
-			modalPosition(parseInt(loaded.style.width)+loadedWidth+interfaceWidth, parseInt(loaded.style.height)+loadedHeight+interfaceHeight, s, function(){
+			modalPosition(parseInt(loaded.style.width, 10)+loadedWidth+interfaceWidth, parseInt(loaded.style.height, 10)+loadedHeight+interfaceHeight, s, function(){
 				$(loaded).show();
 				$(modalLoadingOverlay).hide();
 				if (callback) {callback();}
@@ -156,23 +153,20 @@ $.fn.colorbox = function(settings, callback) {
 	function buildGallery(that){
 		var href = settings.href ? settings.href : that.href;
 		var contentInfo = "<p id='contentTitle'>"+that.title+"</p>";
-
 		if(related.length>1){
 			contentInfo += "<span id='contentCurrent'> " + settings.contentCurrent + "</span>";
 			contentInfo = contentInfo.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length);
-			contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a> ";
-			contentInfo += "<a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
+			contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a><a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
 		}
-
 		if (settings.inline) {
 			loadingElement = $('<div id="colorboxInlineTemp" />').hide().insertBefore($(href)[0]);
 			clone = $(href).clone(true);
 			centerModal($(href).wrapAll("<div></div>").parent(), contentInfo);
 		} else if (settings.iframe) {
-			centerModal($("<div><iframe  frameborder=0 src =" + href + "></iframe></div>"), contentInfo);
-		} else if (href.match(/.(gif|png|jpg|jpeg|bmp|tif)$/i)){
-			loadingElement = $("<img />").load(function(){
-				centerModal($("<div style='display: table-cell; vertical-align: middle; position: static;'><img id='modalPhoto' "+((related.length > 1)?"style='cursor:pointer;' class='modalPhoto'":"")+" src='"+href+"' alt='' /></div>"), contentInfo);
+			centerModal($("<div><iframe name='iframe_"+new Date().getTime()+" 'frameborder=0 src =" + href + "></iframe></div>"), contentInfo);//timestamp to prevent caching.
+		} else if (href.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i)){
+			loadingElement = $("<img id='modalPhoto' "+((related.length > 1)?"style='cursor:pointer;' class='modalPhoto'":"")+" alt='' />").load(function(){
+				centerModal($("<div style='display: table-cell; vertical-align: middle; position: static;' />").append($(this)), contentInfo);
 			}).attr("src",href);
 		}else {
 			loadingElement = $('<div></div>').load(href, function(data, textStatus){
@@ -206,7 +200,7 @@ $.fn.colorbox = function(settings, callback) {
 			$(modalOverlay).css({"opacity": settings.bgOpacity});
 			$([modal, modalLoadingOverlay, modalOverlay]).show();
 			modalPosition(setSize(settings.initialWidth, document.documentElement.clientWidth), setSize(settings.initialHeight, document.documentElement.clientHeight), 0);
-			if (this.rel) {
+			if (this.rel && 'nofollow' != this.rel) {
 				related = $("a[rel='" + this.rel + "']");
 				index = $(related).index(this);
 			}

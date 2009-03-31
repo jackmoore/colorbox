@@ -11,6 +11,14 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
+Version 1.1.1 - March 31 2009
+* More robust image detection regex.  Now detects image file types with url fragments and/or query strings.
+* Added 'nofollow' exception to rel grouping.
+* Changed how images are loaded into the DOM to prevent premature size calculation by ColorBox.
+* Added timestamp to iframe name to prevent caching - this was a problem in some browsers if the user had
+  multiple iframes and the visitor left the page and came back, or if they refreshed the page.
+
+
 Version 1.1.0 - March 21 2009
 Major Changes:
 * Animation is now much smoother and less resource intensive.
