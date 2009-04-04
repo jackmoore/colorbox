@@ -5,17 +5,16 @@
 */
 
 (function($){
-var clone, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btc, bml, bmr, bbc;
+var clone, loadingBay, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btc, bml, bmr, bbc;
 function setModalOverlay(){
 	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
 function keypressEvents(e){
 	if(e.keyCode == 37){
-		$(document).unbind('keydown', keypressEvents);
+		$(document).unbind('keydown.colorKeys');
 		$("a#contentPrevious").click();
-	}
-	else if(e.keyCode == 39){
-		$(document).unbind('keydown', keypressEvents);
+	} else if(e.keyCode == 39){
+		$(document).unbind('keydown.colorKeys');
 		$("a#contentNext").click();
 	}
 }
@@ -28,7 +27,7 @@ closeModal = function(){
 		$(modal).removeData("open");
 	});
 	if(loadingElement){$(loadingElement).remove();}
-	$(document).unbind('keydown', keypressEvents);
+	$(document).unbind('keydown.colorKeys');
 	$(window).unbind('resize scroll', setModalOverlay);
 };
 // Convert % values to pixels
@@ -41,14 +40,15 @@ $(function(){
 	$("body").append(
 		$([
 			modalOverlay = $('<div id="modalBackgroundOverlay" />')[0], 
-			modal = $('<div id="colorbox" />')[0]
+			modal = $('<div id="colorbox" />')[0],
+			loadingBay = $('<div id="modalLoadingBay" style="display:none" />')[0]
 		]).hide()
 	);
 	$(modal).append(
 		$([
 			modalWrap = $('<div id="modalWrap" />')[0]
 		])
-	);
+	).css("opacity", 0).show();
 	$(modalWrap).append(
 		$([
 			$('<div><div id="borderTopLeft"></div><div id="borderTopCenter"></div><div id="borderTopRight"></div></div>')[0],
@@ -65,17 +65,15 @@ $(function(){
 			modalClose = $('<a id="modalClose" href="#"></a>')[0]
 		])
 	);
-	$(modalClose).click(function(){
-		closeModal();
-		return false;
-	});
-	
+
+	$(modalClose).bind("keydown.colorClose", function(e){
+		if (e.keyCode == 27) {
+			closeModal();
+		}
+	}).click(function(){closeModal();return false;});
+
 	btc = $("#borderTopCenter")[0];
 	bbc = $("#borderBottomCenter")[0];
-	
-	$(document).bind('keydown', function(e){if(e.keyCode == 27){closeModal();}});
-
-	$(modal).css("opacity", 0).show();
 
 	interfaceHeight = $(btc).height()+$(bbc).height()+$(modalContent).outerHeight(true) - $(modalContent).height();//Subtraction needed for IE6
 	interfaceWidth = $(bml).width()+$(bmr).width()+$(modalContent).outerWidth(true) - $(modalContent).width();
@@ -88,7 +86,7 @@ $(function(){
 
 $.fn.colorbox = function(settings, callback) {
 	settings = $.extend({}, $.fn.colorbox.settings, settings);
-	//sets the position of the modal on screen.  A transition speed of 0 will result in no animation.
+
 	function modalPosition(mWidth, mHeight, speed, loadedCallback){
 
 		var winHeight = document.documentElement.clientHeight;
@@ -106,11 +104,11 @@ $.fn.colorbox = function(settings, callback) {
 			modalContent.style.width = btc.style.width = bbc.style.width = that.style.width;
 			modalContent.style.height = bml.style.height = bmr.style.height = that.style.height;
 		}
+
 		$(modal).animate({height:mHeight, width:mWidth, top:posTop, left:posLeft}, {duration: speed,
 			complete: function(){
 				if (loadedCallback) {loadedCallback();}
 				modalDimensions(this);
-				$(document).bind('keydown', keypressEvents);
 				if ($.browser.msie && $.browser.version < 7) {setModalOverlay();}
 			},
 			step: function(){
@@ -133,13 +131,14 @@ $.fn.colorbox = function(settings, callback) {
 		loaded = $(object)[0];
 		$(loaded).hide().appendTo('body').css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width()}).css({height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:$(loaded).height()})
 		.attr({id:"modalLoadedContent"}).append(contentInfo).prependTo($(modalContent));
-
 		function setPosition(s){
 			modalPosition(parseInt(loaded.style.width, 10)+loadedWidth+interfaceWidth, parseInt(loaded.style.height, 10)+loadedHeight+interfaceHeight, s, function(){
 				$(loaded).show();
 				$(modalLoadingOverlay).hide();
 				if (callback) {callback();}
-				if (settings.transition == "fade"){$(modal).animate({"opacity":1}, speed);}
+				if (settings.transition == "fade" && $(modal).data("open")==true){
+					$(modal).animate({"opacity":1}, speed);
+				}
 			});
 		}
 		if (settings.transition == "fade") {
@@ -147,7 +146,7 @@ $.fn.colorbox = function(settings, callback) {
 		} else {
 			setPosition(speed);
 		}
-		//var preloads = preload();
+		var preloads = preload();
 	}
 
 	function buildGallery(that){
@@ -165,9 +164,9 @@ $.fn.colorbox = function(settings, callback) {
 		} else if (settings.iframe) {
 			centerModal($("<div><iframe name='iframe_"+new Date().getTime()+" 'frameborder=0 src =" + href + "></iframe></div>"), contentInfo);//timestamp to prevent caching.
 		} else if (href.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i)){
-			loadingElement = $("<img id='modalPhoto' "+((related.length > 1)?"style='cursor:pointer;' class='modalPhoto'":"")+" alt='' />").load(function(){
+			$(loadingBay).empty().append($("<img id='modalPhoto' "+((related.length > 1)?"style='cursor:pointer;' class='modalPhoto'":"")+" alt='' />").load(function(){
 				centerModal($("<div style='display: table-cell; vertical-align: middle; position: static;' />").append($(this)), contentInfo);
-			}).attr("src",href);
+			}).attr("src",href));
 		}else {
 			loadingElement = $('<div></div>').load(href, function(data, textStatus){
 				if(textStatus == "success"){
@@ -211,7 +210,7 @@ $.fn.colorbox = function(settings, callback) {
 			$(modal).css({"opacity":1});
 			buildGallery(related[index]);
 			$("a#contentPrevious, a#contentNext, .modalPhoto").die().live("click", contentNav);
-			$(document).bind('keydown', keypressEvents);
+			$(document).bind('keydown.colorKeys', keypressEvents);
 			if ($.browser.msie && $.browser.version < 7) {
 				$(window).bind("resize scroll", setModalOverlay);
 			}
