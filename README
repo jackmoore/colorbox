@@ -20,7 +20,6 @@ Version 1.1.2 - April 05 2009
 * Fixed an overflow issue for when the fixed width/height is smaller than the size of a photo.
 * Fixed a bug in the fade transition where the border would still come up if ColorBox was
   closed mid-transition.
-* Removed 'overflow:visible' from #modalContent.
 * Switch from JSMin to Yui Compressor for minification.  Minified code now under 7KB.
 
 
