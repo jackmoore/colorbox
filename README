@@ -11,6 +11,19 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
+Version 1.1.2 - April 05 2009
+* Added ability to change content when ColorBox is already open.
+* Added vertical photo centering now works for all browsers (this feature previously excluded IE6&7).
+* Added namespacing to the esc-key keydown event for people who want to disable it: "keydown.colorClose"
+* Added 'title' setting to add the ability to set an alternative title for any ColorBox call.
+* Fixed rollover navigation issue with IE8. (Added JS-based rollover state due to a browser-bug.)
+* Fixed an overflow issue for when the fixed width/height is smaller than the size of a photo.
+* Fixed a bug in the fade transition where the border would still come up if ColorBox was
+  closed mid-transition.
+* Removed 'overflow:visible' from #modalContent.
+* Switch from JSMin to Yui Compressor for minification.  Minified code now under 7KB.
+
+
 Version 1.1.1 - March 31 2009
 * More robust image detection regex.  Now detects image file types with url fragments and/or query strings.
 * Added 'nofollow' exception to rel grouping.

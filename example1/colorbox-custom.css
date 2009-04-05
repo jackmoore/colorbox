@@ -19,9 +19,9 @@
 			#contentTitle{position:absolute; bottom:3px; left:0; text-align:center; width:100%; background:#fff; font-weight:bold; color:#949494;}
 			#contentCurrent{position:absolute; bottom:3px; left:58px; font-weight:bold; color:#949494;}
 			#contentPrevious{position:absolute; bottom:0; left:0px; background:url(images/controls.png) -25px 0px no-repeat; width:25px; height:25px; text-indent:-9999px;}
-			#contentPrevious:hover{background-position:-25px -25px;}
+			#contentPrevious:hover, #contentPrevious.hover{background-position:-25px -25px;}
 			#contentNext{position:absolute; bottom:0; left:27px; background:url(images/controls.png) 0px 0px no-repeat; width:25px; height:25px; text-indent:-9999px;}
-			#contentNext:hover{background-position:0px -25px;}
+			#contentNext:hover, #contentNext.hover{background-position:0px -25px;}
 		#modalLoadingOverlay{background:url(images/loading.gif) center center no-repeat #fff;}
 		#modalClose{position:absolute; bottom:0; right:0; background:url(images/controls.png) -50px 0px no-repeat; width:25px; height:25px; text-indent:-9999px;}
-		#modalClose:hover{background-position:-50px -25px;}
+		#modalClose:hover, #modalClose.hover{background-position:-50px -25px;}

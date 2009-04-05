@@ -1,11 +1,11 @@
 /*
-	ColorBox v1.1.1 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.1.2 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 
 (function($){
-var clone, settings, modalCallback, loadingBay, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btc, bml, bmr, bbc;
+var clone, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btc, bml, bmr, bbc;
 function setModalOverlay(){
 	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
@@ -18,18 +18,24 @@ function keypressEvents(e){
 		$("a#contentNext").click();
 	}
 }
-closeModal = function(){
+function clearLoading(){
 	if($("#colorboxInlineTemp").length > 0){
 		$(loaded).children().insertAfter("#colorboxInlineTemp");
 	}
+	if(loadingElement){$(loadingElement).remove();}
+}
+
+closeModal = function(){
+	clearLoading();
 	$([modalOverlay, modal]).css({cursor:"auto"}).fadeOut("fast", function(){
 		$(loaded).remove();
 		$(modal).removeData("open");
 	});
-	if(loadingElement){$(loadingElement).remove();}
+	
 	$(document).unbind('keydown.colorKeys');
 	$(window).unbind('resize scroll', setModalOverlay);
 };
+
 // Convert % values to pixels
 function setSize(size, dimension){
 	return (typeof size == 'string') ? (size.match(/%/) ? (dimension/100)*parseInt(size, 10) : parseInt(size, 10)) : size;
@@ -40,8 +46,7 @@ $(function(){
 	$("body").append(
 		$([
 			modalOverlay = $('<div id="modalBackgroundOverlay" />')[0], 
-			modal = $('<div id="colorbox" />')[0],
-			loadingBay = $('<div id="modalLoadingBay" style="display:none" />')[0]
+			modal = $('<div id="colorbox" />')[0]
 		]).hide()
 	);
 	$(modal).append(
@@ -86,168 +91,176 @@ $(function(){
 
 	$(loaded).empty();
 	$(modal).css({"padding-bottom":interfaceHeight,"padding-right":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
+
+	//Archaic rollover code because IE8 is a piece of shit.  Hopefully they'll fix their css-rollover bug and so that this can be removed.
+	$("#contentPrevious, #contentNext, #modalClose").live('mouseover', function(){$(this).addClass("hover");});
+	$("#contentPrevious, #contentNext, #modalClose").live('mouseout', function(){$(this).removeClass("hover");});
 });
 
-$.fn.colorbox = function(options, callback) {
+$.fn.colorbox = function(settings, callback) {
+
+	function modalPosition(mWidth, mHeight, speed, loadedCallback){
+	
+		var winHeight = document.documentElement.clientHeight;
+		var posTop = winHeight/2 - mHeight/2 + $(window).scrollTop();
+		var posLeft = document.documentElement.clientWidth/2 - mWidth/2 + $(window).scrollLeft();
+		//keeps the box from expanding to an inaccessible area offscreen.
+		if(mHeight > winHeight){posTop -=(mHeight - winHeight);}
+		if(posTop < 0){posTop = 0;} 
+		if(posLeft < 0){posLeft = 0;}
+	
+		mWidth = mWidth - interfaceWidth;
+		mHeight = mHeight - interfaceHeight;
+	
+		function modalDimensions(that){
+			modalContent.style.width = btc.style.width = bbc.style.width = that.style.width;
+			modalContent.style.height = bml.style.height = bmr.style.height = that.style.height;
+		}
+	
+		$(modal).animate({height:mHeight, width:mWidth, top:posTop, left:posLeft}, {duration: speed,
+			complete: function(){
+				if (loadedCallback) {loadedCallback();}
+				modalDimensions(this);
+				if ($.browser.msie && $.browser.version < 7) {setModalOverlay();}
+			},
+			step: function(){
+				modalDimensions(this);		
+			}
+		});
+	}
+	var preloads = [];
+	function preload(){
+		if(settings.preloading !== false && related.length>1){
+			var previous, next;
+			previous = index > 0 ? related[index-1].href : related[related.length-1].href;
+			next = index < related.length-1 ? related[index+1].href : related[0].href;
+			return [$("<img />").attr("src", next), $("<img />").attr("src", previous)];
+		}
+		return false;
+	}
+	
+	function contentNav(){
+		$(modalLoadingOverlay).show();
+		if($(this).attr("id") == "contentPrevious"){
+			index = index > 0 ? index-1 : related.length-1;
+		} else {
+			index = index < related.length-1 ? index+1 : 0;
+		}
+		loadModal(related[index].href, related[index].title);
+		return false;	
+	}
+	
+	function centerModal (object, contentInfo){
+	
+		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
+		$(loaded).remove();
+		loaded = $(object)[0];
+	
+		$(loaded).hide()
+		.appendTo('body')
+		.css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width()}).css({height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:$(loaded).height()})
+		.attr({id:"modalLoadedContent"})
+		.append(contentInfo)
+		.prependTo($(modalContent));
+
+		if($("#modalPhoto").length > 0 && settings.fixedHeight){
+			var topMargin = (parseInt($(loaded)[0].style.height, 10) - parseInt($("#modalPhoto")[0].style.height, 10))/2;
+			$("#modalPhoto").css({marginTop:(topMargin > 0?topMargin:0)});
+		}
+	
+		function setPosition(s){
+			modalPosition(parseInt(loaded.style.width, 10)+loadedWidth+interfaceWidth, parseInt(loaded.style.height, 10)+loadedHeight+interfaceHeight, s, function(){
+				$(loaded).show();
+				$(modalLoadingOverlay).hide();
+				if (callback) {callback();}
+				if (settings.transition === "fade" && $(modal).data("open")===true){
+					$(modal).animate({"opacity":1}, speed);
+				}
+				$(document).bind('keydown.colorKeys', keypressEvents);
+			});
+		}
+		if (settings.transition == "fade") {
+			$(modal).animate({"opacity":0}, speed, function(){setPosition(0);});
+		} else {
+			setPosition(speed);
+		}
+		var preloads = preload();
+	}
+	
+	function loadModal(href, title){
+		clearLoading();
+		var contentInfo = "<p id='contentTitle'>"+title+"</p>";
+		if(related.length>1){
+			contentInfo += "<span id='contentCurrent'> " + settings.contentCurrent + "</span>";
+			contentInfo = contentInfo.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length);
+			contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a><a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
+		}
+	
+		if (settings.inline) {
+			loadingElement = $('<div id="colorboxInlineTemp" />').hide().insertBefore($(href)[0]);
+			clone = $(href).clone(true);
+			centerModal($(href).wrapAll("<div />").parent(), contentInfo);
+		} else if (settings.iframe) {
+			centerModal($("<div><iframe name='iframe_"+new Date().getTime()+" 'frameborder=0 src =" + href + "></iframe></div>"), contentInfo);//timestamp to prevent caching.
+		} else if (href.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i)){
+			$("<img />").load(function(){
+				centerModal($("<div />").css({width:this.width, height:this.height}).html($("<div "+((related.length > 1)?"id='modalPhoto'":"")+"/>").css({width:this.width, height:this.height, margin:"auto", "background":"url("+href+") center center no-repeat"})), contentInfo);
+			}).attr("src",href);
+		}else {
+			loadingElement = $('<div />').load(href, function(data, textStatus){
+				if(textStatus == "success"){
+					centerModal($(this), contentInfo);
+				} else {
+					centerModal($("<p>Request unsuccessful.</p>"));
+				}
+			});
+		}
+	}
+
+	settings = $.extend({}, $.fn.colorbox.settings, settings);
+	
 	$(this).bind("click.colorbox", function () {
-		settings = $.extend({}, $.fn.colorbox.settings, options);
-		modalCallback = callback;
-		
+		if(settings.fixedWidth){ settings.fixedWidth = setSize(settings.fixedWidth, document.documentElement.clientWidth);}
+		if(settings.fixedHeight){ settings.fixedHeight = setSize(settings.fixedHeight, document.documentElement.clientHeight);}
+		if (this.rel && 'nofollow' != this.rel) {
+			related = $("a[rel='" + this.rel + "']");
+			index = $(related).index(this);
+		}
+		else {
+			related = $(this);
+			index = 0;
+		}
+
 		if ($(modal).data("open") !== true) {
 			$(modal).data("open", true);
-
-			if(settings.fixedWidth){ settings.fixedWidth = setSize(settings.fixedWidth, document.documentElement.clientWidth);}
-			if(settings.fixedHeight){ settings.fixedHeight = setSize(settings.fixedHeight, document.documentElement.clientHeight);}
 			$(modalClose).html(settings.modalClose);
 			$(modalOverlay).css({"opacity": settings.bgOpacity});
 			$([modal, modalLoadingOverlay, modalOverlay]).show();
 			modalPosition(setSize(settings.initialWidth, document.documentElement.clientWidth), setSize(settings.initialHeight, document.documentElement.clientHeight), 0);
-			if (this.rel && 'nofollow' != this.rel) {
-				related = $("a[rel='" + this.rel + "']");
-				index = $(related).index(this);
-			}
-			else {
-				related = $(this);
-				index = 0;
-			}
+
 			$(modal).css({"opacity":1});
-			$.fn.colorbox.load(settings.href ? settings.href : related[index].href, related[index].title);
-			$("a#contentPrevious, a#contentNext, .modalPhoto").die().live("click", contentNav);
+
 			$(document).bind('keydown.colorKeys', keypressEvents);
 			if ($.browser.msie && $.browser.version < 7) {
 				$(window).bind("resize scroll", setModalOverlay);
 			}
 		}
+
+		loadModal(settings.href ? settings.href : related[index].href, settings.title ? settings.title : related[index].title);
+		$("a#contentPrevious, a#contentNext, #modalPhoto").die().live("click", contentNav);
+		
 		if(settings.overlayClose!==false){
 			$(modalOverlay).css({"cursor":"pointer"}).click(function(){closeModal();});
 		}
 		return false;
 	});
 
-	settings = $.extend({}, $.fn.colorbox.settings, options);
 	if(settings.open!==false && $(modal).data("open")!==true){
 		$(this).triggerHandler('click.colorbox');
 	}
 
 	return this.each(function() { 
 	});
-};
-
-function modalPosition(mWidth, mHeight, speed, loadedCallback){
-
-	var winHeight = document.documentElement.clientHeight;
-	var posTop = winHeight/2 - mHeight/2 + $(window).scrollTop();
-	var posLeft = document.documentElement.clientWidth/2 - mWidth/2 + $(window).scrollLeft();
-	//keeps the box from expanding to an inaccessible area offscreen.
-	if(mHeight > winHeight){posTop -=(mHeight - winHeight);}
-	if(posTop < 0){posTop = 0;} 
-	if(posLeft < 0){posLeft = 0;}
-
-	mWidth = mWidth - interfaceWidth;
-	mHeight = mHeight - interfaceHeight;
-
-	function modalDimensions(that){
-		modalContent.style.width = btc.style.width = bbc.style.width = that.style.width;
-		modalContent.style.height = bml.style.height = bmr.style.height = that.style.height;
-	}
-
-	$(modal).animate({height:mHeight, width:mWidth, top:posTop, left:posLeft}, {duration: speed,
-		complete: function(){
-			if (loadedCallback) {loadedCallback();}
-			modalDimensions(this);
-			if ($.browser.msie && $.browser.version < 7) {setModalOverlay();}
-		},
-		step: function(){
-			modalDimensions(this);		
-		}
-	});
-}
-var preloads = [];
-function preload(){
-	if(settings.preloading !== false && related.length>1){
-		var previous, next;
-		previous = index > 0 ? related[index-1].href : related[related.length-1].href;
-		next = index < related.length-1 ? related[index+1].href : related[0].href;
-		return [$("<img />").attr("src", next), $("<img />").attr("src", previous)];
-	}
-	return false;
-}
-
-function contentNav(){
-	$(modalLoadingOverlay).show();
-	if($(this).attr("id") == "contentPrevious"){
-		index = index > 0 ? index-1 : related.length-1;
-	} else {
-		index = index < related.length-1 ? index+1 : 0;
-	}
-	$.fn.colorbox.load(settings.href ? settings.href : related[index].href, related[index].title);
-	return false;	
-}
-
-function centerModal (object, contentInfo){
-
-	var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
-	$(loaded).remove();
-	loaded = $(object)[0];
-
-	$(loaded).hide()
-	.appendTo('body')
-	.css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width()}).css({height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:$(loaded).height()})
-	.attr({id:"modalLoadedContent"})
-	.append(contentInfo)
-	.prependTo($(modalContent));
-
-	function setPosition(s){
-		modalPosition(parseInt(loaded.style.width, 10)+loadedWidth+interfaceWidth, parseInt(loaded.style.height, 10)+loadedHeight+interfaceHeight, s, function(){
-			$(loaded).show();
-			$(modalLoadingOverlay).hide();
-			if (modalCallback) {modalCallback();}
-			if (settings.transition == "fade" && $(modal).data("open")==true){
-				$(modal).animate({"opacity":1}, speed);
-			}
-			$(document).bind('keydown.colorKeys', keypressEvents);
-		});
-	}
-	if (settings.transition == "fade") {
-		$(modal).animate({"opacity":0}, speed, function(){setPosition(0);});
-	} else {
-		setPosition(speed);
-	}
-	var preloads = preload();
-};
-
-$.fn.colorbox.load = function(href, title, options){
-
-	if(options){
-		settings = $.extend({}, $.fn.colorbox.settings, options);
-	}
-
-	var contentInfo = "<p id='contentTitle'>"+title+"</p>";
-	if(related.length>1){
-		contentInfo += "<span id='contentCurrent'> " + settings.contentCurrent + "</span>";
-		contentInfo = contentInfo.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length);
-		contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a><a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
-	}
-
-	if (settings.inline) {
-		loadingElement = $('<div id="colorboxInlineTemp" />').hide().insertBefore($(href)[0]);
-		clone = $(href).clone(true);
-		centerModal($(href).wrapAll("<div></div>").parent(), contentInfo);
-	} else if (settings.iframe) {
-		centerModal($("<div><iframe name='iframe_"+new Date().getTime()+" 'frameborder=0 src =" + href + "></iframe></div>"), contentInfo);//timestamp to prevent caching.
-	} else if (href.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i)){
-		$(loadingBay).empty().append($("<img id='modalPhoto' "+((related.length > 1)?"style='cursor:pointer;' class='modalPhoto'":"")+" alt='' />").load(function(){
-			centerModal($("<div style='display: table-cell; vertical-align: middle; position: static;' />").append($(this)), contentInfo);
-		}).attr("src",href));
-	}else {
-		loadingElement = $('<div></div>').load(href, function(data, textStatus){
-			if(textStatus == "success"){
-				centerModal($(this), contentInfo);
-			} else {
-				centerModal($("<p>Request unsuccessful.</p>"));
-			}
-		});
-	}
 };
 
 /*
@@ -269,6 +282,7 @@ $.fn.colorbox.settings = {
 	inline : false, // Set this to the selector of inline content to be displayed.  Example "#myHiddenDiv" or "body p".
 	iframe : false, // If 'true' specifies that content should be displayed in an iFrame.
 	href : false, // This can be used as an alternate anchor URL for ColorBox to use, or can be used to assign a URL for non-anchor elments such as images or form buttons.
+	title : false, // This can be used as an alternate anchor title.
 	bgOpacity : 0.85, // The modalBackgroundOverlay opacity level. Range: 0 to 1.
 	preloading : true, // Allows for preloading of 'Next' and 'Previous' content in a shared relation group (same values for the 'rel' attribute), after the current content has finished loading.  Set to 'false' to disable.
 	contentCurrent : "image {current} of {total}", // the format of the contentCurrent information
