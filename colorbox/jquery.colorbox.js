@@ -5,7 +5,7 @@
 */
 
 (function($){
-var clone, loadingBay, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btc, bml, bmr, bbc;
+var clone, settings, modalCallback, loadingBay, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, closeModal, loadingElement, modal, modalWrap, modalOverlay, modalLoadingOverlay, modalContent, loaded, modalClose, btc, bml, bmr, bbc;
 function setModalOverlay(){
 	$([modalOverlay]).css({"position":"absolute", width:$(window).width(), height:$(window).height(), top:$(window).scrollTop(), left:$(window).scrollLeft()});
 }
@@ -66,11 +66,14 @@ $(function(){
 		])
 	);
 
-	$(modalClose).bind("keydown.colorClose", function(e){
-		if (e.keyCode == 27) {
-			closeModal();
-		}
-	}).click(function(){closeModal();return false;});
+	$(document).bind("keydown.colorClose", function(e){
+		if (e.keyCode == 27) { closeModal(); }
+	});
+
+	$(modalClose).click(function(){
+		closeModal();
+		return false;
+	});
 
 	btc = $("#borderTopCenter")[0];
 	bbc = $("#borderBottomCenter")[0];
@@ -80,116 +83,16 @@ $(function(){
 
 	loadedHeight = $(loaded).outerHeight(true);
 	loadedWidth = $(loaded).outerWidth(true);
+
 	$(loaded).empty();
 	$(modal).css({"padding-bottom":interfaceHeight,"padding-right":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
 });
 
-$.fn.colorbox = function(settings, callback) {
-	settings = $.extend({}, $.fn.colorbox.settings, settings);
-
-	function modalPosition(mWidth, mHeight, speed, loadedCallback){
-
-		var winHeight = document.documentElement.clientHeight;
-		var posTop = winHeight/2 - mHeight/2 + $(window).scrollTop();
-		var posLeft = document.documentElement.clientWidth/2 - mWidth/2 + $(window).scrollLeft();
-		//keeps the box from expanding to an inaccessible area offscreen.
-		if(mHeight > winHeight){posTop -=(mHeight - winHeight);}
-		if(posTop < 0){posTop = 0;} 
-		if(posLeft < 0){posLeft = 0;}
-
-		mWidth = mWidth - interfaceWidth;
-		mHeight = mHeight - interfaceHeight;
-
-		function modalDimensions(that){
-			modalContent.style.width = btc.style.width = bbc.style.width = that.style.width;
-			modalContent.style.height = bml.style.height = bmr.style.height = that.style.height;
-		}
-
-		$(modal).animate({height:mHeight, width:mWidth, top:posTop, left:posLeft}, {duration: speed,
-			complete: function(){
-				if (loadedCallback) {loadedCallback();}
-				modalDimensions(this);
-				if ($.browser.msie && $.browser.version < 7) {setModalOverlay();}
-			},
-			step: function(){
-				modalDimensions(this);		
-			}
-		});
-	}
-	var preloads = [];
-	function preload(){
-		if(settings.preloading !== false && related.length>1){
-			var previous, next;
-			previous = index > 0 ? related[index-1].href : related[related.length-1].href;
-			next = index < related.length-1 ? related[index+1].href : related[0].href;
-			return [$("<img />").attr("src", next), $("<img />").attr("src", previous)];
-		}
-	}
-	function centerModal(object, contentInfo){
-		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
-		$(loaded).remove();
-		loaded = $(object)[0];
-		$(loaded).hide().appendTo('body').css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width()}).css({height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:$(loaded).height()})
-		.attr({id:"modalLoadedContent"}).append(contentInfo).prependTo($(modalContent));
-		function setPosition(s){
-			modalPosition(parseInt(loaded.style.width, 10)+loadedWidth+interfaceWidth, parseInt(loaded.style.height, 10)+loadedHeight+interfaceHeight, s, function(){
-				$(loaded).show();
-				$(modalLoadingOverlay).hide();
-				if (callback) {callback();}
-				if (settings.transition == "fade" && $(modal).data("open")==true){
-					$(modal).animate({"opacity":1}, speed);
-				}
-			});
-		}
-		if (settings.transition == "fade") {
-			$(modal).animate({"opacity":0}, speed, function(){setPosition(0);});
-		} else {
-			setPosition(speed);
-		}
-		var preloads = preload();
-	}
-
-	function buildGallery(that){
-		var href = settings.href ? settings.href : that.href;
-		var contentInfo = "<p id='contentTitle'>"+that.title+"</p>";
-		if(related.length>1){
-			contentInfo += "<span id='contentCurrent'> " + settings.contentCurrent + "</span>";
-			contentInfo = contentInfo.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length);
-			contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a><a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
-		}
-		if (settings.inline) {
-			loadingElement = $('<div id="colorboxInlineTemp" />').hide().insertBefore($(href)[0]);
-			clone = $(href).clone(true);
-			centerModal($(href).wrapAll("<div></div>").parent(), contentInfo);
-		} else if (settings.iframe) {
-			centerModal($("<div><iframe name='iframe_"+new Date().getTime()+" 'frameborder=0 src =" + href + "></iframe></div>"), contentInfo);//timestamp to prevent caching.
-		} else if (href.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i)){
-			$(loadingBay).empty().append($("<img id='modalPhoto' "+((related.length > 1)?"style='cursor:pointer;' class='modalPhoto'":"")+" alt='' />").load(function(){
-				centerModal($("<div style='display: table-cell; vertical-align: middle; position: static;' />").append($(this)), contentInfo);
-			}).attr("src",href));
-		}else {
-			loadingElement = $('<div></div>').load(href, function(data, textStatus){
-				if(textStatus == "success"){
-					centerModal($(this), contentInfo);
-				} else {
-					centerModal($("<p>Request unsuccessful.</p>"));
-				}
-			});
-		}
-	}
-
-	function contentNav(){
-		$(modalLoadingOverlay).show();
-		if($(this).attr("id") == "contentPrevious"){
-			index = index > 0 ? index-1 : related.length-1;
-		} else {
-			index = index < related.length-1 ? index+1 : 0;
-		}
-		buildGallery(related[index]);
-		return false;	
-	}
-
+$.fn.colorbox = function(options, callback) {
 	$(this).bind("click.colorbox", function () {
+		settings = $.extend({}, $.fn.colorbox.settings, options);
+		modalCallback = callback;
+		
 		if ($(modal).data("open") !== true) {
 			$(modal).data("open", true);
 
@@ -208,7 +111,7 @@ $.fn.colorbox = function(settings, callback) {
 				index = 0;
 			}
 			$(modal).css({"opacity":1});
-			buildGallery(related[index]);
+			$.fn.colorbox.load(settings.href ? settings.href : related[index].href, related[index].title);
 			$("a#contentPrevious, a#contentNext, .modalPhoto").die().live("click", contentNav);
 			$(document).bind('keydown.colorKeys', keypressEvents);
 			if ($.browser.msie && $.browser.version < 7) {
@@ -221,13 +124,130 @@ $.fn.colorbox = function(settings, callback) {
 		return false;
 	});
 
-
+	settings = $.extend({}, $.fn.colorbox.settings, options);
 	if(settings.open!==false && $(modal).data("open")!==true){
 		$(this).triggerHandler('click.colorbox');
 	}
 
 	return this.each(function() { 
 	});
+};
+
+function modalPosition(mWidth, mHeight, speed, loadedCallback){
+
+	var winHeight = document.documentElement.clientHeight;
+	var posTop = winHeight/2 - mHeight/2 + $(window).scrollTop();
+	var posLeft = document.documentElement.clientWidth/2 - mWidth/2 + $(window).scrollLeft();
+	//keeps the box from expanding to an inaccessible area offscreen.
+	if(mHeight > winHeight){posTop -=(mHeight - winHeight);}
+	if(posTop < 0){posTop = 0;} 
+	if(posLeft < 0){posLeft = 0;}
+
+	mWidth = mWidth - interfaceWidth;
+	mHeight = mHeight - interfaceHeight;
+
+	function modalDimensions(that){
+		modalContent.style.width = btc.style.width = bbc.style.width = that.style.width;
+		modalContent.style.height = bml.style.height = bmr.style.height = that.style.height;
+	}
+
+	$(modal).animate({height:mHeight, width:mWidth, top:posTop, left:posLeft}, {duration: speed,
+		complete: function(){
+			if (loadedCallback) {loadedCallback();}
+			modalDimensions(this);
+			if ($.browser.msie && $.browser.version < 7) {setModalOverlay();}
+		},
+		step: function(){
+			modalDimensions(this);		
+		}
+	});
+}
+var preloads = [];
+function preload(){
+	if(settings.preloading !== false && related.length>1){
+		var previous, next;
+		previous = index > 0 ? related[index-1].href : related[related.length-1].href;
+		next = index < related.length-1 ? related[index+1].href : related[0].href;
+		return [$("<img />").attr("src", next), $("<img />").attr("src", previous)];
+	}
+	return false;
+}
+
+function contentNav(){
+	$(modalLoadingOverlay).show();
+	if($(this).attr("id") == "contentPrevious"){
+		index = index > 0 ? index-1 : related.length-1;
+	} else {
+		index = index < related.length-1 ? index+1 : 0;
+	}
+	$.fn.colorbox.load(settings.href ? settings.href : related[index].href, related[index].title);
+	return false;	
+}
+
+function centerModal (object, contentInfo){
+
+	var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
+	$(loaded).remove();
+	loaded = $(object)[0];
+
+	$(loaded).hide()
+	.appendTo('body')
+	.css({width:(settings.fixedWidth)?settings.fixedWidth - loadedWidth - interfaceWidth:$(loaded).width()}).css({height:(settings.fixedHeight)?settings.fixedHeight - loadedHeight - interfaceHeight:$(loaded).height()})
+	.attr({id:"modalLoadedContent"})
+	.append(contentInfo)
+	.prependTo($(modalContent));
+
+	function setPosition(s){
+		modalPosition(parseInt(loaded.style.width, 10)+loadedWidth+interfaceWidth, parseInt(loaded.style.height, 10)+loadedHeight+interfaceHeight, s, function(){
+			$(loaded).show();
+			$(modalLoadingOverlay).hide();
+			if (modalCallback) {modalCallback();}
+			if (settings.transition == "fade" && $(modal).data("open")==true){
+				$(modal).animate({"opacity":1}, speed);
+			}
+			$(document).bind('keydown.colorKeys', keypressEvents);
+		});
+	}
+	if (settings.transition == "fade") {
+		$(modal).animate({"opacity":0}, speed, function(){setPosition(0);});
+	} else {
+		setPosition(speed);
+	}
+	var preloads = preload();
+};
+
+$.fn.colorbox.load = function(href, title, options){
+
+	if(options){
+		settings = $.extend({}, $.fn.colorbox.settings, options);
+	}
+
+	var contentInfo = "<p id='contentTitle'>"+title+"</p>";
+	if(related.length>1){
+		contentInfo += "<span id='contentCurrent'> " + settings.contentCurrent + "</span>";
+		contentInfo = contentInfo.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length);
+		contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a><a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
+	}
+
+	if (settings.inline) {
+		loadingElement = $('<div id="colorboxInlineTemp" />').hide().insertBefore($(href)[0]);
+		clone = $(href).clone(true);
+		centerModal($(href).wrapAll("<div></div>").parent(), contentInfo);
+	} else if (settings.iframe) {
+		centerModal($("<div><iframe name='iframe_"+new Date().getTime()+" 'frameborder=0 src =" + href + "></iframe></div>"), contentInfo);//timestamp to prevent caching.
+	} else if (href.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i)){
+		$(loadingBay).empty().append($("<img id='modalPhoto' "+((related.length > 1)?"style='cursor:pointer;' class='modalPhoto'":"")+" alt='' />").load(function(){
+			centerModal($("<div style='display: table-cell; vertical-align: middle; position: static;' />").append($(this)), contentInfo);
+		}).attr("src",href));
+	}else {
+		loadingElement = $('<div></div>').load(href, function(data, textStatus){
+			if(textStatus == "success"){
+				centerModal($(this), contentInfo);
+			} else {
+				centerModal($("<p>Request unsuccessful.</p>"));
+			}
+		});
+	}
 };
 
 /*
