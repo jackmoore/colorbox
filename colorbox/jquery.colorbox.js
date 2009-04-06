@@ -1,5 +1,5 @@
 /*
-	ColorBox v1.1.2 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.1.3 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -203,9 +203,15 @@ $.fn.colorbox = function(settings, callback) {
 		} else if (settings.iframe) {
 			centerModal($("<div><iframe name='iframe_"+new Date().getTime()+" 'frameborder=0 src =" + href + "></iframe></div>"), contentInfo);//timestamp to prevent caching.
 		} else if (href.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i)){
-			$("<img />").load(function(){
-				centerModal($("<div />").css({width:this.width, height:this.height}).html($("<div "+((related.length > 1)?"id='modalPhoto'":"")+"/>").css({width:this.width, height:this.height, margin:"auto", "background":"url("+href+") center center no-repeat"})), contentInfo);
-			}).attr("src",href);
+			var modalPhoto = new Image();
+			modalPhoto.onload = function(){
+				modalPhoto.onload = null;
+				centerModal($("<div />").css({width:this.width, height:this.height}).append($(this).css({width:this.width, height:this.height, display:"block", margin:"auto"}).attr('id', 'modalPhoto')), contentInfo);
+				if(related.length > 1){
+					$(this).css({cursor:'pointer'}).click(contentNav);
+				}
+			};
+			modalPhoto.src = href;
 		}else {
 			loadingElement = $('<div />').load(href, function(data, textStatus){
 				if(textStatus == "success"){
@@ -247,7 +253,7 @@ $.fn.colorbox = function(settings, callback) {
 		}
 
 		loadModal(settings.href ? settings.href : related[index].href, settings.title ? settings.title : related[index].title);
-		$("a#contentPrevious, a#contentNext, #modalPhoto").die().live("click", contentNav);
+		$("a#contentPrevious, a#contentNext").die().live("click", contentNav);
 		
 		if(settings.overlayClose!==false){
 			$(modalOverlay).css({"cursor":"pointer"}).click(function(){closeModal();});
