@@ -1,5 +1,5 @@
 /*
-	ColorBox v1.1.3 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.1.4 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -27,11 +27,10 @@ function clearLoading(){
 
 closeModal = function(){
 	clearLoading();
-	$([modalOverlay, modal]).css({cursor:"auto"}).fadeOut("fast", function(){
+	$(modalOverlay).css({cursor:"auto"}).fadeOut("fast");
+	$(modal).removeData("open").fadeOut("fast", function(){
 		$(loaded).remove();
-		$(modal).removeData("open");
 	});
-	
 	$(document).unbind('keydown.colorKeys');
 	$(window).unbind('resize scroll', setModalOverlay);
 };
@@ -173,7 +172,10 @@ $.fn.colorbox = function(settings, callback) {
 				$(loaded).show();
 				$(modalLoadingOverlay).hide();
 				if (callback) {callback();}
-				if (settings.transition === "fade" && $(modal).data("open")===true){
+				if ($(modal).data("open")!==true){
+					closeModal();
+				}
+				else if (settings.transition === "fade"){
 					$(modal).animate({"opacity":1}, speed);
 				}
 				$(document).bind('keydown.colorKeys', keypressEvents);

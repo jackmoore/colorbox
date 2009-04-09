@@ -11,6 +11,11 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
+Version 1.1.4 - April 08 2009
+* Fixed a bug in the fade transition where colorbox not close completely if instructed to close during the
+  fade-in portion of the transition.
+
+
 Version 1.1.3 - April 06 2009
 * Fixed an IE6&7 issue with using ColorBox to display animated GIFs.
 
