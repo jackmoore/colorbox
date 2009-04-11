@@ -11,8 +11,12 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
+Version 1.1.5 - April 08 2009
+* Fixed minor issues with exiting ColorBox.
+  
+
 Version 1.1.4 - April 08 2009
-* Fixed a bug in the fade transition where colorbox not close completely if instructed to close during the
+* Fixed a bug in the fade transition where ColorBox not close completely if instructed to close during the
   fade-in portion of the transition.
 
 

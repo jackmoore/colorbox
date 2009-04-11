@@ -129,7 +129,7 @@ $.fn.colorbox = function(settings, callback) {
 	}
 	var preloads = [];
 	function preload(){
-		if(settings.preloading !== false && related.length>1){
+		if(settings.preloading !== false && related.length>1 && related[index].href.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i)){
 			var previous, next;
 			previous = index > 0 ? related[index-1].href : related[related.length-1].href;
 			next = index < related.length-1 ? related[index+1].href : related[0].href;
@@ -146,11 +146,11 @@ $.fn.colorbox = function(settings, callback) {
 			index = index < related.length-1 ? index+1 : 0;
 		}
 		loadModal(related[index].href, related[index].title);
-		return false;	
 	}
 	
 	function centerModal (object, contentInfo){
-	
+		if($(modal).data("open")!==true){ return false; }
+
 		var speed = settings.transition=="none" ? 0 : settings.transitionSpeed;
 		$(loaded).remove();
 		loaded = $(object)[0];
@@ -169,17 +169,19 @@ $.fn.colorbox = function(settings, callback) {
 	
 		function setPosition(s){
 			modalPosition(parseInt(loaded.style.width, 10)+loadedWidth+interfaceWidth, parseInt(loaded.style.height, 10)+loadedHeight+interfaceHeight, s, function(){
+				if($(modal).data("open")!==true){
+					return false;
+				}
 				$(loaded).show();
 				$(modalLoadingOverlay).hide();
 				$(document).bind('keydown.colorKeys', keypressEvents);
 				if (callback) {
 					callback();
 				}
-				if($(modal).data("open")!==true){
-					closeModal();
-				} else if (settings.transition === "fade"){
+				if (settings.transition === "fade"){
 					$(modal).animate({"opacity":1}, speed);
 				}
+				return true;
 			});
 		}
 		if (settings.transition == "fade") {
@@ -188,6 +190,7 @@ $.fn.colorbox = function(settings, callback) {
 			setPosition(speed);
 		}
 		var preloads = preload();
+		return true;
 	}
 	
 	function loadModal(href, title){
@@ -240,15 +243,14 @@ $.fn.colorbox = function(settings, callback) {
 		}
 
 		if ($(modal).data("open") !== true) {
-			$(modal).data("open", true);
+			$(document).bind('keydown.colorKeys', keypressEvents);
 			$(modalClose).html(settings.modalClose);
 			$(modalOverlay).css({"opacity": settings.bgOpacity});
+			$(modal).data("open", true).css({"opacity":1});
 			$([modal, modalLoadingOverlay, modalOverlay]).show();
+
 			modalPosition(setSize(settings.initialWidth, document.documentElement.clientWidth), setSize(settings.initialHeight, document.documentElement.clientHeight), 0);
 
-			$(modal).css({"opacity":1});
-
-			$(document).bind('keydown.colorKeys', keypressEvents);
 			if ($.browser.msie && $.browser.version < 7) {
 				$(window).bind("resize scroll", setModalOverlay);
 			}
@@ -256,7 +258,7 @@ $.fn.colorbox = function(settings, callback) {
 
 		loadModal(settings.href ? settings.href : related[index].href, settings.title ? settings.title : related[index].title);
 		$("a#contentPrevious, a#contentNext").die().live("click", contentNav);
-		
+
 		if(settings.overlayClose!==false){
 			$(modalOverlay).css({"cursor":"pointer"}).click(function(){closeModal();});
 		}
