@@ -1,5 +1,5 @@
 /*
-	ColorBox v1.1.4 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.1.5 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -28,7 +28,7 @@ function clearLoading(){
 closeModal = function(){
 	clearLoading();
 	$(modalOverlay).css({cursor:"auto"}).fadeOut("fast");
-	$(modal).removeData("open").fadeOut("fast", function(){
+	$(modal).stop(true, false).removeData("open").fadeOut("fast", function(){
 		$(loaded).remove();
 	});
 	$(document).unbind('keydown.colorKeys');
@@ -91,7 +91,7 @@ $(function(){
 	$(loaded).empty();
 	$(modal).css({"padding-bottom":interfaceHeight,"padding-right":interfaceWidth}).hide();//the padding removes the need to do size conversions during the animation step.
 
-	//Archaic rollover code because IE8 is a piece of shit.  Hopefully they'll fix their css-rollover bug and so that this can be removed.
+	//Archaic rollover code because IE8 is a piece of shit.  Hopefully they'll fix their css-rollover bug so the following code can be removed.
 	$("#contentPrevious, #contentNext, #modalClose").live('mouseover', function(){$(this).addClass("hover");});
 	$("#contentPrevious, #contentNext, #modalClose").live('mouseout', function(){$(this).removeClass("hover");});
 });
@@ -171,14 +171,15 @@ $.fn.colorbox = function(settings, callback) {
 			modalPosition(parseInt(loaded.style.width, 10)+loadedWidth+interfaceWidth, parseInt(loaded.style.height, 10)+loadedHeight+interfaceHeight, s, function(){
 				$(loaded).show();
 				$(modalLoadingOverlay).hide();
-				if (callback) {callback();}
-				if ($(modal).data("open")!==true){
-					closeModal();
+				$(document).bind('keydown.colorKeys', keypressEvents);
+				if (callback) {
+					callback();
 				}
-				else if (settings.transition === "fade"){
+				if($(modal).data("open")!==true){
+					closeModal();
+				} else if (settings.transition === "fade"){
 					$(modal).animate({"opacity":1}, speed);
 				}
-				$(document).bind('keydown.colorKeys', keypressEvents);
 			});
 		}
 		if (settings.transition == "fade") {
@@ -197,7 +198,6 @@ $.fn.colorbox = function(settings, callback) {
 			contentInfo = contentInfo.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length);
 			contentInfo += "<a id='contentPrevious' href='#'>"+settings.contentPrevious+"</a><a id='contentNext' href='#'>"+settings.contentNext+"</a> ";
 		}
-	
 		if (settings.inline) {
 			loadingElement = $('<div id="colorboxInlineTemp" />').hide().insertBefore($(href)[0]);
 			clone = $(href).clone(true);
@@ -205,15 +205,15 @@ $.fn.colorbox = function(settings, callback) {
 		} else if (settings.iframe) {
 			centerModal($("<div><iframe name='iframe_"+new Date().getTime()+" 'frameborder=0 src =" + href + "></iframe></div>"), contentInfo);//timestamp to prevent caching.
 		} else if (href.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i)){
-			var modalPhoto = new Image();
-			modalPhoto.onload = function(){
-				modalPhoto.onload = null;
+			loadingElement = new Image();
+			loadingElement.onload = function(){
+				loadingElement.onload = null;
 				centerModal($("<div />").css({width:this.width, height:this.height}).append($(this).css({width:this.width, height:this.height, display:"block", margin:"auto"}).attr('id', 'modalPhoto')), contentInfo);
 				if(related.length > 1){
 					$(this).css({cursor:'pointer'}).click(contentNav);
 				}
 			};
-			modalPhoto.src = href;
+			loadingElement.src = href;
 		}else {
 			loadingElement = $('<div />').load(href, function(data, textStatus){
 				if(textStatus == "success"){
@@ -227,7 +227,7 @@ $.fn.colorbox = function(settings, callback) {
 
 	settings = $.extend({}, $.fn.colorbox.settings, settings);
 	
-	$(this).bind("click.colorbox", function () {
+	$(this).unbind("click.colorbox").bind("click.colorbox", function () {
 		if(settings.fixedWidth){ settings.fixedWidth = setSize(settings.fixedWidth, document.documentElement.clientWidth);}
 		if(settings.fixedHeight){ settings.fixedHeight = setSize(settings.fixedHeight, document.documentElement.clientHeight);}
 		if (this.rel && 'nofollow' != this.rel) {
