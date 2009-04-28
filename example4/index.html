@@ -17,8 +17,10 @@
 		<script type="text/javascript">google.load("jquery", "1.3.2");</script>
 		<script type="text/javascript" src="../colorbox/jquery.colorbox.js"></script>
 		<script type="text/javascript">
-			//This hides the inline content if JavaScript is supported.
+			//This hides the inline content if JavaScript is supported, but allows it to remain visible if not.
+			//<![CDATA[
 			document.write("<style type='text/css'>.hidden{display:none;}<\/style>");
+			//]]>
 			
 			$(document).ready(function(){
 				//Examples of Global Changes

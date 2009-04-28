@@ -11,6 +11,16 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
+Version 1.1.6 - April 28 2009
+* Prevented the default action of the next & previous anchors and the left and right keys for gallery mode.
+* Fixed a bug where the title element was being added back to the DOM when closing ColorBox while using
+  inline content.
+* Fixed a bug where IE7 would crash for example 2.
+* Smaller filesize: removed a small amount of unused code and rewrote the HTML injection with less syntax.
+* Added a public method for closing ColorBox: $.fn.colorbox.close().  This will allow iframe users to
+  add an event to close ColorBox without having to create an additional function.
+
+
 Version 1.1.5 - April 11 2009
 * Fixed minor issues with exiting ColorBox.
   
