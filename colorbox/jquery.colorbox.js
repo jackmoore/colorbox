@@ -26,6 +26,7 @@ function clearLoading(){
 }
 
 closeModal = function(){
+	$('#contentTitle').remove();
 	clearLoading();
 	$(modalOverlay).css({cursor:"auto"}).fadeOut("fast");
 	$(modal).stop(true, false).removeData("open").fadeOut("fast", function(){
@@ -40,8 +41,12 @@ function setSize(size, dimension){
 	return (typeof size == 'string') ? (size.match(/%/) ? (dimension/100)*parseInt(size, 10) : parseInt(size, 10)) : size;
 }
 
-//Initialize the modal: store common calculations, preload the interface graphics, append the html.
-$(function(){
+/*
+  Initialize the modal: store common calculations, preload the interface graphics, append the html.
+  This preps colorbox for a speedy open when clicked, and lightens the burdon on the browser by only
+  having to run once, instead of each time colorbox is opened.
+*/
+$(function(){//jQuery shortcut for $(document).ready(function(){});
 	$("body").append(
 		$([
 			modalOverlay = $('<div id="modalBackgroundOverlay" />')[0], 
@@ -64,7 +69,8 @@ $(function(){
 	);
 	$(modalContent).append(
 		$([
-			loaded = $('<div id="modalLoadedContent"><a id="contentPrevious" href="#"></a><a id="contentNext" href="#"></a><span id="contentCurrent"></span><br id="modalInfoBr"/><span id="contentTitle"></span><div id="preloadPrevious"></div><div id="preloadNext"></div><div id="preloadClose"></div></div>')[0], 
+			//loaded is filled with temporary HTML to allow the CSS backgrounds for those elements to load before ColorBox is actually called.
+			loaded = $('<div id="modalLoadedContent"><a id="contentNext" href="#"></a><a id="contentPrevious" href="#"></a><span id="contentCurrent"></span><span id="contentTitle"></span><div id="preloadPrevious"></div><div id="preloadNext"></div><div id="preloadClose"></div></div>')[0], 
 			modalLoadingOverlay = $('<div id="modalLoadingOverlay" />')[0],
 			modalClose = $('<a id="modalClose" href="#"></a>')[0]
 		])
@@ -146,6 +152,7 @@ $.fn.colorbox = function(settings, callback) {
 			index = index < related.length-1 ? index+1 : 0;
 		}
 		loadModal(related[index].href, related[index].title);
+		return false;
 	}
 	
 	function centerModal (object, contentInfo){
