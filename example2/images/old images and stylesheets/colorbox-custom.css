@@ -1,0 +1,24 @@
+/* 
+	ColorBox example user style
+	These rules are ordered and tabbed in a way that represents the order/nesting of the generated HTML, 
+	in hope that this will make the relationship easier to understand. Thanks, jack@colorpowered.com
+*/
+#cboxOverlay{background:#fff;}
+
+#colorbox{}
+	#cboxContent{margin-top:32px;}
+		#cboxLoadedContent{background:#000; padding:1px;}
+                #cboxTitle{position:absolute; top:-22px; left:0; color:#000;}
+                #cboxCurrent{position:absolute; top:-22px; right:205px; text-indent:-9999px;}
+                #cboxSlideshow{position:absolute; top:-22px; right:95px; color:#0092ef;}
+                
+                #cboxSlideshow, #cboxPrevious, #cboxNext, #cboxClose{}
+                
+                #cboxPrevious{width:29px; height:32px; display:block; text-indent:-9999px; position:absolute; top:-32px; right:60px; background:url(images/buttons.png) left top no-repeat #fff;}
+                #cboxPrevious.hover{background-position:left bottom;}
+                #cboxNext{width:29px; height:32px; display:block; text-indent:-9999px; position:absolute; top:-32px; right:28px; background:url(images/buttons.png) right top no-repeat #fff;}
+                #cboxNext.hover{background-position:right bottom;}
+		#cboxLoadingOverlay{background:#000;}
+                #cboxLoadingGraphic{background:url(images/loading.gif) center center no-repeat;}
+		#cboxClose{position:absolute; top:-32px; right:0px; display:block; background:url(images/buttons.png) -29px 0 no-repeat #fff; width:26px; height:32px; text-indent:-9999px;}
+		#cboxClose.hover{background-position:-29px -31px; cursor:pointer;}

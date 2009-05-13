@@ -11,6 +11,36 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
+
+Version 1.2 - May 13 2009
+* Note: If you are upgrading from a previous version of ColorBox, see the UPGRADE file.
+
+* Added a slideshow feature.
+* Added re-positioning on browser resize.  If the browser is resized, ColorBox will recenter itself onscreen.
+* Added hooks for key events: cbox_open, cbox_load, cbox_complete, cbox_closed.
+  Example of using the hooks to build a primitive sideshow:
+  $().bind('cbox_complete', function(){
+    setTimeout($.fn.colorbox.next, 1500);
+  });
+* Fixed an IE transparency-stacking problem, where transparent PNGs would show through to the background
+  overlay.
+* Fixed an IE iframe issue where the ifame might shift up and to the left under certain circumstances.
+* Fixed an IE6 bug where the loading overlay was not at full height.
+* Removed the delay in switching between same-sized gallery content when using transitions.
+* Changed how iframes are loaded to make it more compatible with iframed pages that use DOM dependent
+  JavaScript.
+* Changed how the JS is structured to be better organized and increase compression.  Increased documentation.
+* Changed CSS :hover states to a .hover class.  This sidesteps a minor IE8 bug with css hover states and
+  allows easier access to hover state user styles from the JavaScript.
+* Changed: elements added to the DOM have new ID's.  The naming is more consistent and less likely to cause
+  conflicts with existing website stylesheets.  All stylesheets have been updated.
+* Changed the behavior for prev/next links so that ColorBox does not get hung up on broken links.  A visitor
+  can now skip through broken or long-loading links by clicking prev/next or using the left/right keys.
+* Changed the naming of variables in the parameter map to be more concise and intuitive.
+* Removed colorbox.css.  Combined the colorbox.css styles with jquery.colorbox.js:
+  the css file was not large enough to warrant being a separate file.
+
+
 Version 1.1.6 - April 28 2009
 * Prevented the default action of the next & previous anchors and the left and right keys for gallery mode.
 * Fixed a bug where the title element was being added back to the DOM when closing ColorBox while using
@@ -23,7 +53,7 @@ Version 1.1.6 - April 28 2009
 
 Version 1.1.5 - April 11 2009
 * Fixed minor issues with exiting ColorBox.
-  
+ 
 
 Version 1.1.4 - April 08 2009
 * Fixed a bug in the fade transition where ColorBox not close completely if instructed to close during the
@@ -61,14 +91,14 @@ Version 1.1.0 - March 21 2009
 * Callback option added.
 * Inline content now preserves JavaScript events, and changes made while ColorBox is open are also preserved.
 * Added 'href' setting to add the ability to set an alternative href for any anchor, or to assign the
-  ColorBox event to non-anchors.  
+  ColorBox event to non-anchors. 
   Example: $('button').colorbox({'href':'process.php'})
   Example: $('a[href='http://msn.com']).colorbox({'href':'http://google.com', iframe:true});
-  
+ 
   Minor Changes:
 * Photos are now horizontally centered if they are smaller than the lightbox size.  Also vertically centered
   for browsers newer than IE7.
-* Buttons in the examples are now included in the 'protected zone'.  The lightbox will never expand it's 
+* Buttons in the examples are now included in the 'protected zone'.  The lightbox will never expand it's
   borders or buttons beyond an accessible area of the screen.
 * Keypress events don't queue up by holding down the arrow keys.
 * Added option to close ColorBox by clicking on the background overlay.
@@ -85,14 +115,14 @@ Version 1.1.0 - March 21 2009
 
 
 Version 1.0.5 - March 11 2009
-* Redo: Fixed a bug where IE would cut off the bottom portion of a photo, if the photo was larger than 
+* Redo: Fixed a bug where IE would cut off the bottom portion of a photo, if the photo was larger than
   the document dimensions.
 
 
 Version 1.0.4 - March 10 2009
-* Added an option to allow users to automatically open the lightbox.  
+* Added an option to allow users to automatically open the lightbox. 
   Example usage: $(".colorbox").colorbox({open:true});
-* Fixed a bug where IE would cut off the bottom portion of a photo, 
+* Fixed a bug where IE would cut off the bottom portion of a photo,
   if the photo was larger than the document dimensions.
 
 
@@ -102,7 +132,7 @@ Version 1.0.3 - March 09 2009
 
 Version 1.0.2 - March 06 2009
 * Corrected a typo.
-* Changed the content-type check so that it does not assume all links to photos should actually 
+* Changed the content-type check so that it does not assume all links to photos should actually
   display photos.  This allows for Ajax/inline/and iframe calls on anchors linking to picture file types.
 
 
@@ -112,4 +142,5 @@ Version 1.0.1 - March 05 2009
 
 Version 1.0 - March 03 2009
 * First release
+
 

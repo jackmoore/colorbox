@@ -2,14 +2,14 @@
 	The following fixes png-transparency for IE6.  
 	It is also necessary for png-transparency to cooperate with the fade transition in IE7 & IE8
 	
-	Since this does not support background-positioning, it is incompatible with CSS sprites.  
-	Colorbox preloads the 'previous', 'next', 'close' hover-states to account for this.
+	Since this method does not support CSS background-positioning, it is incompatible with CSS sprites.  
+	Colorbox preloads navigation hover classes to account for this.
 */
-#borderTopLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderTopLeft.png, sizingMethod='scale');}
-#borderTopCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderTopCenter.png, sizingMethod='scale');}
-#borderTopRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderTopRight.png, sizingMethod='scale');}
-#borderBottomLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderBottomLeft.png, sizingMethod='scale');}
-#borderBottomCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderBottomCenter.png, sizingMethod='scale');}
-#borderBottomRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderBottomRight.png, sizingMethod='scale');}
-#borderMiddleLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderMiddleLeft.png, sizingMethod='scale');}
-#borderMiddleRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderMiddleRight.png, sizingMethod='scale');}
+#cboxTopLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderTopLeft.png, sizingMethod='scale');}
+#cboxTopCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderTopCenter.png, sizingMethod='scale');}
+#cboxTopRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderTopRight.png, sizingMethod='scale');}
+#cboxBottomLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderBottomLeft.png, sizingMethod='scale');}
+#cboxBottomCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderBottomCenter.png, sizingMethod='scale');}
+#cboxBottomRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderBottomRight.png, sizingMethod='scale');}
+#cboxMiddleLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderMiddleLeft.png, sizingMethod='scale');}
+#cboxMiddleRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/borderMiddleRight.png, sizingMethod='scale');}

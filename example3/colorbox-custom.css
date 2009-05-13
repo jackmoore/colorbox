@@ -3,17 +3,19 @@
 	These rules are ordered and tabbed in a way that represents the order/nesting of the generated HTML, 
 	in hope that this will make the relationship easier to understand. Thanks, jack@colorpowered.com
 */
-#modalBackgroundOverlay{background:#000;}
+#cboxOverlay{background:#000;}
 
 #colorbox{}
-	#modalContent{background:#000; margin-top:20px;}
-		#modalLoadedContent{background:#000; border:10px solid #000;}
-			#contentTitle{position:absolute; top:-20px; left:0; color:#fff;}
-			#contentCurrent{display:none;}
-			#contentPrevious{position:absolute; top:50%; left:10px; margin-top:-41px; background:url(images/controls.png) top left no-repeat; width:38px; height:81px; text-indent:-9999px;}
-			#contentPrevious:hover, #contentPrevious.hover{background-position:bottom left;}
-			#contentNext{position:absolute; top:50%; right:10px; margin-top:-41px; background:url(images/controls.png) top right no-repeat; width:38px; height:81px; text-indent:-9999px;}
-			#contentNext:hover, #contentNext.hover{background-position:bottom right;}
-		#modalLoadingOverlay{background:url(images/loading.gif) center center no-repeat #000;}
-		#modalClose{position:absolute; top:10px; right:10px; display:block; background:url(images/controls.png) top center no-repeat; width:47px; height:24px; text-indent:-9999px;}
-		#modalClose:hover, #modalClose.hover{background-position:bottom center;}
+	#cboxContent{background:#000; margin-top:20px;}
+		#cboxLoadedContent{background:#000; padding:5px;}
+                #cboxTitle{position:absolute; top:-20px; left:0; color:#ccc;}
+                #cboxCurrent{position:absolute; top:-20px; right:0px; color:#ccc;}
+                #cboxSlideshow{position:absolute; top:-20px; right:90px; color:#fff;}
+                #cboxPrevious{position:absolute; top:50%; left:5px; margin-top:-41px; background:url(images/controls.png) top left no-repeat; width:38px; height:81px; text-indent:-9999px;}
+                #cboxPrevious.hover{background-position:bottom left;}
+                #cboxNext{position:absolute; top:50%; right:5px; margin-top:-41px; background:url(images/controls.png) top right no-repeat; width:38px; height:81px; text-indent:-9999px;}
+                #cboxNext.hover{background-position:bottom right;}
+                #cboxLoadingOverlay{background:#000;}
+		#cboxLoadingGraphic{background:url(images/loading.gif) center center no-repeat;}
+		#cboxClose{position:absolute; top:5px; right:5px; display:block; background:url(images/controls.png) top center no-repeat; width:47px; height:24px; text-indent:-9999px;}
+		#cboxClose.hover{background-position:bottom center;}
