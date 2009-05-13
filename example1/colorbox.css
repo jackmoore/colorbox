@@ -16,7 +16,7 @@
 	#cboxMiddleRight{width:21px; background:url(images/borderMiddleRight.png) 0 0 repeat-y;}
 	#cboxContent{background:#fff;}
 		#cboxLoadedContent{margin-bottom:28px;}
-                #cboxTitle{position:absolute; bottom:3px; left:0; text-align:center; width:100%; background:#fff; color:#949494;}
+                #cboxTitle{position:absolute; bottom:3px; left:0; text-align:center; width:100%; color:#949494;}
                 #cboxCurrent{position:absolute; bottom:3px; left:58px; color:#949494;}
                 #cboxSlideshow{position:absolute; bottom:3px; right:30px; color:#0092ef;}
                 #cboxPrevious{position:absolute; bottom:0; left:0px; background:url(images/controls.png) -25px 0px no-repeat; width:25px; height:25px; text-indent:-9999px;}
