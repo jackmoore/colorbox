@@ -35,7 +35,7 @@ Version 1.2 - May 13 2009
 * Changed: elements added to the DOM have new ID's.  The naming is more consistent and less likely to cause
   conflicts with existing website stylesheets.  All stylesheets have been updated.
 * Changed the behavior for prev/next links so that ColorBox does not get hung up on broken links.  A visitor
-  can now skip through broken or long-loading links by clicking prev/next or using the left/right keys.
+  can now skip through broken or long-loading links by clicking prev/next buttons.
 * Changed the naming of variables in the parameter map to be more concise and intuitive.
 * Removed colorbox.css.  Combined the colorbox.css styles with jquery.colorbox.js:
   the css file was not large enough to warrant being a separate file.

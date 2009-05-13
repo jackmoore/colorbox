@@ -29,23 +29,12 @@ document.write("\r\n<style type='text/css'>\r\n"+
 		$overlay.css({"position":"absolute", width:$window.width(), height:$window.height(), top:$window.scrollTop(), left:$window.scrollLeft()});
 	}
 
-	function keypressEvents(e){
-		if(e.keyCode == 37){
-			e.preventDefault();
-			$prev.click();
-		} else if(e.keyCode == 39){
-			e.preventDefault();
-			$next.click();
-		}
-	}
-
 	function slideshow(){
 		var stop;
 		function start(){
 			$slideshow
 			.text(settings.slideshowStop)
 			.bind("cbox_complete", function(){
-				$slideshow.show();
 				ssTimeout = setTimeout($.fn.colorbox.next, settings.slideshowSpeed);
 			})
 			.bind("cbox_load", function(){
@@ -299,7 +288,7 @@ document.write("\r\n<style type='text/css'>\r\n"+
 			var topMargin = (parseInt($loaded[0].style.height, 10) - parseInt($('#cboxPhoto')[0].style.height, 10))/2;
 			$('#cboxPhoto').css({marginTop:(topMargin > 0?topMargin:0)});
 		}
-		$().unbind('keydown.cbox_key');
+		
 		function setPosition(s){
 			var mWidth = parseInt($loaded[0].style.width, 10)+loadedWidth+interfaceWidth;
 			var mHeight = parseInt($loaded[0].style.height, 10)+loadedHeight+interfaceHeight;
@@ -307,7 +296,6 @@ document.write("\r\n<style type='text/css'>\r\n"+
 				if($modal.data("open")!==true){
 					return false;
 				}
-				
 				$modalContent.children().show();
 				$loadingOverlay.hide();
 				$loadingGraphic.hide();
@@ -318,7 +306,18 @@ document.write("\r\n<style type='text/css'>\r\n"+
 					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length));
 					$next.html(settings.next);
 					$prev.html(settings.previous);
-					$().bind('keydown.cbox_key', keypressEvents);
+					$().unbind('keydown.cbox_key').one('keydown.cbox_key', function(e){
+						if(e.keyCode == 37){
+							e.preventDefault();
+							$prev.click();
+						} else if(e.keyCode == 39){
+							e.preventDefault();
+							$next.click();
+						}
+					});
+					if(settings.slideshow!==false){
+						$slideshow.show();
+					}
 				} else {
 					$current.add($next).add($prev).hide();
 				}
@@ -357,7 +356,6 @@ document.write("\r\n<style type='text/css'>\r\n"+
 		$loadingOverlay.show();
 		$loadingGraphic.show();
 		$close.show();
-
 		clearInline();//puts inline elements back if they are being used
 		
 		var href = settings.href ? settings.href : related[index].href;
@@ -394,7 +392,7 @@ document.write("\r\n<style type='text/css'>\r\n"+
 	$.fn.colorbox.close = function(){
 		clearTimeout(ssTimeout);
 		$window.unbind('resize.cbox_resize');
-		$slideshow.unbind('cbox_complete cbox_load');
+		$slideshow.unbind('cbox_complete cbox_load click');
 		clearInline();
 		$overlay.css({cursor:'auto'}).fadeOut('fast').unbind('click', $.fn.colorbox.close);
 		$().unbind('keydown.cbox_key');
