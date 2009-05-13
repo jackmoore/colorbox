@@ -422,26 +422,28 @@ document.write("\r\n<style type='text/css'>\r\n"+
 		Please do not change these settings here, instead overwrite these settings when attaching the colorbox() event to your anchors.
 		Example (Global)	: $.fn.colorbox.settings.transition = "fade"; //changes the transition to fade for all colorBox() events proceeding it's declaration.
 		Example (Specific)	: $("a[href='http://www.google.com']").colorbox({width:"90%", height:"450px", iframe:true});
+		
+		See http://colorpowered.com/colorbox for details.
 	*/
 	$.fn.colorbox.settings = {
-		transition : "elastic", // Transition types: "elastic", "fade", or "none".
-		speed : 350, // Sets the speed of the fade and elastic transitions, in milliseconds.
-		initialWidth : "400", // Set the initial width of the modal, prior to any content being loaded.
-		initialHeight : "400", // Set the initial height of the modal, prior to any content being loaded.
-		width : false, // Set a fixed width for div#loaded.  Example: "500px"
-		height : false, // Set a fixed height for div#modalLoadedContent.  Example: "500px"
-		inline : false, // Set this to the selector of inline content to be displayed.  Example "#myHiddenDiv" or "body p".
-		iframe : false, // If 'true' specifies that content should be displayed in an iFrame.
-		href : false, // This can be used as an alternate anchor URL for ColorBox to use, or can be used to assign a URL for non-anchor elments such as images or form buttons.
-		title : false, // This can be used as an alternate anchor title.
-		opacity : 0.9, // The modalBackgroundOverlay opacity level. Range: 0 to 1.
-		preloading : true, // Allows for preloading of 'Next' and 'Previous' content in a shared relation group (same values for the 'rel' attribute), after the current content has finished loading.  Set to 'false' to disable.
-		current : "image {current} of {total}", // the format of the contentCurrent information
-		previous : "previous", // the anchor text for the previous link in a shared relation group (same values for 'rel').
-		next : "next", // the anchor text for the next link in a shared relation group (same 'rel' attribute').
-		close : "close", // the anchor text for the close link.  Esc will also close the modal.
-		open : false, //Automatically opens ColorBox. (fires the click.colorbox event without waiting for user input).
-		overlayClose : true,  //If true, enables closing ColorBox by clicking on the background overlay.
+		transition : "elastic",
+		speed : 350,
+		initialWidth : "400",
+		initialHeight : "400",
+		width : false,
+		height : false,
+		inline : false,
+		iframe : false,
+		href : false,
+		title : false,
+		opacity : 0.9,
+		preloading : true,
+		current : "image {current} of {total}",
+		previous : "previous",
+		next : "next",
+		close : "close",
+		open : false,
+		overlayClose : true,
 		slideshow:false,
 		slideshowAuto:true,
 		slideshowSpeed: 2500,
