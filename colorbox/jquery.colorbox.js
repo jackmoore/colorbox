@@ -5,7 +5,7 @@
 */
 (function($){
 	
-	var settings, callback, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, ssTimeout, $slideshow, $window, $close, $next, $prev, $current, $title, $modal, $wrap, $loadingOverlay, $loadingGraphic, $overlay, $modalContent, $loaded, $borderTopCenter, $borderMiddleLeft, $borderMiddleRight, $borderBottomCenter;
+	var settings, callback, maxWidth, maxHeight, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, ssTimeout, $slideshow, $window, $close, $next, $prev, $current, $title, $modal, $wrap, $loadingOverlay, $loadingGraphic, $overlay, $modalContent, $loaded, $borderTopCenter, $borderMiddleLeft, $borderMiddleRight, $borderBottomCenter;
 	
 	/* Helper Functions */
 	//function for IE6 to set the background overlay
@@ -70,6 +70,7 @@
 
 	// Convert % values to pixels
 	function setSize(size, dimension){
+		dimension = dimension=='x' ? document.documentElement.clientWidth : document.documentElement.clientHeight;
 		return (typeof size == 'string') ? (size.match(/%/) ? (dimension/100)*parseInt(size, 10) : parseInt(size, 10)) : size;
 	}
 
@@ -98,8 +99,8 @@
 				callback = function(){};
 			}
 			
-			if(settings.width){ settings.width = setSize(settings.width, document.documentElement.clientWidth);}
-			if(settings.height){ settings.height = setSize(settings.height, document.documentElement.clientHeight);}
+			if(settings.width){ settings.width = setSize(settings.width, 'x');}
+			if(settings.height){ settings.height = setSize(settings.height, 'y');}
 			
 			if (this.rel && 'nofollow' != this.rel) {
 				related = $("a[rel='" + this.rel + "']");
@@ -113,7 +114,7 @@
 				$close.html(settings.close);
 				$overlay.css({"opacity": settings.opacity}).show();
 				$modal.data("open", true);
-				$.fn.colorbox.position(setSize(settings.initialWidth, document.documentElement.clientWidth), setSize(settings.initialHeight, document.documentElement.clientHeight), 0);
+				$.fn.colorbox.position(setSize(settings.initialWidth, 'x'), setSize(settings.initialHeight, 'y'), 0);
 				if ($.browser.msie && $.browser.version < 7) {
 					$window.bind("resize scroll", IE6Overlay);
 				}
@@ -131,7 +132,11 @@
 			$(this).triggerHandler('click.colorbox');
 		}
 		
-		return this.each(function(){});
+		return this.each(function(){
+		
+			
+		
+		});
 	};
 	
 	/*
@@ -267,10 +272,7 @@
 		var speed = settings.transition=="none" ? 0 : settings.speed;
 		$loaded.remove();
 		$loaded = $(object);
-		
-		var maxWidth = settings.maxWidth ? setSize(settings.maxWidth) : false;
-		var maxHeight = settings.maxHeight ? setSize(settings.maxHeight) : false;
-		
+				
 		function getWidth(){
 			var width = settings.width ? settings.width - loadedWidth - interfaceWidth:$loaded.width();
 			if(maxWidth && maxWidth < width){
@@ -365,6 +367,9 @@
 		$close.show();
 		clearInline();//puts inline elements back if they are being used
 		
+		maxWidth = settings.maxWidth ? setSize(settings.maxWidth, 'x') - loadedWidth - interfaceWidth : false;
+		maxHeight = settings.maxHeight ? setSize(settings.maxHeight, 'y') - loadedHeight - interfaceHeight : false;
+		
 		var href = settings.href ? settings.href : related[index].href;
 		
 		if (settings.inline) {
@@ -379,10 +384,6 @@
 			loadingElement.onload = function(){
 				loadingElement.onload = null;
 				
-				
-				/* Resizes the photo to fit within the maximum range */
-				var maxWidth = settings.maxWidth ? setSize(settings.maxWidth) : false;
-				var maxHeight = settings.maxHeight ? setSize(settings.maxHeight) : false;
 				if(maxHeight || maxWidth){
 					var width = this.width;
 					var height = this.height;
@@ -405,7 +406,7 @@
 					}
 				}
 				
-				$.fn.colorbox.dimensions($("<div />").css({width:this.width, height:this.height}).append($(this).css({width:this.width, height:this.height, display:"block", margin:"auto"}).attr('id', 'cboxPhoto')));
+				$.fn.colorbox.dimensions($("<div />").css({width:this.width, height:this.height}).append($(this).css({width:this.width, height:this.height, display:"block", margin:"auto", border:0}).attr('id', 'cboxPhoto')));
 				if(related.length > 1){
 					$(this).css({cursor:'pointer'}).click($.fn.colorbox.next);
 				}
