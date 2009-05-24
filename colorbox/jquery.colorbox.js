@@ -3,22 +3,6 @@
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
-
-
-//JSLint does not approve of using document.write(), but it is the only method
-//I am aware of for adding a style element that Safari 3.0 supports.
-document.write("\r\n<style type='text/css'>\r\n"+
-'#colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden;}\r\n'+
-'#cboxOverlay{position:fixed; width:100%; height:100%;}\r\n'+
-'#cboxMiddleLeft, #cboxBottomLeft{clear:left;}\r\n'+
-'#cboxContent{position:relative; overflow:visible;}\r\n'+
-'#cboxLoadedContent{overflow:auto; width:0; height:0;}\r\n'+
-'#cboxLoadedContent iframe{display:block; width:100%; height:100%; border:0;}\r\n'+
-'#cboxTitle{margin:0;}\r\n'+
-'#cboxLoadingOverlay, #cboxLoadingGraphic{position:absolute; top:0; left:0; width:100%;}\r\n'+
-'#cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{cursor:pointer;}\r\n'+
-'<\/style>\r\n');
-
 (function($){
 	
 	var settings, callback, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, ssTimeout, $slideshow, $window, $close, $next, $prev, $current, $title, $modal, $wrap, $loadingOverlay, $loadingGraphic, $overlay, $modalContent, $loaded, $borderTopCenter, $borderMiddleLeft, $borderMiddleRight, $borderBottomCenter;
@@ -74,6 +58,16 @@ document.write("\r\n<style type='text/css'>\r\n"+
 		}
 	}
 
+	function cbox_key(e) {
+		if(e.keyCode == 37){
+			e.preventDefault();
+			$prev.click();
+		} else if(e.keyCode == 39){
+			e.preventDefault();
+			$next.click();
+		}
+	}
+
 	// Convert % values to pixels
 	function setSize(size, dimension){
 		return (typeof size == 'string') ? (size.match(/%/) ? (dimension/100)*parseInt(size, 10) : parseInt(size, 10)) : size;
@@ -98,7 +92,8 @@ document.write("\r\n<style type='text/css'>\r\n"+
 			settings = $.extend({}, $.fn.colorbox.settings, options);
 			
 			if(custom_callback){
-				callback = custom_callback;
+				var that = this;
+				callback = function(){ $(that).each(custom_callback) };
 			} else {
 				callback = function(){};
 			}
@@ -273,25 +268,43 @@ document.write("\r\n<style type='text/css'>\r\n"+
 		$loaded.remove();
 		$loaded = $(object);
 		
-		$loaded.hide()
-		.appendTo('body')
-		.css({width:(settings.width)?settings.width - loadedWidth - interfaceWidth:$loaded.width()})
-		.css({height:(settings.height)?settings.height - loadedHeight - interfaceHeight:$loaded.height()})//sets the height independently from the width in case the new width influences the value of height.
+		var maxWidth = settings.maxWidth ? setSize(settings.maxWidth) : false;
+		var maxHeight = settings.maxHeight ? setSize(settings.maxHeight) : false;
+		
+		function getWidth(){
+			var width = settings.width ? settings.width - loadedWidth - interfaceWidth:$loaded.width();
+			if(maxWidth && maxWidth < width){
+				width = maxWidth;
+			}
+			return width;
+		}
+		
+		function getHeight(){
+			var height = settings.height ? settings.height - loadedHeight - interfaceHeight:$loaded.height();
+			if(maxHeight && maxHeight < height){
+				height = maxHeight;
+			}
+			return height;
+		}
+				
+		$loaded.hide().appendTo('body')
+		.css({width:getWidth()})
+		.css({height:getHeight()})//sets the height independently from the width in case the new width influences the value of height.
 		.attr({id:'cboxLoadedContent'})
 		.prependTo($modalContent);
 		
 		if ($.browser.msie && $.browser.version < 7) {
 			$('select').not($('#colorbox select')).css({'visibility':'hidden'});
 		}
-		
+				
 		if($('#cboxPhoto').length > 0 && settings.height){
-			var topMargin = (parseInt($loaded[0].style.height, 10) - parseInt($('#cboxPhoto')[0].style.height, 10))/2;
+			var topMargin = ($loaded.height() - parseInt($('#cboxPhoto')[0].style.height, 10))/2;
 			$('#cboxPhoto').css({marginTop:(topMargin > 0?topMargin:0)});
 		}
 		
 		function setPosition(s){
-			var mWidth = parseInt($loaded[0].style.width, 10)+loadedWidth+interfaceWidth;
-			var mHeight = parseInt($loaded[0].style.height, 10)+loadedHeight+interfaceHeight;
+			var mWidth = $loaded.width()+loadedWidth+interfaceWidth;
+			var mHeight = $loaded.height()+loadedHeight+interfaceHeight;
 			$.fn.colorbox.position(mWidth, mHeight, s, function(){
 				if($modal.data("open")!==true){
 					return false;
@@ -306,15 +319,9 @@ document.write("\r\n<style type='text/css'>\r\n"+
 					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length));
 					$next.html(settings.next);
 					$prev.html(settings.previous);
-					$().unbind('keydown.cbox_key').one('keydown.cbox_key', function(e){
-						if(e.keyCode == 37){
-							e.preventDefault();
-							$prev.click();
-						} else if(e.keyCode == 39){
-							e.preventDefault();
-							$next.click();
-						}
-					});
+					
+					$().unbind('keydown', cbox_key).one('keydown', cbox_key);
+					
 					if(settings.slideshow!==false){
 						$slideshow.show();
 					}
@@ -371,6 +378,33 @@ document.write("\r\n<style type='text/css'>\r\n"+
 			var loadingElement = new Image();
 			loadingElement.onload = function(){
 				loadingElement.onload = null;
+				
+				
+				/* Resizes the photo to fit within the maximum range */
+				var maxWidth = settings.maxWidth ? setSize(settings.maxWidth) : false;
+				var maxHeight = settings.maxHeight ? setSize(settings.maxHeight) : false;
+				if(maxHeight || maxWidth){
+					var width = this.width;
+					var height = this.height;
+					var percent = 0;
+					var that = this;
+					
+					function setResize(){
+						height += height * percent;
+						width += width * percent;
+						that.height = height;
+						that.width = width;	
+					}
+					if( maxWidth && width > maxWidth ){
+						percent = (maxWidth - width) / width;
+						setResize();
+					}
+					if( maxHeight && height > maxHeight ){
+						percent = (maxHeight - height) / height;
+						setResize();
+					}
+				}
+				
 				$.fn.colorbox.dimensions($("<div />").css({width:this.width, height:this.height}).append($(this).css({width:this.width, height:this.height, display:"block", margin:"auto"}).attr('id', 'cboxPhoto')));
 				if(related.length > 1){
 					$(this).css({cursor:'pointer'}).click($.fn.colorbox.next);
@@ -395,7 +429,7 @@ document.write("\r\n<style type='text/css'>\r\n"+
 		$slideshow.unbind('cbox_complete cbox_load click');
 		clearInline();
 		$overlay.css({cursor:'auto'}).fadeOut('fast').unbind('click', $.fn.colorbox.close);
-		$().unbind('keydown.cbox_key');
+		$().unbind('keydown', cbox_key);
 		
 		if ($.browser.msie && $.browser.version < 7) {
 			$('select').css({'visibility':'inherit'});
@@ -428,10 +462,15 @@ document.write("\r\n<style type='text/css'>\r\n"+
 	$.fn.colorbox.settings = {
 		transition : "elastic",
 		speed : 350,
-		initialWidth : "400",
-		initialHeight : "400",
+
 		width : false,
 		height : false,
+		initialWidth : "400",
+		initialHeight : "400",
+		maxWidth : false,
+		maxHeight : false,
+		resize : true,
+		
 		inline : false,
 		iframe : false,
 		href : false,
