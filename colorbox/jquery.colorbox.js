@@ -84,13 +84,14 @@
 	});
 
 	$.fn.colorbox = function(options, custom_callback) {
+
 		$(this).unbind("click.colorbox").bind("click.colorbox", function (event) {
+			
+			settings = $(this).data('colorbox');
 				
 			//remove the focus from the anchor to prevent accidentally calling
 			//colorbox multiple times, which is allowed but probably not desired.
-			this.blur();	
-			
-			settings = $.extend({}, $.fn.colorbox.settings, options);
+			this.blur();
 			
 			if(custom_callback){
 				var that = this;
@@ -98,9 +99,6 @@
 			} else {
 				callback = function(){};
 			}
-			
-			if(settings.width){ settings.width = setSize(settings.width, 'x');}
-			if(settings.height){ settings.height = setSize(settings.height, 'y');}
 			
 			if (this.rel && 'nofollow' != this.rel) {
 				related = $("a[rel='" + this.rel + "']");
@@ -133,9 +131,11 @@
 		}
 		
 		return this.each(function(){
-		
-			
-		
+			if($(this).data("colorbox")){
+				$(this).data("colorbox", $.extend({}, $(this).data("colorbox"), options));
+			} else {
+				$(this).data("colorbox", $.extend({}, $.fn.colorbox.settings, options));
+			}
 		});
 	};
 	
@@ -362,6 +362,16 @@
 	
 	$.fn.colorbox.load = function(){
 		$.event.trigger('cbox_load');
+		
+		$this = $(related[index]);
+		if($this.data('colorbox')){
+			//alert('hi')
+			settings = $this.data('colorbox');
+		}
+		
+		if(settings.width){ settings.width = setSize(settings.width, 'x');}
+		if(settings.height){ settings.height = setSize(settings.height, 'y');}
+		
 		$loadingOverlay.show();
 		$loadingGraphic.show();
 		$close.show();
