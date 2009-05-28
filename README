@@ -12,6 +12,28 @@ http://groups.google.com/group/colorbox/topics
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
 
+Version 1.2.1 - May 28 2009
+* Note: If you are upgrading, update your jquery.colorbox.js and colorbox.css files.
+* Added photo resizing.
+* Added a maximum width and maximum height.  If photo resizing is on, photos will be resized to fit within
+  the maximum range.
+* Added 'rel' setting to add the ability to set an alternative rel for any ColorBox call.  This allows the
+  user to group any combination of elements together for a gallery, or to override an existing rel
+  attribute so those element are not grouped together, without having to alter their rel in the HTML.
+* Added a 'photo' setting to force ColorBox to display a link as a photo.  Use this when automatic photo detection
+  fails (such as using a url like 'photo.php' instead of 'photo.jpg', 'photo.jpg#1', or 'photo.jpg?pic=1')
+* Removed the need to ever create disposable elements to call colorbox on.  ColorBox can now be called
+  directly, without being associated with any existing element, by using the following format:
+  $.fn.colorbox({open:true, href:'yourLink.xxx'});
+* ColorBox settings are now persistent and unique for each element.  This allows for extremely flexible
+  options for individual elements.  You could use this to create a gallery in which each page in the gallery
+  has different settings.  One could be a photo with a fade transition, next could be an inline element
+  with an elastic transition with a set width and height, etc.
+* For user callbacks, 'this' now refers to the element colorbox was opened from.
+* Fixed a minor grouping issue with IE6, when transition type is set to 'none'.
+* Added an Adobe Illustrator file that contains the borders and buttons used in the various examples.
+
+
 Version 1.2 - May 13 2009
 * Note: If you are upgrading from a previous version of ColorBox, see the UPGRADE file.
 

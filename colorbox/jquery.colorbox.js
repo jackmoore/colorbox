@@ -1,11 +1,11 @@
 /*
-	ColorBox v1.2.0 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.2.1 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 (function($){
 	
-	var settings, callback, maxWidth, maxHeight, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, related, ssTimeout, $slideshow, $window, $close, $next, $prev, $current, $title, $modal, $wrap, $loadingOverlay, $loadingGraphic, $overlay, $modalContent, $loaded, $borderTopCenter, $borderMiddleLeft, $borderMiddleRight, $borderBottomCenter;
+	var settings, callback, maxWidth, maxHeight, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, $related, ssTimeout, $slideshow, $window, $close, $next, $prev, $current, $title, $modal, $wrap, $loadingOverlay, $loadingGraphic, $overlay, $modalContent, $loaded, $borderTopCenter, $borderMiddleLeft, $borderMiddleRight, $borderBottomCenter;
 	
 	/* Helper Functions */
 	//function for IE6 to set the background overlay
@@ -43,8 +43,8 @@
 			$modal.removeClass("cboxSlideshow_on").addClass("cboxSlideshow_off");
 		};
 		
-		if(settings.slideshow!==false && related.length>1){
-			if(settings.slideshowAuto===true){
+		if(settings.slideshow && $related.length>1){
+			if(settings.slideshowAuto){
 				start();
 			} else {
 				stop();
@@ -75,7 +75,7 @@
 	}
 
 	function isImage(url){
-		return url.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i);
+		return settings.photo ? true : url.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(.*))?$/i);
 	}
 
 	/* Initializes ColorBox when the DOM has loaded */
@@ -84,27 +84,49 @@
 	});
 
 	$.fn.colorbox = function(options, custom_callback) {
-
+		
+		if(this.length){
+			this.each(function(){
+				
+				if($(this).data("colorbox")){
+					$(this).data("colorbox", $.extend({}, $(this).data("colorbox"), options));
+				} else {
+					$(this).data("colorbox", $.extend({}, $.fn.colorbox.settings, options));
+				}
+				
+				var data = $(this).data("colorbox");
+				data.title = data.title ? data.title : this.title;
+				data.href = data.href ? data.href : this.href;
+				data.rel = data.rel ? data.rel : this.rel;
+				$(this).data("colorbox", data).addClass("cboxelement");
+			});
+		} else {
+			$(this).data("colorbox", $.extend({}, $.fn.colorbox.settings, options));
+		}
+		
 		$(this).unbind("click.colorbox").bind("click.colorbox", function (event) {
 			
 			settings = $(this).data('colorbox');
-				
+			
 			//remove the focus from the anchor to prevent accidentally calling
-			//colorbox multiple times, which is allowed but probably not desired.
+			//colorbox multiple times (by pressing the 'Enter' key
+			//after colorbox has opened, but before the user has clicked on anything else)
 			this.blur();
 			
 			if(custom_callback){
 				var that = this;
-				callback = function(){ $(that).each(custom_callback) };
+				callback = function(){ $(that).each(custom_callback); };
 			} else {
 				callback = function(){};
 			}
 			
-			if (this.rel && 'nofollow' != this.rel) {
-				related = $("a[rel='" + this.rel + "']");
-				index = $(related).index(this);
+			if (settings.rel && settings.rel != 'nofollow') {
+				$related = $('.cboxelement').filter(function(){
+					return ($(this).data("colorbox").rel == settings.rel);
+				});
+				index = $related.index(this);
 			} else {
-				related = $(this);
+				$related = $(this);
 				index = 0;
 			}
 			if ($modal.data("open") !== true) {
@@ -126,19 +148,13 @@
 			event.preventDefault();
 		});
 		
-		if(options && options.open && $modal.data("open")!==true){
+		if(options && options.open){
 			$(this).triggerHandler('click.colorbox');
 		}
 		
-		return this.each(function(){
-			if($(this).data("colorbox")){
-				$(this).data("colorbox", $.extend({}, $(this).data("colorbox"), options));
-			} else {
-				$(this).data("colorbox", $.extend({}, $.fn.colorbox.settings, options));
-			}
-		});
+		return this;
 	};
-	
+
 	/*
 	  Initialize the modal: store common calculations, preload the interface graphics, append the html.
 	  This preps colorbox for a speedy open when clicked, and lightens the burdon on the browser by only
@@ -211,12 +227,12 @@
 	
 	//navigates to the next page/image in a set.
 	$.fn.colorbox.next = function(){
-		index = index < related.length-1 ? index+1 : 0;
+		index = index < $related.length-1 ? index+1 : 0;
 		$.fn.colorbox.load();
 	};
 	
 	$.fn.colorbox.prev = function(){
-		index = index > 0 ? index-1 : related.length-1;
+		index = index > 0 ? index-1 : $related.length-1;
 		$.fn.colorbox.load();
 	};
 	
@@ -316,20 +332,20 @@
 				$loadingGraphic.hide();
 				$slideshow.hide();
 				
-				$title.html(settings.title ? settings.title : related[index].title);
-				if(related.length>1){
-					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, related.length));
+				if($related.length>1){
+					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, $related.length));
 					$next.html(settings.next);
 					$prev.html(settings.previous);
 					
 					$().unbind('keydown', cbox_key).one('keydown', cbox_key);
 					
-					if(settings.slideshow!==false){
+					if(settings.slideshow){
 						$slideshow.show();
 					}
 				} else {
 					$current.add($next).add($prev).hide();
 				}
+				$title.html(settings.title);
 				
 				$('#cboxIframe').attr('src', $('#cboxIframe').attr('src'));//reloads the iframe now that it is added to the DOM & it is visible, which increases compatability with pages using DOM dependent JavaScript.
 				
@@ -350,11 +366,15 @@
 			setPosition(speed);
 		}
 		
-		if(settings.preloading !== false && related.length>1 && isImage(related[index].href)){
-			var previous, next;
-			previous = index > 0 ? related[index-1].href : related[related.length-1].href;
-			next = index < related.length-1 ? related[index+1].href : related[0].href;
-			return [$('<img />').attr('src', next), $('<img />').attr('src', previous)];
+		if(settings.preloading && $related.length>1){
+			var previous = index > 0 ? $related[index-1] : $related[$related.length-1];
+			var next = index < $related.length-1 ? $related[index+1] : $related[0];
+			if(isImage($(next).data('colorbox').href)){
+				$('<img />').attr('src', next);
+			}
+			if(isImage($(previous).data('colorbox').href)){
+				$('<img />').attr('src', previous);
+			}
 		}
 		
 		return true;
@@ -363,11 +383,9 @@
 	$.fn.colorbox.load = function(){
 		$.event.trigger('cbox_load');
 		
-		$this = $(related[index]);
-		if($this.data('colorbox')){
-			//alert('hi')
-			settings = $this.data('colorbox');
-		}
+		//if ($($related[index]).data('colorbox')){
+		settings = $($related[index]).data('colorbox');
+		//}
 		
 		if(settings.width){ settings.width = setSize(settings.width, 'x');}
 		if(settings.height){ settings.height = setSize(settings.height, 'y');}
@@ -380,7 +398,7 @@
 		maxWidth = settings.maxWidth ? setSize(settings.maxWidth, 'x') - loadedWidth - interfaceWidth : false;
 		maxHeight = settings.maxHeight ? setSize(settings.maxHeight, 'y') - loadedHeight - interfaceHeight : false;
 		
-		var href = settings.href ? settings.href : related[index].href;
+		var href = settings.href;
 		
 		if (settings.inline) {
 			$('<div id="cboxInlineTemp" />').hide().insertBefore($(href)[0]);
@@ -393,19 +411,19 @@
 			var loadingElement = new Image();
 			loadingElement.onload = function(){
 				loadingElement.onload = null;
-				
+								
 				if(maxHeight || maxWidth){
 					var width = this.width;
 					var height = this.height;
 					var percent = 0;
 					var that = this;
 					
-					function setResize(){
+					var setResize = function(){
 						height += height * percent;
 						width += width * percent;
 						that.height = height;
 						that.width = width;	
-					}
+					};
 					if( maxWidth && width > maxWidth ){
 						percent = (maxWidth - width) / width;
 						setResize();
@@ -417,7 +435,7 @@
 				}
 				
 				$.fn.colorbox.dimensions($("<div />").css({width:this.width, height:this.height}).append($(this).css({width:this.width, height:this.height, display:"block", margin:"auto", border:0}).attr('id', 'cboxPhoto')));
-				if(related.length > 1){
+				if($related.length > 1){
 					$(this).css({cursor:'pointer'}).click($.fn.colorbox.next);
 				}
 			};
@@ -473,7 +491,6 @@
 	$.fn.colorbox.settings = {
 		transition : "elastic",
 		speed : 350,
-
 		width : false,
 		height : false,
 		initialWidth : "400",
@@ -481,11 +498,12 @@
 		maxWidth : false,
 		maxHeight : false,
 		resize : true,
-		
 		inline : false,
 		iframe : false,
+		photo : false,
 		href : false,
 		title : false,
+		rel : false,
 		opacity : 0.9,
 		preloading : true,
 		current : "image {current} of {total}",
