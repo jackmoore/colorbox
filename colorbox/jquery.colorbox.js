@@ -1,5 +1,5 @@
 /*
-	ColorBox v1.2.1 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.2.2 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -288,23 +288,22 @@
 		var speed = settings.transition=="none" ? 0 : settings.speed;
 		$loaded.remove();
 		$loaded = $(object);
-				
+		
 		function getWidth(){
-			var width = settings.width ? settings.width - loadedWidth - interfaceWidth:$loaded.width();
-			if(maxWidth && maxWidth < width){
-				width = maxWidth;
+			if(settings.width){
+				return maxWidth;
+			} else {
+				return maxWidth && maxWidth < $loaded.width() ? maxWidth : $loaded.width();
 			}
-			return width;
+		}
+		function getHeight(){
+			if(settings.height){
+				return maxHeight;
+			} else {
+				return maxHeight && maxHeight < $loaded.height() ? maxHeight : $loaded.height();
+			}
 		}
 		
-		function getHeight(){
-			var height = settings.height ? settings.height - loadedHeight - interfaceHeight:$loaded.height();
-			if(maxHeight && maxHeight < height){
-				height = maxHeight;
-			}
-			return height;
-		}
-				
 		$loaded.hide().appendTo('body')
 		.css({width:getWidth()})
 		.css({height:getHeight()})//sets the height independently from the width in case the new width influences the value of height.
@@ -383,20 +382,29 @@
 	$.fn.colorbox.load = function(){
 		$.event.trigger('cbox_load');
 		
-		//if ($($related[index]).data('colorbox')){
 		settings = $($related[index]).data('colorbox');
-		//}
-		
-		if(settings.width){ settings.width = setSize(settings.width, 'x');}
-		if(settings.height){ settings.height = setSize(settings.height, 'y');}
 		
 		$loadingOverlay.show();
 		$loadingGraphic.show();
 		$close.show();
 		clearInline();//puts inline elements back if they are being used
 		
-		maxWidth = settings.maxWidth ? setSize(settings.maxWidth, 'x') - loadedWidth - interfaceWidth : false;
-		maxHeight = settings.maxHeight ? setSize(settings.maxHeight, 'y') - loadedHeight - interfaceHeight : false;
+		// Evaluate the height based on the optional height and width settings.
+		var height = settings.height ? setSize(settings.height, 'y') - loadedHeight - interfaceHeight : false;
+		var width = settings.width ? setSize(settings.width, 'x') - loadedWidth - interfaceWidth : false;
+		
+		//Re-evaluate the maximum dimensions based on the optional maxheight and maxwidth.
+		if(settings.maxHeight){
+			maxHeight = settings.maxHeight ? setSize(settings.maxHeight, 'y') - loadedHeight - interfaceHeight : false;
+			height = height && height < maxHeight ? height : maxHeight;
+		}
+		if(settings.maxWidth){
+			maxWidth = settings.maxWidth ? setSize(settings.maxWidth, 'x') - loadedWidth - interfaceWidth : false;
+			width = width && width < maxWidth ? width : maxWidth;
+		}
+		
+		maxHeight = height;
+		maxWidth = width;
 		
 		var href = settings.href;
 		
@@ -411,8 +419,8 @@
 			var loadingElement = new Image();
 			loadingElement.onload = function(){
 				loadingElement.onload = null;
-								
-				if(maxHeight || maxWidth){
+			
+				if((maxHeight || maxWidth) && settings.resize){
 					var width = this.width;
 					var height = this.height;
 					var percent = 0;

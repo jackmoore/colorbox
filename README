@@ -12,13 +12,17 @@ http://groups.google.com/group/colorbox/topics
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
 
+Version 1.2.2 - May 28 2009
+* Fixed an issue with the 'resize' option.
+
 Version 1.2.1 - May 28 2009
 * Note: If you are upgrading, update your jquery.colorbox.js and colorbox.css files.
 * Added photo resizing.
-* Added a maximum width and maximum height.  If photo resizing is on, photos will be resized to fit within
-  the maximum range.
+* Added a maximum width and maximum height. Example: {height:800, maxHeight:'100%'}, would allow the box
+  to be a maximum potential height of 800px, instead of a fixed height of 800px.  With maxHeight of 100%
+  the height of ColorBox cannot exceed the height of the browser window.
 * Added 'rel' setting to add the ability to set an alternative rel for any ColorBox call.  This allows the
-  user to group any combination of elements together for a gallery, or to override an existing rel
+  user to group any combination of elements together for a gallery, or to override an existing rel.
   attribute so those element are not grouped together, without having to alter their rel in the HTML.
 * Added a 'photo' setting to force ColorBox to display a link as a photo.  Use this when automatic photo detection
   fails (such as using a url like 'photo.php' instead of 'photo.jpg', 'photo.jpg#1', or 'photo.jpg?pic=1')
