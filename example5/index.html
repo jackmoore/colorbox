@@ -33,6 +33,7 @@
 				//Example of preserving a JavaScript event for inline calls.
 				$("#click").click(function(){ 
 					$('#click').css({"background-color":"#f00", "color":"#fff", "cursor":"inherit"}).text("Open this window again and this message will still be here.");
+					return false;
 				});
 				$("#inline").colorbox({width:"50%", inline:true, href:"#inline_example1", title:"hello"});
 			});

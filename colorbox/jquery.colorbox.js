@@ -1,11 +1,11 @@
 /*
-	ColorBox v1.2.2 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.2.3 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 (function($){
 	
-	var settings, callback, maxWidth, maxHeight, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, $related, ssTimeout, $slideshow, $window, $close, $next, $prev, $current, $title, $modal, $wrap, $loadingOverlay, $loadingGraphic, $overlay, $modalContent, $loaded, $borderTopCenter, $borderMiddleLeft, $borderMiddleRight, $borderBottomCenter;
+	var element, settings, callback, maxWidth, maxHeight, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, $related, ssTimeout, $slideshow, $window, $close, $next, $prev, $current, $title, $modal, $wrap, $loadingOverlay, $loadingGraphic, $overlay, $modalContent, $loaded, $borderTopCenter, $borderMiddleLeft, $borderMiddleRight, $borderBottomCenter;
 	
 	/* Helper Functions */
 	//function for IE6 to set the background overlay
@@ -87,7 +87,6 @@
 		
 		if(this.length){
 			this.each(function(){
-				
 				if($(this).data("colorbox")){
 					$(this).data("colorbox", $.extend({}, $(this).data("colorbox"), options));
 				} else {
@@ -106,6 +105,8 @@
 		
 		$(this).unbind("click.colorbox").bind("click.colorbox", function (event) {
 			
+			element = this;
+			
 			settings = $(this).data('colorbox');
 			
 			//remove the focus from the anchor to prevent accidentally calling
@@ -113,12 +114,7 @@
 			//after colorbox has opened, but before the user has clicked on anything else)
 			this.blur();
 			
-			if(custom_callback){
-				var that = this;
-				callback = function(){ $(that).each(custom_callback); };
-			} else {
-				callback = function(){};
-			}
+			callback = custom_callback ? custom_callback : false;
 			
 			if (settings.rel && settings.rel != 'nofollow') {
 				$related = $('.cboxelement').filter(function(){
@@ -129,7 +125,7 @@
 				$related = $(this);
 				index = 0;
 			}
-			if ($modal.data("open") !== true) {
+			if (!$modal.data("open")) {
 				$.event.trigger('cbox_open');
 				$close.html(settings.close);
 				$overlay.css({"opacity": settings.opacity}).show();
@@ -153,6 +149,10 @@
 		}
 		
 		return this;
+	};
+
+	$.fn.colorbox.element = function(){
+		return element;
 	};
 
 	/*
@@ -189,7 +189,7 @@
 		
 		$modalContent.append(
 			//loaded is filled with temporary HTML to allow the CSS backgrounds for those elements to load before ColorBox is actually called.
-			$loaded = $('<div id="cboxLoadedContent" />'),
+			$loaded = $('<div id="cboxLoadedContent" style="width:0; height:0;" />'),
 			$loadingOverlay = $('<div id="cboxLoadingOverlay" />'),
 			$loadingGraphic = $('<div id="cboxLoadingGraphic" />'),
 			$title = $('<div id="cboxTitle" />'),
@@ -283,7 +283,7 @@
 	
 	$.fn.colorbox.dimensions = function(object){
 		$window.unbind('resize.cbox_resize');
-		if($modal.data("open")!==true){ return false; }
+		if(!$modal.data("open")){ return false; }
 		
 		var speed = settings.transition=="none" ? 0 : settings.speed;
 		$loaded.remove();
@@ -305,9 +305,9 @@
 		}
 		
 		$loaded.hide().appendTo('body')
+		.attr({id:'cboxLoadedContent'})
 		.css({width:getWidth()})
 		.css({height:getHeight()})//sets the height independently from the width in case the new width influences the value of height.
-		.attr({id:'cboxLoadedContent'})
 		.prependTo($modalContent);
 		
 		if ($.browser.msie && $.browser.version < 7) {
@@ -323,10 +323,19 @@
 			var mWidth = $loaded.width()+loadedWidth+interfaceWidth;
 			var mHeight = $loaded.height()+loadedHeight+interfaceHeight;
 			$.fn.colorbox.position(mWidth, mHeight, s, function(){
-				if($modal.data("open")!==true){
+				if(!$modal.data("open")){
 					return false;
 				}
+				
+				if($.browser.msie){
+					//This fadeIn helps the bicubic resampling to kick-in.
+					if($('#cboxPhoto').length > 0 ){$loaded.fadeIn(100);}
+					//IE adds a filter when ColorBox fades in and out that can cause problems if the loaded content contains transparent pngs.
+					$modal.css('filter','');
+				}
+				
 				$modalContent.children().show();
+				
 				$loadingOverlay.hide();
 				$loadingGraphic.hide();
 				$slideshow.hide();
@@ -349,13 +358,21 @@
 				$('#cboxIframe').attr('src', $('#cboxIframe').attr('src'));//reloads the iframe now that it is added to the DOM & it is visible, which increases compatability with pages using DOM dependent JavaScript.
 				
 				$.event.trigger('cbox_complete');
-				callback();
-				if (settings.transition === 'fade'){
-					$modal.fadeTo(speed, 1);
+				
+				if(callback){
+					$(element).each(callback);
 				}
+				
+				if (settings.transition === 'fade'){
+					$modal.fadeTo(speed, 1, function(){
+						if($.browser.msie){$modal.css('filter','');}
+					});
+				}
+				
 				$window.bind('resize.cbox_resize', function(){
 					$.fn.colorbox.position(mWidth, mHeight, 0);
 				});
+				
 				return true;
 			});
 		}
@@ -380,9 +397,12 @@
 	};
 	
 	$.fn.colorbox.load = function(){
+		
 		$.event.trigger('cbox_load');
 		
-		settings = $($related[index]).data('colorbox');
+		element = $related[index];
+		
+		settings = $(element).data('colorbox');
 		
 		$loadingOverlay.show();
 		$loadingGraphic.show();
@@ -410,7 +430,7 @@
 		
 		if (settings.inline) {
 			$('<div id="cboxInlineTemp" />').hide().insertBefore($(href)[0]);
-			$.fn.colorbox.dimensions($(href).wrapAll("<div />").parent());
+			$.fn.colorbox.dimensions($(href).wrapAll('<div/>').parent());
 		} else if (settings.iframe) {
 			$.fn.colorbox.dimensions(
 				$("<div><iframe id='cboxIframe' name='iframe_"+new Date().getTime()+"' frameborder=0 src='"+href+"' /></div>")
@@ -446,9 +466,12 @@
 				if($related.length > 1){
 					$(this).css({cursor:'pointer'}).click($.fn.colorbox.next);
 				}
+				if($.browser.msie && $.browser.version == 7){
+					this.style.msInterpolationMode='bicubic';
+				}
 			};
 			loadingElement.src = href;
-		}else {
+		} else {
 			$('<div />').load(href, function(data, textStatus){
 				if(textStatus == "success"){
 					$.fn.colorbox.dimensions($(this));

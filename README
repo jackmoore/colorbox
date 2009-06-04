@@ -12,8 +12,18 @@ http://groups.google.com/group/colorbox/topics
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
 
+Version 1.2.3 - June 4 2009
+* Fixed a png transparency stacking issue in IE.
+* More accurate Ajax auto-sizing if the user was depending on the #cboxLoadedContent ID for CSS styling.
+* Added a public function for returning the current html element that ColorBox is associated with.
+  Example use: var that = $.fn.colorbox.element();
+* Added bicubic scaling for resized images in the original IE7.
+* Better transparent png support for IE6 in example 3.
+
+
 Version 1.2.2 - May 28 2009
 * Fixed an issue with the 'resize' option.
+
 
 Version 1.2.1 - May 28 2009
 * Note: If you are upgrading, update your jquery.colorbox.js and colorbox.css files.
