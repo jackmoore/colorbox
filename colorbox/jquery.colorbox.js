@@ -398,11 +398,11 @@
 	
 	$.fn.colorbox.load = function(){
 		
-		$.event.trigger('cbox_load');
-		
 		element = $related[index];
 		
 		settings = $(element).data('colorbox');
+		
+		$.event.trigger('cbox_load');
 		
 		$loadingOverlay.show();
 		$loadingGraphic.show();

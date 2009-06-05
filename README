@@ -18,7 +18,9 @@ Version 1.2.3 - June 4 2009
 * Added a public function for returning the current html element that ColorBox is associated with.
   Example use: var that = $.fn.colorbox.element();
 * Added bicubic scaling for resized images in the original IE7.
-* Better transparent png support for IE6 in example 3.
+* Removed the IE6 stylesheet and png files from Example 3.  It now uses the same png file for the controls
+  that the rest of the browsers use (an alpha transparency PNG8).  This example now only has 2 graphics
+  files and 1 stylesheet.
 
 
 Version 1.2.2 - May 28 2009
