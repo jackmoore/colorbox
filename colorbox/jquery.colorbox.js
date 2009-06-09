@@ -1,11 +1,11 @@
 /*
-	ColorBox v1.2.3 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.2.4 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 (function($){
 	
-	var element, settings, callback, maxWidth, maxHeight, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, $related, ssTimeout, $slideshow, $window, $close, $next, $prev, $current, $title, $modal, $wrap, $loadingOverlay, $loadingGraphic, $overlay, $modalContent, $loaded, $borderTopCenter, $borderMiddleLeft, $borderMiddleRight, $borderBottomCenter;
+	var open, element, settings, callback, maxWidth, maxHeight, loadedWidth, loadedHeight, interfaceHeight, interfaceWidth, index, $related, ssTimeout, $slideshow, $window, $close, $next, $prev, $current, $title, $modal, $wrap, $loadingOverlay, $loadingGraphic, $overlay, $modalContent, $loaded, $borderTopCenter, $borderMiddleLeft, $borderMiddleRight, $borderBottomCenter;
 	
 	/* Helper Functions */
 	//function for IE6 to set the background overlay
@@ -87,13 +87,10 @@
 		
 		if(this.length){
 			this.each(function(){
-				if($(this).data("colorbox")){
-					$(this).data("colorbox", $.extend({}, $(this).data("colorbox"), options));
-				} else {
-					$(this).data("colorbox", $.extend({}, $.fn.colorbox.settings, options));
-				}
+				var data = $(this).data("colorbox")
+					? $.extend({}, $(this).data("colorbox"), options)
+					: $.extend({}, $.fn.colorbox.settings, options);
 				
-				var data = $(this).data("colorbox");
 				data.title = data.title ? data.title : this.title;
 				data.href = data.href ? data.href : this.href;
 				data.rel = data.rel ? data.rel : this.rel;
@@ -125,11 +122,11 @@
 				$related = $(this);
 				index = 0;
 			}
-			if (!$modal.data("open")) {
+			if (!open) {
 				$.event.trigger('cbox_open');
 				$close.html(settings.close);
 				$overlay.css({"opacity": settings.opacity}).show();
-				$modal.data("open", true);
+				open = true;
 				$.fn.colorbox.position(setSize(settings.initialWidth, 'x'), setSize(settings.initialHeight, 'y'), 0);
 				if ($.browser.msie && $.browser.version < 7) {
 					$window.bind("resize scroll", IE6Overlay);
@@ -282,8 +279,9 @@
 	};
 	
 	$.fn.colorbox.dimensions = function(object){
+		if(!open){ return false; }
+		
 		$window.unbind('resize.cbox_resize');
-		if(!$modal.data("open")){ return false; }
 		
 		var speed = settings.transition=="none" ? 0 : settings.speed;
 		$loaded.remove();
@@ -323,9 +321,7 @@
 			var mWidth = $loaded.width()+loadedWidth+interfaceWidth;
 			var mHeight = $loaded.height()+loadedHeight+interfaceHeight;
 			$.fn.colorbox.position(mWidth, mHeight, s, function(){
-				if(!$modal.data("open")){
-					return false;
-				}
+				if(!open){ return false; }
 				
 				if($.browser.msie){
 					//This fadeIn helps the bicubic resampling to kick-in.
@@ -484,6 +480,7 @@
 
 	//public function for closing colorbox.  To use this within an iframe use the following format: parent.$.fn.colorbox.close();
 	$.fn.colorbox.close = function(){
+		open = false;
 		clearTimeout(ssTimeout);
 		$window.unbind('resize.cbox_resize');
 		$slideshow.unbind('cbox_complete cbox_load click');
@@ -503,7 +500,7 @@
 		.removeClass()
 		.fadeOut('fast', function(){
 			$loaded.remove();
-			$modal.removeData('open').css({'opacity':1});
+			$modal.css({'opacity':1});
 			$.event.trigger('cbox_closed');
 		});
 	};
