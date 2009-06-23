@@ -1,5 +1,5 @@
 /*
-	ColorBox v1.2.4 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+	ColorBox v1.2.5 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -54,7 +54,8 @@
 
 	function clearInline(){
 		if($("#cboxInlineTemp").length > 0){
-			$loaded.children().insertAfter("#cboxInlineTemp");
+			$loaded.children().insertBefore("#cboxInlineTemp");
+			$("#cboxInlineTemp").remove();
 		}
 	}
 
@@ -87,9 +88,8 @@
 		
 		if(this.length){
 			this.each(function(){
-				var data = $(this).data("colorbox")
-					? $.extend({}, $(this).data("colorbox"), options)
-					: $.extend({}, $.fn.colorbox.settings, options);
+				var data = $(this).data("colorbox") ? $.extend({},
+					$(this).data("colorbox"), options) : $.extend({}, $.fn.colorbox.settings, options);
 				
 				data.title = data.title ? data.title : this.title;
 				data.href = data.href ? data.href : this.href;
@@ -279,7 +279,7 @@
 	};
 	
 	$.fn.colorbox.dimensions = function(object){
-		if(!open){ return false; }
+		if(!open){ return; }
 		
 		$window.unbind('resize.cbox_resize');
 		
@@ -321,7 +321,7 @@
 			var mWidth = $loaded.width()+loadedWidth+interfaceWidth;
 			var mHeight = $loaded.height()+loadedHeight+interfaceHeight;
 			$.fn.colorbox.position(mWidth, mHeight, s, function(){
-				if(!open){ return false; }
+				if(!open){ return; }
 				
 				if($.browser.msie){
 					//This fadeIn helps the bicubic resampling to kick-in.
@@ -331,6 +331,10 @@
 				}
 				
 				$modalContent.children().show();
+				
+				//Waited until the iframe is added to the DOM & it is visible before setting the src.
+				//This increases compatability with pages using DOM dependent JavaScript.
+				$('#cboxIframe').attr('src', settings.href);
 				
 				$loadingOverlay.hide();
 				$loadingGraphic.hide();
@@ -351,12 +355,10 @@
 				}
 				$title.html(settings.title);
 				
-				$('#cboxIframe').attr('src', $('#cboxIframe').attr('src'));//reloads the iframe now that it is added to the DOM & it is visible, which increases compatability with pages using DOM dependent JavaScript.
-				
 				$.event.trigger('cbox_complete');
 				
 				if(callback){
-					$(element).each(callback);
+					callback.call(element);
 				}
 				
 				if (settings.transition === 'fade'){
@@ -368,8 +370,6 @@
 				$window.bind('resize.cbox_resize', function(){
 					$.fn.colorbox.position(mWidth, mHeight, 0);
 				});
-				
-				return true;
 			});
 		}
 		if (settings.transition == 'fade') {
@@ -388,8 +388,6 @@
 				$('<img />').attr('src', previous);
 			}
 		}
-		
-		return true;
 	};
 	
 	$.fn.colorbox.load = function(){
@@ -429,7 +427,7 @@
 			$.fn.colorbox.dimensions($(href).wrapAll('<div/>').parent());
 		} else if (settings.iframe) {
 			$.fn.colorbox.dimensions(
-				$("<div><iframe id='cboxIframe' name='iframe_"+new Date().getTime()+"' frameborder=0 src='"+href+"' /></div>")
+				$("<div><iframe id='cboxIframe' name='iframe_"+new Date().getTime()+"' frameborder=0 /></div>")
 			);//timestamp to prevent caching.
 		} else if (isImage(href)){
 			var loadingElement = new Image();
@@ -499,6 +497,7 @@
 		.stop(true, false)
 		.removeClass()
 		.fadeOut('fast', function(){
+			element.focus();
 			$loaded.remove();
 			$modal.css({'opacity':1});
 			$.event.trigger('cbox_closed');
