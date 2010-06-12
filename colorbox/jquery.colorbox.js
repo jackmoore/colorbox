@@ -1,4 +1,4 @@
-// ColorBox v1.3.4c - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+// ColorBox v1.3.5b - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 // c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 
@@ -187,8 +187,6 @@
 				settings.onOpen.call(element);
 			}
 			
-			$close.html(settings.close);
-			
 			$overlay.css({"opacity": settings.opacity}).show();
 			
 			// Opens inital empty ColorBox prior to content being loaded.
@@ -202,6 +200,10 @@
 				}).trigger("scroll.cboxie6");
 			}
 		}
+		
+		$current.add($prev).add($next).add($slideshow).add($title).hide();
+		
+		$close.html(settings.close).show();
 		
 		cboxPublic.slideshow();
 		
@@ -219,7 +221,7 @@
 		
 		if (!$this.length) {
 			if ($this.selector === '') { // empty selector means a direct call, ie: $.fn.colorbox();
-				$this = $($this);
+				$this = $($this).data(colorbox, defaults);
 				options.open = TRUE;
 			} else { // else the selector didn't match anything, and colorbox should go ahead and return.
 				return this;
@@ -287,9 +289,9 @@
 			)
 		).children().children().css({'float': 'left'});
 		
-		$loadingBay = $("<div style='position:absolute; top:0; left:0; width:0; height:0; overflow:hidden;'/>");
+		$loadingBay = $("<div style='position:absolute; top:0; left:0; width:9999px; height:0;'/>");
 		
-		$('body').prepend($overlay, $cbox.append($wrap), $loadingBay);
+		$('body').prepend($overlay, $cbox.append($wrap, $loadingBay));
 				
 		if (isIE) {
 			$cbox.addClass('cboxIE');
@@ -300,10 +302,9 @@
 		
 		// Add rollover event to navigation elements
 		$content.children()
-		.addClass(hover)
-		.mouseover(function () { $(this).addClass(hover); })
-		.mouseout(function () { $(this).removeClass(hover); })
-		.hide();
+		.bind('mouseover mouseout', function(){
+			$(this).toggleClass(hover);
+		}).addClass(hover);
 		
 		// Cache values needed for size calculations
 		interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(TRUE) - $content.height();//Subtraction needed for IE6
@@ -324,7 +325,7 @@
 		$content.children().removeClass(hover);
 		
 		$('.cboxElement').live('click', function (e) {
-			if (e.button !== 0) {// checks to see if it was a non-left mouse-click.
+			if (e.button !== 0 && typeof e.button !== 'undefined') {// checks to see if it was a non-left mouse-click.
 				return TRUE;
 			} else {
 				launch(this);			
@@ -440,33 +441,30 @@
 					$cbox[0].style.removeAttribute("filter");
 				}
 				
-				$content.children().show();
-				
 				//Waited until the iframe is added to the DOM & it is visible before setting the src.
 				//This increases compatability with pages using DOM dependent JavaScript.
 				if(settings.iframe){
 					$loaded.append("<iframe id='cboxIframe'" + (settings.scrolling ? " " : "scrolling='no'") + " name='iframe_"+new Date().getTime()+"' frameborder=0 src='"+(settings.href || element.href)+"' " + (isIE ? "allowtransparency='true'" : '') + " />");
 				}
 				
-				$loadingOverlay.hide();
-				$loadingGraphic.hide();
-				$slideshow.hide();
+				$loaded.show();
+				
+				$title.html(settings.title || element.title);
+				
+				$title.show();
 				
 				if ($related.length>1) {
-					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, $related.length));
-					$next.html(settings.next);
-					$prev.html(settings.previous);
+					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, $related.length)).show();
+					$next.html(settings.next).show();
+					$prev.html(settings.previous).show();
 					
 					if(settings.slideshow){
 						$slideshow.show();
 					}
-				} else {
-					$current.hide();
-					$next.hide();
-					$prev.hide();
 				}
 				
-				$title.html(settings.title || element.title);
+				$loadingOverlay.hide();
+				$loadingGraphic.hide();
 				
 				$.event.trigger(cbox_complete);
 				if (settings.onComplete) {
@@ -494,13 +492,13 @@
 			nextSrc = $(next).data(colorbox).href || next.href;
 			prevSrc = $(prev).data(colorbox).href || prev.href;
 			
-			//if(isImage(nextSrc)){
-			//	$('<img />').attr('src', nextSrc);
-			//}
-			//
-			//if(isImage(prevSrc)){
-			//	$('<img />').attr('src', prevSrc);
-			//}
+			if(isImage(nextSrc)){
+				$('<img />').attr('src', nextSrc);
+			}
+			
+			if(isImage(prevSrc)){
+				$('<img />').attr('src', prevSrc);
+			}
 		}
 	};
 
@@ -583,8 +581,7 @@
 		
 		$loadingOverlay.show();
 		$loadingGraphic.show();
-		$close.show();
-			
+		
 		if (settings.inline) {
 			// Inserts an empty placeholder where inline content is being pulled from.
 			// An event is bound to put inline content back when ColorBox closes or loads new content.
@@ -727,9 +724,9 @@
 		$cbox
 		.stop(TRUE, FALSE)
 		.fadeOut('fast', function () {
+			$('#colorbox iframe').attr('src', 'about:blank');
 			$loaded.remove();
 			$cbox.css({'opacity': 1});
-			$content.children().hide();
 			
 			try{
 				bookmark.focus();
