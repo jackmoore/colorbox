@@ -1,9 +1,9 @@
-/*!	ColorBox v1.3.2 - a full featured, light-weight, customizable lightbox based on jQuery 1.3 */
-//	(c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
-//	Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+// ColorBox v1.3.3 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+// c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
+// Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 
 (function ($) {
-	//Shortcuts (to increase compression)
+	// Shortcuts (to increase compression)
 	var colorbox = 'colorbox',
 	hover = 'hover',
 	TRUE = true,
@@ -12,7 +12,7 @@
 	isIE = !$.support.opacity,
 	isIE6 = isIE && !window.XMLHttpRequest,
 
-	//Event Strings (to increase compression)
+	// Event Strings (to increase compression)
 	cbox_click = 'click.colorbox',
 	cbox_open = 'cbox_open',
 	cbox_load = 'cbox_load',
@@ -21,7 +21,7 @@
 	cbox_closed = 'cbox_closed',
 	cbox_resize = 'resize.cbox_resize',
 
-	//Cached jQuery Object Variables
+	// Cached jQuery Object Variables
 	$overlay,
 	$cbox,
 	$wrap,
@@ -42,7 +42,7 @@
 	$prev,
 	$close,
 
-	//Variables for cached values or use across multiple functions
+	// Variables for cached values or use across multiple functions
 	interfaceHeight,
 	interfaceWidth,
 	loadedHeight,
@@ -141,7 +141,8 @@
 			
 			settings = $(element).data(colorbox);
 			
-			process();//process settings functions
+			// Convert functions to their returned values.
+			process();
 			
 			callback = custom_callback || FALSE;
 			
@@ -154,7 +155,8 @@
 				});
 				index = $related.index(element);
 				
-				if (index < 0) { //this checks direct calls to colorbox
+				// Check direct calls to ColorBox.
+				if (index < 0) { 
 					$related = $related.add(element);
 					index = $related.length - 1;
 				}
@@ -166,7 +168,8 @@
 			if (!open) {
 				open = TRUE;
 				
-				active = TRUE; // this is to prevent the page-change action from queuing up if the visitor holds down the left or right keys.
+				active = TRUE; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
+				
 				// Set Navigation Key Bindings
 				$().bind("keydown.cbox_close", function (e) {
 					if (e.keyCode === 27) {
@@ -187,9 +190,8 @@
 					$overlay.css({"cursor": "pointer"}).one('click', cboxPublic.close);
 				}
 				
-				//remove the focus from the anchor to prevent accidentally calling
-				//colorbox multiple times (by pressing the 'Enter' key
-				//after colorbox has opened, but before the user has clicked on anything else)
+				// Remove the focus from the anchor to prevent accidentally calling
+				// ColorBox multiple times (by pressing the 'Enter' key after colorbox has opened, but before the user has clicked on anything else)
 				element.blur();
 				
 				$.event.trigger(cbox_open);
@@ -484,7 +486,7 @@
 			$imgs = $ajax.find('img'),
 			x = $imgs.length;
 			
-			(function loadloop(){
+			function loadloop(){
 				var img = new Image();
 				x = x-1;
 				if(x >= 0 && settings.preloadIMG){
@@ -493,7 +495,9 @@
 				} else {
 					resize($ajax);
 				}
-			}());
+			}
+			
+			loadloop();
 		}
 		
 		element = $related[index];
@@ -532,7 +536,7 @@
 			settings.mh = settings.h && settings.h < settings.mh ? settings.h : settings.mh;
 		}
 		
-		href = settings.href || element.href;
+		href = settings.href || $(element).attr("href");
 		
 		$loadingOverlay.show();
 		$loadingGraphic.show();
@@ -603,7 +607,7 @@
 		}
 	};
 
-	//navigates to the next page/image in a set.
+	// Navigates to the next page/image in a set.
 	cboxPublic.next = function () {
 		if(!active){
 			index = index < $related.length-1 ? index+1 : 0;
@@ -664,7 +668,7 @@
 		}
 	};
 
-	//Note: to use this within an iframe use the following format: parent.$.fn.colorbox.close();
+	// Note: to use this within an iframe use the following format: parent.$.fn.colorbox.close();
 	cboxPublic.close = function () {
 		$.event.trigger(cbox_cleanup);
 		open = FALSE;
@@ -682,7 +686,9 @@
 		});
 	};
 
-	cboxPublic.element = function(){ return element; };
+	// A method for fetching the current element ColorBox is referencing.
+	// returns a jQuery object.
+	cboxPublic.element = function(){ return $(element); };
 
 	cboxPublic.settings = defaults;
 

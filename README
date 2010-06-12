@@ -11,6 +11,12 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
+Version 1.3.3 - November 7 2009
+Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
+* Changed $.fn.colorbox.element() to return a jQuery object rather the DOM element.
+* jQuery.colorbox-min.js is compressed with Google's Closure Compiler rather than YUI Compressor.
+
+
 Version 1.3.2 - October 27 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Added IMG preloading to Ajax & HTML loading.  ColorBox now loops through supplied HTML to find IMG
@@ -23,6 +29,7 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Bug fix: In IE6, the background overlay is briefly not full size when first viewing.
 * Bug fix: In Firefox, opening ColorBox causes a split second shift with a small minority of webpage layouts.
 * Simplified code in a few areas.
+
 
 Version 1.3.1 - September 16 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js/colorbox.css/colorbox-ie.css(removed)
@@ -266,5 +273,3 @@ Version 1.0.1 - March 05 2009
 
 Version 1.0 - March 03 2009
 * First release
-
-
