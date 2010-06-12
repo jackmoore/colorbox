@@ -1,4 +1,4 @@
-// ColorBox v1.3.6 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+// ColorBox v1.3.7 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 // c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 
@@ -9,7 +9,7 @@
 	TRUE = true,
 	FALSE = false,
 	cboxPublic,
-	isIE = $.browser.msie && !$.support.opacity, // feature detection alone gave false positives in some browsers
+	isIE = $.browser.msie && !$.support.opacity, // feature detection alone gave a false positive on at least one phone browser
 	isIE6 = isIE && $.browser.version < 7,
 
 	// Event Strings (to increase compression)
@@ -18,7 +18,6 @@
 	cbox_complete = 'cbox_complete',
 	cbox_cleanup = 'cbox_cleanup',
 	cbox_closed = 'cbox_closed',
-	cbox_resize = 'resize.cbox_resize',
 
 	// Cached jQuery Object Variables
 	$overlay,
@@ -34,7 +33,6 @@
 	$loaded,
 	$loadingBay,
 	$loadingOverlay,
-	$loadingGraphic,
 	$title,
 	$current,
 	$slideshow,
@@ -84,6 +82,7 @@
 		close: "close",
 		open: FALSE,
 		overlayClose: TRUE,
+		loop: TRUE,
 		
 		slideshow: FALSE,
 		slideshowAuto: TRUE,
@@ -95,7 +94,10 @@
 		onLoad: FALSE,
 		onComplete: FALSE,
 		onCleanup: FALSE,
-		onClosed: FALSE
+		onClosed: FALSE,
+		
+		escKey:TRUE,
+		arrowKey:TRUE
 	};
 	
 	// ****************
@@ -122,8 +124,8 @@
 			    settings[i] = settings[i].call(element);
 			}
 		}
-		settings.rel = settings.rel || element.rel;
-		settings.href = settings.href || element.href;
+		settings.rel = settings.rel || element.rel || 'nofollow';
+		settings.href = settings.href || $(element).attr('href');
 		settings.title = settings.title || element.title;
 	}
 
@@ -131,11 +133,11 @@
 		
 		element = elem;
 		
-		settings = $(element).data(colorbox);
+		settings = $.extend({}, $(element).data(colorbox));
 		
 		process(); // Convert functions to their returned values.
 		
-		if (settings.rel && settings.rel !== 'nofollow') {
+		if (settings.rel !== 'nofollow') {
 			$related = $('.cboxElement').filter(function () {
 				var relRelated = $(this).data(colorbox).rel || this.rel;
 				return (relRelated === settings.rel);
@@ -159,36 +161,16 @@
 			
 			bookmark = element;
 			
-			bookmark.blur(); // Remove the focus from the calling element.
-			
-			// Set Navigation Key Bindings
-			$(document).bind("keydown.cbox_close", function (e) {
-				if (e.keyCode === 27) {
-					e.preventDefault();
-					cboxPublic.close();
-				}
-			}).bind("keydown.cbox_arrows", function (e) {
-				if ($related.length > 1) {
-					if (e.keyCode === 37) {
-						e.preventDefault();
-						$prev.click();
-					} else if (e.keyCode === 39) {
-						e.preventDefault();
-						$next.click();
-					}
-				}
-			});
-			
-			if (settings.overlayClose) {
-				$overlay.css({"cursor": "pointer"}).one('click', cboxPublic.close);
-			}
+			try{
+				bookmark.blur(); // Remove the focus from the calling element.
+			}catch(e){}
 			
 			$.event.trigger(cbox_open);
 			if (settings.onOpen) {
 				settings.onOpen.call(element);
 			}
 			
-			$overlay.css({"opacity": settings.opacity}).show();
+			$overlay.css({"opacity": parseFloat(settings.opacity), "cursor": settings.overlayClose ? "pointer" : "auto"}).show();
 			
 			// Opens inital empty ColorBox prior to content being loaded.
 			settings.w = setSize(settings.initialWidth, 'x');
@@ -196,9 +178,9 @@
 			cboxPublic.position(0);
 			
 			if (isIE6) {
-				$window.bind('resize.cboxie6 scroll.cboxie6', function () {
+				$window.bind('resize.cboxIE6 scroll.cboxIE6', function () {
 					$overlay.css({width: $window.width(), height: $window.height(), top: $window.scrollTop(), left: $window.scrollLeft()});
-				}).trigger("scroll.cboxie6");
+				}).trigger("scroll.cboxIE6");
 			}
 		}
 		
@@ -217,33 +199,33 @@
 	// Usage from within an iframe: parent.$.fn.colorbox.close();
 	// ****************
 	
-	cboxPublic = $.fn.colorbox = function (options, callback) {
+	cboxPublic = $.fn.colorbox = $.colorbox = function (options, callback) {
 		var $this = this;
 		
-		if (!$this.length) {
-			if ($this.selector === '') { // empty selector means a direct call, ie: $.fn.colorbox();
-				$this = $('<a/>');
-				options.open = TRUE;
-			} else { // else the selector didn't match anything, and colorbox should go ahead and return.
-				return this;
-			}
+		if($this.selector && !$this.length){
+			return $this;
+		}
+		
+		options = options || {};
+		
+		if(callback){
+			options.onComplete = callback;
+		}
+		
+		if(!$this.length || $this.selector === undefined){ // detects $.colorbox() and $.fn.colorbox()
+			$this = $('<a/>');
+			options.open = TRUE; // assume an immediate open
 		}
 		
 		$this.each(function () {
-			var data = $.extend({}, $(this).data(colorbox) ? $(this).data(colorbox) : defaults, options);
-			
-			$(this).data(colorbox, data).addClass("cboxElement");
-			
-			if (callback) {
-				$(this).data(colorbox).onComplete = callback;
-			}
+			$(this).data(colorbox, $.extend({}, $(this).data(colorbox) || defaults, options)).addClass("cboxElement");
 		});
 		
-		if (options && options.open) {
-			launch($this);
+		if(options.open){
+			launch($this[0]);
 		}
 		
-		return this;
+		return $this;
 	};
 
 	// Initialize ColorBox: store common calculations, preload the interface graphics, append the html.
@@ -263,13 +245,12 @@
 		$wrap = $div("Wrapper");
 		$content = $div("Content").append(
 			$loaded = $div("LoadedContent").css({width: 0, height: 0}),
-			$loadingOverlay = $div("LoadingOverlay"),
-			$loadingGraphic = $div("LoadingGraphic"),
+			$loadingOverlay = $div("LoadingOverlay").add($div("LoadingGraphic")),
 			$title = $div("Title"),
 			$current = $div("Current"),
-			$slideshow = $div("Slideshow"),
 			$next = $div("Next"),
 			$prev = $div("Previous"),
+			$slideshow = $div("Slideshow"),
 			$close = $div("Close")
 		);
 		$wrap.append( // The 3x3 Grid that makes up ColorBox
@@ -290,9 +271,9 @@
 			)
 		).children().children().css({'float': 'left'});
 		
-		$loadingBay = $("<div style='position:absolute; top:0; left:0; width:9999px; height:0;'/>");
+		$loadingBay = $("<div id='cboxLoadingBay' style='position:absolute; top:-200px; left:-200px; width:50px; height:50px; overflow:hidden;'/>");
 		
-		$('body').prepend($overlay, $cbox.append($wrap, $loadingBay));
+		$('body').prepend($overlay, $cbox.append($wrap), $loadingBay);
 				
 		if (isIE) {
 			$cbox.addClass('cboxIE');
@@ -316,7 +297,7 @@
 		// Setting padding to remove the need to do size conversions during the animation step.
 		$cbox.css({"padding-bottom": interfaceHeight, "padding-right": interfaceWidth}).hide();
 		
-		// Setup button & key events.
+		// Setup button events.
 		$next.click(cboxPublic.next);
 		$prev.click(cboxPublic.prev);
 		$close.click(cboxPublic.close);
@@ -326,22 +307,46 @@
 		$content.children().removeClass(hover);
 		
 		$('.cboxElement').live('click', function (e) {
-			if (e.button !== 0 && typeof e.button !== 'undefined') {// checks to see if it was a non-left mouse-click.
+			// checks to see if it was a non-left mouse-click and for clicks modified with ctrl, shift, or alt.
+			if ((e.button !== 0 && typeof e.button !== 'undefined') || e.ctrlKey || e.shiftKey || e.altKey) {
 				return TRUE;
 			} else {
 				launch(this);			
 				return FALSE;
 			}
 		});
+		
+		$overlay.click(function(){
+			if (settings.overlayClose) {
+				cboxPublic.close();
+			}
+		});
+		
+		// Set Navigation Key Bindings
+		$(document).bind("keydown", function (e) {
+			if(open && settings.escKey && e.keyCode === 27) {
+				e.preventDefault();
+				cboxPublic.close();
+			}
+			if (open && settings.arrowKey && !active && $related.length > 1) {
+				if (e.keyCode === 37 && (index > 0 || settings.loop)) {
+					e.preventDefault();
+					$prev.click();
+				} else if (e.keyCode === 39 && (index < $related.length - 1 || settings.loop)) {
+					e.preventDefault();
+					$next.click();
+				}
+			}
+		});
+		
 	};
 
 	cboxPublic.position = function (speed, loadedCallback) {
 		var
 		animate_speed,
-		winHeight = $window.height(),
 		// keeps the top and left positions within the browser's viewport.
-		posTop = Math.max(winHeight - settings.h - loadedHeight - interfaceHeight,0)/2 + $window.scrollTop(),
-		posLeft = Math.max(document.documentElement.clientWidth - settings.w - loadedWidth - interfaceWidth,0)/2 + $window.scrollLeft();
+		posTop = Math.max($window.height() - settings.h - loadedHeight - interfaceHeight,0)/2 + $window.scrollTop(),
+		posLeft = Math.max($window.width() - settings.w - loadedWidth - interfaceWidth,0)/2 + $window.scrollLeft();
 		
 		// setting the speed to 0 to reduce the delay between same-sized content.
 		animate_speed = ($cbox.width() === settings.w+loadedWidth && $cbox.height() === settings.h+loadedHeight) ? 0 : speed;
@@ -352,9 +357,9 @@
 		$wrap[0].style.width = $wrap[0].style.height = "9999px";
 		
 		function modalDimensions (that) {
-			// loading overlay size has to be sure that IE6 uses the correct height.
+			// loading overlay height has to be explicitly set for IE6.
 			$topBorder[0].style.width = $bottomBorder[0].style.width = $content[0].style.width = that.style.width;
-			$loadingGraphic[0].style.height = $loadingOverlay[0].style.height = $content[0].style.height = $leftBorder[0].style.height = $rightBorder[0].style.height = that.style.height;
+			$loadingOverlay[0].style.height = $loadingOverlay[1].style.height = $content[0].style.height = $leftBorder[0].style.height = $rightBorder[0].style.height = that.style.height;
 		}
 		
 		$cbox.dequeue().animate({width:settings.w+loadedWidth, height:settings.h+loadedHeight, top:posTop, left:posLeft}, {duration: animate_speed,
@@ -375,30 +380,43 @@
 		});
 	};
 
-	cboxPublic.resize = function (object) {
+	cboxPublic.resize = function(options){
+		if(open){
+			options = options || {};
+			
+			if(options.width){
+				settings.w = setSize(options.width, 'x') - loadedWidth - interfaceWidth;
+			}
+			if(options.innerWidth){
+				settings.w = setSize(options.innerWidth, 'x');
+			}
+			$loaded.css({width:settings.w});
+			
+			if(options.height){
+				settings.h = setSize(options.height, 'y') - loadedHeight - interfaceHeight;
+			}
+			if(options.innerHeight){
+				settings.h = setSize(options.innerHeight, 'y');
+			}
+			if(!options.innerHeight && !options.height){				
+				var $child = $loaded.wrapInner("<div style='overflow:auto'></div>").children(); // temporary wrapper to get an accurate estimate of just how high the total content should be.
+				settings.h = $child.height();
+				$child.replaceWith($child.children()); // ditch the temporary wrapper div used in height calculation
+			}
+			$loaded.css({height:settings.h});
+			
+			cboxPublic.position(settings.transition==="none" ? 0 : settings.speed);
+		}
+	};
+
+	cboxPublic.prep = function (object) {
 		if(!open){ return; }
 		
 		var topMargin,
-		prev,
-		prevSrc,
-		next,
-		nextSrc,
 		photo,
-		timeout,
 		speed = settings.transition==="none" ? 0 : settings.speed;
 		
-		$window.unbind(cbox_resize);
-		
-		if(!object){
-			timeout = setTimeout(function(){ // timer allows IE to render the dimensions before attempting to calculate the height
-				var $child = $loaded.wrapInner("<div style='overflow:auto'></div>").children(); // temporary wrapper to get an accurate estimate of just how high the total content should be.
-				settings.h = $child.height();
-				$loaded.css({height:settings.h});
-				$child.replaceWith($child.children()); // ditch the temporary wrapper div used in height calculation
-				cboxPublic.position(speed);
-			}, 1);
-			return;
-		}
+		$window.unbind('resize.cbox');
 		
 		$loaded.remove();
 		$loaded = $('<div id="cboxLoadedContent"/>').html(object);
@@ -432,6 +450,7 @@
 		}
 				
 		function setPosition (s) {
+			var prev, prevSrc, next, nextSrc, total = $related.length, loop = settings.loop;
 			cboxPublic.position(s, function(){
 				if (!open) { return; }
 				
@@ -445,30 +464,47 @@
 				//Waited until the iframe is added to the DOM & it is visible before setting the src.
 				//This increases compatability with pages using DOM dependent JavaScript.
 				if(settings.iframe){
-					$loaded.append("<iframe id='cboxIframe'" + (settings.scrolling ? " " : "scrolling='no'") + " name='iframe_"+new Date().getTime()+"' frameborder=0 src='"+settings.href+"' " + (isIE ? "allowtransparency='true'" : '') + " />");
+					$("<iframe frameborder=0" + (settings.scrolling ? "" : " scrolling='no'") + (isIE ? " allowtransparency='true'" : '') + " />")
+					.appendTo($loaded)
+					.attr({src: settings.href, id: 'cboxIframe', name: new Date().getTime()});
 				}
 				
 				$loaded.show();
 				
 				$title.show().html(settings.title);
 				
-				if ($related.length>1) {
-					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, $related.length)).show();
-					$next.html(settings.next).show();
-					$prev.html(settings.previous).show();
+				if (total>1){ // handle grouping
+					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, total)).show();
+					
+					$next[(loop || index < total-1) ? "show" : "hide"]().html(settings.next);
+					$prev[(loop || index > 0) ? "show" : "hide"]().html(settings.prev);
+					
+					prev = index > 0 ? $related[index-1] : $related[total-1];
+					next = index < total-1 ? $related[index+1] : $related[0];
 					
 					if(settings.slideshow){
 						$slideshow.show();
+						if(index === total-1 && !loop && $cbox.is('.cboxSlideshow_on')){
+							$slideshow.click();
+						}
+					}
+					
+					// Preloads images within a rel group
+					if (settings.preloading) {
+						nextSrc = $(next).data(colorbox).href || next.href;
+						prevSrc = $(prev).data(colorbox).href || prev.href;
+						
+						if(isImage(nextSrc)){
+							$('<img />')[0].src = nextSrc;
+						}
+						
+						if(isImage(prevSrc)){
+							$('<img />')[0].src = prevSrc;
+						}
 					}
 				}
 				
 				$loadingOverlay.hide();
-				$loadingGraphic.hide();
-				
-				$.event.trigger(cbox_complete);
-				if (settings.onComplete) {
-					settings.onComplete.call(element);
-				}
 				
 				if (settings.transition === 'fade'){
 					$cbox.fadeTo(speed, 1, function(){
@@ -476,70 +512,28 @@
 					});
 				}
 				
-				$window.bind(cbox_resize, function(){
+				$window.bind('resize.cbox', function(){
 					cboxPublic.position(0);
 				});
+				
+				$.event.trigger(cbox_complete);
+				if (settings.onComplete) {
+					settings.onComplete.call(element);
+				}
 			});
 		}
 		
 		if((settings.transition === 'fade' && $cbox.fadeTo(speed, 0, function(){setPosition(0);})) || setPosition(speed)){}
-		
-		// Preloads images within a rel group
-		if (settings.preloading && $related.length>1) {
-			prev = index > 0 ? $related[index-1] : $related[$related.length-1];
-			next = index < $related.length-1 ? $related[index+1] : $related[0];
-			nextSrc = $(next).data(colorbox).href || next.href;
-			prevSrc = $(prev).data(colorbox).href || prev.href;
-			
-			if(isImage(nextSrc)){
-				$('<img />').attr('src', nextSrc);
-			}
-			
-			if(isImage(prevSrc)){
-				$('<img />').attr('src', prevSrc);
-			}
-		}
 	};
 
 	cboxPublic.load = function () {
-		var href, img, setResize, resize = cboxPublic.resize;
+		var href, img, setResize, prep = cboxPublic.prep;
 		
 		active = TRUE;
 		
-		/*
-		 
-		// I decided to comment this out because I can see it causing problems as users
-		// really should just set the dimensions on their IMG elements instead,
-		// but I'm leaving the code in as it may be useful to someone.
-		// To use, uncomment the function and change 'if(textStatus === "success"){ resize(this); }'
-		// to 'if(textStatus === "success"){ preload(this); }'
-		
-		// Preload loops through the HTML to find IMG elements and loads their sources.
-		// This allows the resize method to accurately estimate the dimensions of the new content.
-		function preload(html){
-			var
-			$ajax = $(html),
-			$imgs = $ajax.find('img'),
-			x = $imgs.length;
-			
-			function loadloop(){
-				var img = new Image();
-				x = x-1;
-				if(x >= 0){
-					img.onload = loadloop;
-					img.src = $imgs[x].src;
-				} else {
-					resize($ajax);
-				}
-			}
-			
-			loadloop();
-		}
-		*/
-		
 		element = $related[index];
 		
-		settings = $(element).data(colorbox);
+		settings = $.extend({}, $(element).data(colorbox));
 		
 		//convert functions to static values
 		process();
@@ -579,7 +573,6 @@
 		href = settings.href;
 		
 		$loadingOverlay.show();
-		$loadingGraphic.show();
 		
 		if (settings.inline) {
 			// Inserts an empty placeholder where inline content is being pulled from.
@@ -587,13 +580,13 @@
 			$('<div id="cboxInlineTemp" />').hide().insertBefore($(href)[0]).bind(cbox_load+' '+cbox_cleanup, function(){
 				$(this).replaceWith($loaded.children());
 			});
-			resize($(href));
+			prep($(href));
 		} else if (settings.iframe) {
 			// IFrame element won't be added to the DOM until it is ready to be displayed,
 			// to avoid problems with DOM-ready JS that might be trying to run in that iframe.
-			resize(" ");
+			prep(" ");
 		} else if (settings.html) {
-			resize(settings.html);
+			prep(settings.html);
 		} else if (isImage(href)){
 			img = new Image();
 			img.onload = function(){
@@ -624,7 +617,7 @@
 					img.style.marginTop = Math.max(settings.h - img.height,0)/2 + 'px';
 				}
 				
-				resize(img);
+				prep(img);
 				
 				if($related.length > 1){
 					$(img).css({cursor:'pointer'}).click(cboxPublic.next);
@@ -636,12 +629,8 @@
 			};
 			img.src = href;
 		} else {
-			$('<div />').appendTo($loadingBay).load(href, function(data, textStatus){
-				if(textStatus === "success"){
-					resize(this);
-				} else {
-					resize($("<p>Request unsuccessful.</p>"));
-				}
+			$('<div><p>Request unsuccessful.</p></div>').appendTo($loadingBay).load(href, function(data, textStatus){
+				prep(this);
 			});
 		}
 	};
@@ -709,35 +698,40 @@
 
 	// Note: to use this within an iframe use the following format: parent.$.fn.colorbox.close();
 	cboxPublic.close = function () {
-		
-		$.event.trigger(cbox_cleanup);
-		if (settings.onCleanup) {
-			settings.onCleanup.call(element);
+		if(open){
+			open = FALSE;
+			
+			$.event.trigger(cbox_cleanup);
+			
+			if (settings.onCleanup) {
+				settings.onCleanup.call(element);
+			}
+			
+			$window.unbind('.cbox .cboxIE6');
+			
+			$cbox.add($overlay)
+			.stop()
+			.fadeTo('fast', 0, function () {
+				$('#colorbox iframe').attr('src','about:blank'); // change the location of the iframe to avoid a problem in IE with flash objects not clearing.
+				
+				$loaded.remove();
+				
+				$cbox.add($overlay).css({'opacity': 1, cursor:'auto'}).hide();
+				
+				try{
+					bookmark.focus();
+				} catch (e){
+					// do nothing
+				}
+				
+				setTimeout(function(){
+					$.event.trigger(cbox_closed);
+					if (settings.onClosed) {
+						settings.onClosed.call(element);
+					}
+				},1);
+			});
 		}
-		
-		open = FALSE;
-		$(document).unbind("keydown.cbox_close keydown.cbox_arrows");
-		$window.unbind(cbox_resize+' resize.cboxie6 scroll.cboxie6');
-		$overlay.css({cursor: 'auto'}).fadeOut('fast');
-		
-		$cbox
-		.stop(TRUE, FALSE)
-		.fadeOut('fast', function () {
-			$('#colorbox iframe').attr('src', 'about:blank');
-			$loaded.remove();
-			$cbox.css({'opacity': 1});
-			
-			try{
-				bookmark.focus();
-			} catch (er){
-				// do nothing
-			}
-			
-			$.event.trigger(cbox_closed);
-			if (settings.onClosed) {
-				settings.onClosed.call(element);
-			}
-		});
 	};
 
 	// A method for fetching the current element ColorBox is referencing.
