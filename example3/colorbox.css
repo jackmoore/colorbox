@@ -22,7 +22,7 @@
 
 #colorbox{}
     #cboxContent{background:#000; margin-top:20px;}
-        #cboxLoadedContent{background:#000; padding:5px;}
+        #cboxContent{background:#000; padding:5px;}
         #cboxTitle{position:absolute; top:-20px; left:0; color:#ccc;}
         #cboxCurrent{position:absolute; top:-20px; right:0px; color:#ccc;}
         #cboxSlideshow{position:absolute; top:-20px; right:90px; color:#fff;}
