@@ -1,4 +1,4 @@
-// ColorBox v1.3.5b - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+// ColorBox v1.3.6 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 // c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 
@@ -9,8 +9,8 @@
 	TRUE = true,
 	FALSE = false,
 	cboxPublic,
-	isIE = !$.support.opacity,
-	isIE6 = isIE && !window.XMLHttpRequest,
+	isIE = $.browser.msie && !$.support.opacity, // feature detection alone gave false positives in some browsers
+	isIE6 = isIE && $.browser.version < 7,
 
 	// Event Strings (to increase compression)
 	cbox_open = 'cbox_open',
@@ -122,6 +122,9 @@
 			    settings[i] = settings[i].call(element);
 			}
 		}
+		settings.rel = settings.rel || element.rel;
+		settings.href = settings.href || element.href;
+		settings.title = settings.title || element.title;
 	}
 
 	function launch(elem) {
@@ -132,12 +135,10 @@
 		
 		process(); // Convert functions to their returned values.
 		
-		var rel = settings.rel || element.rel;
-		
-		if (rel && rel !== 'nofollow') {
+		if (settings.rel && settings.rel !== 'nofollow') {
 			$related = $('.cboxElement').filter(function () {
 				var relRelated = $(this).data(colorbox).rel || this.rel;
-				return (relRelated === rel);
+				return (relRelated === settings.rel);
 			});
 			index = $related.index(element);
 			
@@ -161,7 +162,7 @@
 			bookmark.blur(); // Remove the focus from the calling element.
 			
 			// Set Navigation Key Bindings
-			$().bind("keydown.cbox_close", function (e) {
+			$(document).bind("keydown.cbox_close", function (e) {
 				if (e.keyCode === 27) {
 					e.preventDefault();
 					cboxPublic.close();
@@ -221,7 +222,7 @@
 		
 		if (!$this.length) {
 			if ($this.selector === '') { // empty selector means a direct call, ie: $.fn.colorbox();
-				$this = $($this).data(colorbox, defaults);
+				$this = $('<a/>');
 				options.open = TRUE;
 			} else { // else the selector didn't match anything, and colorbox should go ahead and return.
 				return this;
@@ -444,14 +445,12 @@
 				//Waited until the iframe is added to the DOM & it is visible before setting the src.
 				//This increases compatability with pages using DOM dependent JavaScript.
 				if(settings.iframe){
-					$loaded.append("<iframe id='cboxIframe'" + (settings.scrolling ? " " : "scrolling='no'") + " name='iframe_"+new Date().getTime()+"' frameborder=0 src='"+(settings.href || element.href)+"' " + (isIE ? "allowtransparency='true'" : '') + " />");
+					$loaded.append("<iframe id='cboxIframe'" + (settings.scrolling ? " " : "scrolling='no'") + " name='iframe_"+new Date().getTime()+"' frameborder=0 src='"+settings.href+"' " + (isIE ? "allowtransparency='true'" : '') + " />");
 				}
 				
 				$loaded.show();
 				
-				$title.html(settings.title || element.title);
-				
-				$title.show();
+				$title.show().html(settings.title);
 				
 				if ($related.length>1) {
 					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, $related.length)).show();
@@ -577,7 +576,7 @@
 			settings.mh = settings.h && settings.h < settings.mh ? settings.h : settings.mh;
 		}
 		
-		href = settings.href || $(element).attr("href");
+		href = settings.href;
 		
 		$loadingOverlay.show();
 		$loadingGraphic.show();
@@ -717,7 +716,7 @@
 		}
 		
 		open = FALSE;
-		$().unbind("keydown.cbox_close keydown.cbox_arrows");
+		$(document).unbind("keydown.cbox_close keydown.cbox_arrows");
 		$window.unbind(cbox_resize+' resize.cboxie6 scroll.cboxie6');
 		$overlay.css({cursor: 'auto'}).fadeOut('fast');
 		
