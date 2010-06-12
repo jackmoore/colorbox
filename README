@@ -12,12 +12,55 @@ http://groups.google.com/group/colorbox/topics
 RELEASE NOTES:
 ----------------------------------------------------------------------------------------------------------
 
+Version 1.2.9 - August 7 2009
+* Minor change to enable use with $.getScript();
+* Minor change to the timing of the 'cbox_load' event so that it is more useful.
+* Added a direct link to a YouTube video to the examples.
+
+
+Version 1.2.8 - August 5 2009
+Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
+* Fixed a bug with the overlay in IE6
+* Fixed a bug where left & right keypress events might be prematurely unbound.
+* Removed focus return on closing because of potential problems in IE.
+
+
+Version 1.2.7 - July 31 2009
+Files Changed: jquery.colorbox.js/jquery.colorbox-min.js, example stylesheets and background images
+(core styles have not changed and the updates will not affect existing user themes / old example themes)
+* Code cleanup and reduction, better organization and documentation in the full source.
+* Added ability to use functions in place of static values for ColorBox's options (thanks Ken!).
+* Added an option for straight HTML.  Example: $.fn.colorbox({html:'<p>Howdy</p>', open:true})
+* Added an event for the beginning of the closing process.  This is in addition to the event that already
+  existed for when ColorBox had completely closed.  'cbox_close' and 'cbox_closed' respectively.
+* Fixed a minor bug in IE6 that would cause a brief content shift in the parent document when opening ColorBox.
+* Fixed a minor bug in IE6 that would reveal select elements that had a hidden visibility after closing ColorBox.
+* The 'esc' key is unbound now when ColorBox is not open, to avoid any potential conflicts.
+* Used background sprites for examples 1 & 4.  Put IE-only (non-sprite) background images in a separate folder.
+* Example themes 1, 3, & 4 received slight visual tweaks.
+* Optimized pngs for smaller file size.
+* Added slices, grid, and correct sizing to the Adobe Illustrator file, all theme files are now export ready!
+
+
+Version 1.2.6 - July 15 2009
+Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
+* Fixed a bug with fixed width/height images in Opera 9.64.
+* Fixed a bug with trying to set a value for rel during a direct call to ColorBox.
+  Example: $.fn.colorbox({rel:'foo', open:true});
+* Changed how href/rel/title settings are determined to avoid users having to manually update ColorBox
+  settings if they use JavaScript to update any of those attributes, after ColorBox has been defined.
+* Fixed a FF3 bug where the back button was disabled after closing an iframe.
+
+
 Version 1.2.5 - June 23 2009
+Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Changed the point at which iframe srcs are set (to eliminate the need to refresh the iframe once it has
   been added to the DOM).
 * Removed unnecessary return values for a very slight code reduction.
 
+
 Version 1.2.4 - June 9 2009
+Files Changed: jquery.colorbox.js, jquery.colorbox-min.js
 * Fixed an issue where ColorBox may not close completely if it is closed during a transition animation.
 * Minor code reduction.
 

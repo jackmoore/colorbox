@@ -18,58 +18,59 @@
 		<script type="text/javascript" src="../colorbox/jquery.colorbox.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
-				//Examples of how to assign the ColorBox event to elements.
-				$("a[rel='jack']").colorbox({transition:"fade"});
-				$("a[rel='dogs']").colorbox({transition:"elastic"});
-				$("a[rel='river']").colorbox({transition:"none", width:"75%", height:"75%"});
-				$(".slideshow").colorbox({slideshow:true});
-				$("a.single").colorbox({}, function(){
+				//Examples of how to assign the ColorBox event to elements
+				$("a[rel='example1']").colorbox();
+				$("a[rel='example2']").colorbox({transition:"fade"});
+				$("a[rel='example3']").colorbox({transition:"none", width:"75%", height:"75%"});
+				$("a[rel='example4']").colorbox({slideshow:true});
+				$(".single").colorbox({}, function(){
 					alert('Howdy, this is an example callback.');
 				});
-				$("a[title='Homer Defined']").colorbox();
-				$(".flash").colorbox({href:"../content/flash.html"});
-				$("a[href='http://google.com']").colorbox({width:"80%", height:"80%", iframe:true});
+				$(".colorbox").colorbox();
+				$(".youtube").colorbox({iframe:true, width:650, height:550});
+				$(".iframe").colorbox({width:"80%", height:"80%", iframe:true});
+				$(".inline").colorbox({width:"50%", inline:true, href:"#inline_example1"});
 				
 				//Example of preserving a JavaScript event for inline calls.
 				$("#click").click(function(){ 
 					$('#click').css({"background-color":"#f00", "color":"#fff", "cursor":"inherit"}).text("Open this window again and this message will still be here.");
 					return false;
 				});
-				$("#inline").colorbox({width:"50%", inline:true, href:"#inline_example1", title:"hello"});
 			});
 		</script>
 	</head>
 	<body>
-		<h1>ColorBox Examples</h1>
-		<h2>fade transition</h2>
-		<p><a href="../content/ohoopee1.jpg" rel="jack" title="Me and my grandfather on the Ohoopee">Grouped Photo 1</a></p>
-		<p><a href="../content/ohoopee2.jpg" rel="jack" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
-		<p><a href="../content/ohoopee3.jpg" rel="jack" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+		<h1>ColorBox Demonstration</h1>
+		<h2>elastic transition</h2>
+		<p><a href="../content/ohoopee1.jpg" rel="example1" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee2.jpg" rel="example1" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a href="../content/ohoopee3.jpg" rel="example1" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
 		
-		<h2>elastic transition + changed default photo numbering</h2>
-		<p><a href="../content/ohoopee1.jpg" rel="dogs" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
-		<p><a href="../content/ohoopee2.jpg" rel="dogs" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
-		<p><a href="../content/ohoopee3.jpg" rel="dogs" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
-
+		<h2>fade transition</h2>
+		<p><a href="../content/ohoopee1.jpg" rel="example2" title="Me and my grandfather on the Ohoopee">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee2.jpg" rel="example2" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a href="../content/ohoopee3.jpg" rel="example2" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+		
 		<h2>no transition + fixed width and height (75% of screen size)</h2>
-		<p><a href="../content/ohoopee1.jpg" rel="river"  class='ohoopee' title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
-		<p><a href="../content/ohoopee2.jpg" rel="river"  class='ohoopee' title="On the Ohoopee as a child">Grouped Photo 2</a></p>
-		<p><a href="../content/ohoopee3.jpg" rel="river"  class='ohoopee' title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
-
+		<p><a href="../content/ohoopee1.jpg" rel="example3"  title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee2.jpg" rel="example3"  title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a href="../content/ohoopee3.jpg" rel="example3"  title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+		
 		<h2>slideshow</h2>
-		<p><a href="../content/ohoopee1.jpg" rel="ohoopee"  class='slideshow' title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
-		<p><a href="../content/ohoopee2.jpg" rel="ohoopee"  class='slideshow' title="On the Ohoopee as a child">Grouped Photo 2</a></p>
-		<p><a href="../content/ohoopee3.jpg" rel="ohoopee"  class='slideshow' title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
-
+		<p><a href="../content/ohoopee1.jpg" rel="example4"  title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a href="../content/ohoopee2.jpg" rel="example4"  title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a href="../content/ohoopee3.jpg" rel="example4"  title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
+		
 		<h2>Single photo with callback example</h2>
 		<p><a class='single' href="../content/marylou.jpg" title="Marylou on Cumberland Island">Single Photo</a></p>
-
+		
 		<h2>Other Content Types</h2>
-		<p><a href="http://google.com">Outside webpage (IFrame)</a></p>
-		<p><a title="Homer Defined" href="../content/ajax.html">Outside HTML (Ajax)</a></p>
-		<p><a id="inline" href="#">Inline HTML</a></p>
-		<p><a class="flash" href="http://www.vimeo.com/2285902" title="Royksopp: Remind Me">Flash / Video</a></p>
-
+		<p><a class='iframe' href="http://google.com">Outside webpage (IFrame)</a></p>
+		<p><a class='colorbox' title="Homer Defined" href="../content/ajax.html">Outside HTML (Ajax)</a></p>
+		<p><a class='inline' href="#">Inline HTML</a></p>
+		<p><a class='colorbox' href="../content/flash.html" title="Royksopp: Remind Me">Flash / Video (Embedded)</a></p>
+		<p><a class='youtube' href="http://www.youtube.com/v/617ANIA5Rqs" title="The Knife: We Share Our Mother's Health">Flash / Video (Direct Link To YouTube)</a></p>
+		
 		<!-- This contains the hidden content for inline calls -->
 		<div class='hidden'>
 			<div id='inline_example1' style='padding:10px; background:#fff;'>
@@ -79,7 +80,7 @@
 			
 			<p><strong>If you try to open a new ColorBox while it is already open, it will update itself with the new content.</strong></p>
 			<p>Updating Content Example:<br />
-			<a class="flash" href="#">Click here to load new content</a></p>
+			<a class="colorbox" href="../content/flash.html">Click here to load new content</a></p>
 			</div>
 		</div>
 	</body>

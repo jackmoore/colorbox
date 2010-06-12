@@ -20,30 +20,30 @@
 #cboxOverlay{background:#000;}
 
 #colorbox{}
-	#cboxTopLeft{width:14px; height:14px; background:url(images/controls.png) top left no-repeat;}
-	#cboxTopCenter{height:14px; background:url(images/borderHorizontal.png) top left repeat-x;}
-	#cboxTopRight{width:14px; height:14px; background:url(images/controls.png) top right no-repeat;}
-	#cboxBottomLeft{width:14px; height:43px; background:url(images/controls.png) bottom left no-repeat;}
-	#cboxBottomCenter{height:43px; background:url(images/borderHorizontal.png) bottom left repeat-x;}
-	#cboxBottomRight{width:14px; height:43px; background:url(images/controls.png) bottom right no-repeat;}
-	#cboxMiddleLeft{width:14px; background:url(images/borderVertical.png) top left repeat-y;}
-	#cboxMiddleRight{width:14px; background:url(images/borderVertical.png) top right repeat-y;}
+	#cboxTopLeft{width:14px; height:14px; background:url(images/controls.png) 0 0 no-repeat;}
+	#cboxTopCenter{height:14px; background:url(images/border.png) top left repeat-x;}
+	#cboxTopRight{width:14px; height:14px; background:url(images/controls.png) -36px 0 no-repeat;}
+	#cboxBottomLeft{width:14px; height:43px; background:url(images/controls.png) 0 -32px no-repeat;}
+	#cboxBottomCenter{height:43px; background:url(images/border.png) bottom left repeat-x;}
+	#cboxBottomRight{width:14px; height:43px; background:url(images/controls.png) -36px -32px no-repeat;}
+	#cboxMiddleLeft{width:14px; background:url(images/controls.png) -175px 0 repeat-y;}
+	#cboxMiddleRight{width:14px; background:url(images/controls.png) -211px 0 repeat-y;}
 	#cboxContent{background:#fff;}
 		#cboxLoadedContent{margin-bottom:5px;}
 		#cboxLoadingOverlay{background:url(images/loading_background.png) center center no-repeat;}
                 #cboxLoadingGraphic{background:url(images/loading.gif) center center no-repeat;}
-                #cboxTitle{position:absolute; bottom:-25px; left:0; text-align:center; width:100%; font-weight:bold; color:#949494;}
-                #cboxCurrent{position:absolute; bottom:-25px; left:58px; font-weight:bold; color:#949494;}
+                #cboxTitle{position:absolute; bottom:-25px; left:0; text-align:center; width:100%; font-weight:bold; color:#7C7C7C;}
+                #cboxCurrent{position:absolute; bottom:-25px; left:58px; font-weight:bold; color:#7C7C7C;}
                 
                 #cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{position:absolute; bottom:-29px; background:url(images/controls.png) 0px 0px no-repeat; width:23px; height:23px; text-indent:-9999px;}
-                #cboxPrevious{left:0px; background-position: -14px -23px;}
-                #cboxPrevious.hover{background-position:-14px 0px;}
-                #cboxNext{left:27px; background-position:-37px -23px;}
-                #cboxNext.hover{background-position:-37px 0px;}
-		#cboxClose{right:0; background-position:-60px -23px;}
-		#cboxClose.hover{background-position:-60px 0px;}
+                #cboxPrevious{left:0px; background-position: -51px -25px;}
+                #cboxPrevious.hover{background-position:-51px 0px;}
+                #cboxNext{left:27px; background-position:-75px -25px;}
+                #cboxNext.hover{background-position:-75px 0px;}
+		#cboxClose{right:0; background-position:-100px -25px;}
+		#cboxClose.hover{background-position:-100px 0px;}
 
-                .cboxSlideshow_on #cboxSlideshow{background-position:-83px -0px; right:27px;}
-                .cboxSlideshow_on #cboxSlideshow.hover{background-position:-106px -0px;}
-                .cboxSlideshow_off #cboxSlideshow{background-position:-106px -23px; right:27px;}
-                .cboxSlideshow_off #cboxSlideshow.hover{background-position:-83px -0px;}
+                .cboxSlideshow_on #cboxSlideshow{background-position:-125px 0px; right:27px;}
+                .cboxSlideshow_on #cboxSlideshow.hover{background-position:-150px 0px;}
+                .cboxSlideshow_off #cboxSlideshow{background-position:-150px -25px; right:27px;}
+                .cboxSlideshow_off #cboxSlideshow.hover{background-position:-125px 0px;}
