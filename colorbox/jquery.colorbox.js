@@ -271,9 +271,9 @@
 			)
 		).children().children().css({'float': 'left'});
 		
-		$loadingBay = $("<div id='cboxLoadingBay' style='position:absolute;'/>");
+		$loadingBay = $("<div id='cboxLoadingBay' style='position:absolute; width:9999px;'/>");
 		
-		$('body').prepend($overlay, $cbox.append($wrap), $loadingBay);
+		$('body').prepend($overlay, $cbox.append($wrap, $loadingBay));
 				
 		if (isIE) {
 			$cbox.addClass('cboxIE');
@@ -342,7 +342,7 @@
 	};
 	
 	cboxPublic.remove = function(){
-		$cbox.add($overlay).add($loadingBay).remove();
+		$cbox.add($overlay).remove();
 		$('.cboxElement').removeData(colorbox).removeClass('cboxElement');
 	}
 
@@ -438,7 +438,7 @@
 		}
 		
 		$loaded.hide()
-		.appendTo('body')// content has to be appended to the DOM for accurate size calculations.  Appended to an absolutely positioned element, rather than BODY, which avoids an extremely brief display of the vertical scrollbar in Firefox that can occur for a small minority of websites.
+		.appendTo($loadingBay)// content has to be appended to the DOM for accurate size calculations.  Appended to an absolutely positioned element, rather than BODY, which avoids an extremely brief display of the vertical scrollbar in Firefox that can occur for a small minority of websites.
 		.css({width:getWidth(), overflow:settings.scrolling ? 'auto' : 'hidden'})
 		.css({height:getHeight()})// sets the height independently from the width in case the new width influences the value of height.
 		.prependTo($content);
@@ -641,7 +641,7 @@
 			};
 			img.src = href;
 		} else {
-			$('<div><p>Request unsuccessful.</p></div>').appendTo($loadingBay).load(href, function(data, textStatus){
+			$('<div>Request unsuccessful.</div>').appendTo($loadingBay).load(href, function(data, textStatus){
 				prep(this);
 			});
 		}
