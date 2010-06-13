@@ -271,7 +271,7 @@
 			)
 		).children().children().css({'float': 'left'});
 		
-		$loadingBay = $("<div id='cboxLoadingBay' style='position:absolute; top:-200px; left:-200px; width:50px; height:50px; overflow:hidden;'/>");
+		$loadingBay = $("<div id='cboxLoadingBay' style='position:absolute;'/>");
 		
 		$('body').prepend($overlay, $cbox.append($wrap), $loadingBay);
 				
@@ -340,6 +340,11 @@
 		});
 		
 	};
+	
+	cboxPublic.remove = function(){
+		$cbox.add($overlay).add($loadingBay).remove();
+		$('.cboxElement').removeData(colorbox).removeClass('cboxElement');
+	}
 
 	cboxPublic.position = function (speed, loadedCallback) {
 		var
@@ -433,7 +438,7 @@
 		}
 		
 		$loaded.hide()
-		.appendTo($loadingBay)// content has to be appended to the DOM for accurate size calculations.  Appended to an absolutely positioned element, rather than BODY, which avoids an extremely brief display of the vertical scrollbar in Firefox that can occur for a small minority of websites.
+		.appendTo('body')// content has to be appended to the DOM for accurate size calculations.  Appended to an absolutely positioned element, rather than BODY, which avoids an extremely brief display of the vertical scrollbar in Firefox that can occur for a small minority of websites.
 		.css({width:getWidth(), overflow:settings.scrolling ? 'auto' : 'hidden'})
 		.css({height:getHeight()})// sets the height independently from the width in case the new width influences the value of height.
 		.prependTo($content);
@@ -452,19 +457,24 @@
 		function setPosition (s) {
 			var prev, prevSrc, next, nextSrc, total = $related.length, loop = settings.loop;
 			cboxPublic.position(s, function(){
+				function defilter(){
+					if(isIE){
+						//IE adds a filter when ColorBox fades in and out that can cause problems if the loaded content contains transparent pngs.
+						$cbox[0].style.removeAttribute("filter");
+					}
+				}
+				
 				if (!open) { return; }
 				
 				if (isIE) {
 					//This fadeIn helps the bicubic resampling to kick-in.
 					if( photo ){$loaded.fadeIn(100);}
-					//IE adds a filter when ColorBox fades in and out that can cause problems if the loaded content contains transparent pngs.
-					$cbox[0].style.removeAttribute("filter");
 				}
 				
 				//Waited until the iframe is added to the DOM & it is visible before setting the src.
 				//This increases compatability with pages using DOM dependent JavaScript.
 				if(settings.iframe){
-					$("<iframe frameborder=0" + (settings.scrolling ? "" : " scrolling='no'") + (isIE ? " allowtransparency='true'" : '') + " />")
+					$("<iframe frameborder=0" + (settings.scrolling ? "" : " scrolling='no'") + (isIE ? " allowtransparency='true'" : '') + "/>")
 					.appendTo($loaded)
 					.attr({src: settings.href, id: 'cboxIframe', name: new Date().getTime()});
 				}
@@ -495,11 +505,11 @@
 						prevSrc = $(prev).data(colorbox).href || prev.href;
 						
 						if(isImage(nextSrc)){
-							$('<img />')[0].src = nextSrc;
+							$('<img/>')[0].src = nextSrc;
 						}
 						
 						if(isImage(prevSrc)){
-							$('<img />')[0].src = prevSrc;
+							$('<img/>')[0].src = prevSrc;
 						}
 					}
 				}
@@ -508,8 +518,10 @@
 				
 				if (settings.transition === 'fade'){
 					$cbox.fadeTo(speed, 1, function(){
-						if(isIE){$cbox[0].style.removeAttribute("filter");}
+						defilter();
 					});
+				} else {
+					defilter();
 				}
 				
 				$window.bind('resize.cbox', function(){
@@ -577,7 +589,7 @@
 		if (settings.inline) {
 			// Inserts an empty placeholder where inline content is being pulled from.
 			// An event is bound to put inline content back when ColorBox closes or loads new content.
-			$('<div id="cboxInlineTemp" />').hide().insertBefore($(href)[0]).bind(cbox_load+' '+cbox_cleanup, function(){
+			$('<div id="cboxInlineTemp"/>').hide().insertBefore($(href)[0]).bind(cbox_load+' '+cbox_cleanup, function(){
 				$(this).replaceWith($loaded.children());
 			});
 			prep($(href));
