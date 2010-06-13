@@ -282,10 +282,11 @@
 			}
 		}
 		
-		// Add rollover event to navigation elements
 		$content.children()
-		.bind('mouseover mouseout', function(){
-			$(this).toggleClass(hover);
+		.hover(function(){
+			$(this).addClass(hover);
+		}, function(){
+			$(this).removeClass(hover)
 		}).addClass(hover);
 		
 		// Cache values needed for size calculations
@@ -338,7 +339,6 @@
 				}
 			}
 		});
-		
 	};
 	
 	cboxPublic.remove = function(){
@@ -487,7 +487,7 @@
 					$current.html(settings.current.replace(/\{current\}/, index+1).replace(/\{total\}/, total)).show();
 					
 					$next[(loop || index < total-1) ? "show" : "hide"]().html(settings.next);
-					$prev[(loop || index > 0) ? "show" : "hide"]().html(settings.prev);
+					$prev[(loop || index > 0) ? "show" : "hide"]().html(settings.previous);
 					
 					prev = index > 0 ? $related[index-1] : $related[total-1];
 					next = index < total-1 ? $related[index+1] : $related[0];
@@ -681,7 +681,6 @@
 				clearTimeout(timeOut);	
 			}).one("click", function(){
 				stop();
-				$(this).removeClass(hover);
 			});
 			$cbox.removeClass(className+"off").addClass(className+"on");
 		}
@@ -694,7 +693,6 @@
 			.one("click", function(){
 				start();
 				timeOut = setTimeout(cboxPublic.next, settings.slideshowSpeed);
-				$(this).removeClass(hover);
 			});
 			$cbox.removeClass(className+"on").addClass(className+"off");
 		};

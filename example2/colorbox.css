@@ -37,5 +37,5 @@
         .cboxSlideshow_on #cboxPrevious, .cboxSlideshow_off #cboxPrevious{right:66px;}
         .cboxSlideshow_on #cboxSlideshow{background-position:-75px -25px; right:44px;}
         .cboxSlideshow_on #cboxSlideshow.hover{background-position:-100px -25px;}
-        .cboxSlideshow_off #cboxSlideshow{background-position:-75px -25px; right:44px;}
-        .cboxSlideshow_off #cboxSlideshow.hover{background-position:-100px 0px;}
+        .cboxSlideshow_off #cboxSlideshow{background-position:-100px 0px; right:44px;}
+        .cboxSlideshow_off #cboxSlideshow.hover{background-position:-75px -25px;}
