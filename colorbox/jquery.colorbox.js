@@ -1,17 +1,11 @@
-// ColorBox v1.3.7 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+// ColorBox v1.3.7.dev - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 // c) 2009 Jack Moore - www.colorpowered.com - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 
-/*jslint browser: true */
-
-(function ($) {
-	// Shortcuts (to increase compression)
-	var colorbox = 'colorbox',
-	hover = 'hover',
-	TRUE = true,
-	FALSE = false,
-	cboxPublic,
-	isIE = $.browser.msie && !$.support.opacity, // feature detection alone gave a false positive on at least one phone browser
+(function ($, window, TRUE, FALSE, colorbox, hover) {
+	
+	var cboxPublic,
+	isIE = $.browser.msie && !$.support.opacity, // feature detection alone gave a false positive on at least one phone browser and on some development versions of Chrome.
 	isIE6 = isIE && $.browser.version < 7,
 
 	// Event Strings (to increase compression)
@@ -108,7 +102,7 @@
 		
 	// Convert % values to pixels
 	function setSize(size, dimension) {
-		dimension = dimension === 'x' ? $window.width() : $window.height();//document.documentElement.clientWidth : document.documentElement.clientHeight;
+		dimension = dimension === 'x' ? $window.width() : $window.height();
 		return (typeof size === 'string') ? Math.round((size.match(/%/) ? (dimension / 100) * parseInt(size, 10) : parseInt(size, 10))) : size;
 	}
 
@@ -273,7 +267,7 @@
 			)
 		).children().children().css({'float': 'left'});
 		
-		$loadingBay = $("<div id='cboxLoadingBay' style='position:absolute; width:9999px;'/>");
+		$loadingBay = $("<div style='position:absolute; width:9999px;'/>");
 		
 		$('body').prepend($overlay, $cbox.append($wrap, $loadingBay));
 				
@@ -769,4 +763,4 @@
 	// Initializes ColorBox when the DOM has loaded
 	$(cboxPublic.init);
 
-}(jQuery));
+}(jQuery, this, true, false, 'colorbox', 'hover'));
