@@ -151,9 +151,7 @@
 		}
 		
 		if (!open) {
-			open = TRUE;
-			
-			active = TRUE; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
+			open = active = TRUE; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
 			
 			bookmark = element;
 			
@@ -166,7 +164,8 @@
 				settings.onOpen.call(element);
 			}
 			
-			$overlay.css({"opacity": parseFloat(settings.opacity), "cursor": settings.overlayClose ? "pointer" : "auto"}).show();
+			// +settings.opacity avoids a problem in IE when using non-zero-prefixed-string-values, like '.5'
+			$overlay.css({"opacity": +settings.opacity, "cursor": settings.overlayClose ? "pointer" : "auto"}).show();
 			
 			// Opens inital empty ColorBox prior to content being loaded.
 			settings.w = setSize(settings.initialWidth, 'x');
@@ -198,7 +197,7 @@
 	cboxPublic = $.fn.colorbox = $.colorbox = function (options, callback) {
 		var $this = this;
 		
-		if ($this.selector && !$this.length) {
+		if ($this.selector && !$this[0]) { // if a selector was given and it didn't match any elements, go ahead and exit.
 			return $this;
 		}
 		
@@ -267,7 +266,7 @@
 			)
 		).children().children().css({'float': 'left'});
 		
-		$loadingBay = $("<div style='position:absolute; width:9999px;'/>");
+		$loadingBay = $("<div style='position:absolute; width:9999px; visibility:hidden;'/>");
 		
 		$('body').prepend($overlay, $cbox.append($wrap, $loadingBay));
 				
@@ -565,17 +564,13 @@
 			settings.onLoad.call(element);
 		}
 		
-		// Evaluate the height based on the optional height and width settings.
 		settings.h = settings.height ?
 				setSize(settings.height, 'y') - loadedHeight - interfaceHeight :
-				settings.innerHeight ?
-					setSize(settings.innerHeight, 'y') :
-					FALSE;
+				settings.innerHeight && setSize(settings.innerHeight, 'y');
+		
 		settings.w = settings.width ?
 				setSize(settings.width, 'x') - loadedWidth - interfaceWidth :
-				settings.innerWidth ?
-					setSize(settings.innerWidth, 'x') :
-					FALSE;
+				settings.innerWidth && setSize(settings.innerWidth, 'x');
 		
 		// Sets the minimum dimensions for use in image scaling
 		settings.mw = settings.w;
@@ -616,7 +611,7 @@
 				
 				img.onload = null;
 				img.id = 'cboxPhoto';
-				$(img).css({margin: 'auto', border: 'none', display: 'block', cssFloat: 'left'});
+				$(img).css({margin: 'auto', border: 'none', display: 'block', cssFloat: 'left', height: img.height, width: img.width});
 				
 				if (settings.scalePhotos) {
 					setResize = function () {
