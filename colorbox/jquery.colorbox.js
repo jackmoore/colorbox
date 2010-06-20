@@ -266,7 +266,7 @@
 			)
 		).children().children().css({'float': 'left'});
 		
-		$loadingBay = $("<div style='position:absolute; width:9999px; visibility:hidden;'/>");
+		$loadingBay = $("<div style='position:absolute; width:9999px; visibility:hidden; display:none'/>");
 		
 		$('body').prepend($overlay, $cbox.append($wrap, $loadingBay));
 				
@@ -421,7 +421,6 @@
 		speed = settings.transition === "none" ? 0 : settings.speed;
 		
 		$window.unbind('resize.cbox');
-		
 		$loaded.remove();
 		$loaded = $('<div id="cboxLoadedContent"/>').html(object);
 		
@@ -437,10 +436,12 @@
 		}
 		
 		$loaded.hide()
-		.appendTo($loadingBay)// content has to be appended to the DOM for accurate size calculations.
+		.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
 		.css({width: getWidth(), overflow: settings.scrolling ? 'auto' : 'hidden'})
 		.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
 		.prependTo($content);
+		
+		$loadingBay.hide();
 		
 		$('#cboxPhoto').css({cssFloat: 'none'});// floating the IMG removes the bottom line-height and fixed a problem where IE miscalculates the width of the parent element as 100% of the document width.
 		
