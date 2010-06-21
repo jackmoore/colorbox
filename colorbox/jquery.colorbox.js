@@ -633,7 +633,9 @@
 					img.style.marginTop = Math.max(settings.h - img.height, 0) / 2 + 'px';
 				}
 				
-				setTimeout(function(){prep(img)},1); // Chrome will sometimes report a 0 by 0 size if there isn't pause in execution
+				setTimeout(function () { // Chrome will sometimes report a 0 by 0 size if there isn't pause in execution
+					prep(img);
+				}, 1);
 				
 				if ($related[1] && (index < $related.length - 1 || settings.loop)) {
 					$(img).css({cursor: 'pointer'}).click(publicMethod.next);
