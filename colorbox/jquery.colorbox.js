@@ -134,7 +134,7 @@
 		}
 		settings.rel = settings.rel || element.rel || 'nofollow';
 		settings.href = settings.href || $(element).attr('href');
-		settings.title = settings.title || element.title;
+		settings.title = settings.title || $(".idesc", element).html() || element.title;
 	}
 
 	function launch(elem) {
