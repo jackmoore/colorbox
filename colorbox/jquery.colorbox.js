@@ -285,8 +285,8 @@
 		}).addClass('hover');
 		
 		// Cache values needed for size calculations
-		interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(true) - $content.height();//Subtraction needed for IE6
-		interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true) - $content.width();
+		interfaceHeight = $topBorder.outerHeight() + $bottomBorder.outerHeight() + $content.outerHeight(true) - $content.outerHeight();//Subtraction needed for IE6
+		interfaceWidth = $leftBorder.outerWidth() + $rightBorder.outerWidth() + $content.outerWidth(true) - $content.outerWidth();
 		loadedHeight = $loaded.outerHeight(true);
 		loadedWidth = $loaded.outerWidth(true);
 		
@@ -425,12 +425,12 @@
 		$loaded = $div('LoadedContent').html(object);
 		
 		function getWidth() {
-			settings.w = settings.w || $loaded.width();
+			settings.w = settings.w || $loaded.outerWidth();
 			settings.w = settings.mw && settings.mw < settings.w ? settings.mw : settings.w;
 			return settings.w;
 		}
 		function getHeight() {
-			settings.h = settings.h || $loaded.height();
+			settings.h = settings.h || $loaded.outerHeight();
 			settings.h = settings.mh && settings.mh < settings.h ? settings.mh : settings.h;
 			return settings.h;
 		}
