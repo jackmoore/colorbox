@@ -227,7 +227,11 @@
 		$this.each(function () {
 			$(this).data(colorbox, $.extend({}, $(this).data(colorbox) || defaults, options)).addClass(boxElement);
 		});
-		
+
+		if ($.isFunction(options.open)) {
+			options.open = options.open.call($this);
+		};
+
 		if (options.open) {
 			launch($this[0]);
 		}
