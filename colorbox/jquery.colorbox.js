@@ -218,17 +218,19 @@
 		if (callback) {
 			options.onComplete = callback;
 		}
-		
+
 		if (!$this[0] || $this.selector === undefined) { // detects $.colorbox() and $.fn.colorbox()
 			$this = $('<a/>');
 			options.open = true; // assume an immediate open
-		}
+    } else {
+      options.open = (typeof(options.open) == 'function') ? options.open() : options.open;
+    }
 		
 		$this.each(function () {
 			$(this).data(colorbox, $.extend({}, $(this).data(colorbox) || defaults, options)).addClass(boxElement);
 		});
 		
-		if (options.open) {
+    if (options.open) {
 			launch($this[0]);
 		}
 		
