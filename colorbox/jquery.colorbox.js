@@ -1,4 +1,4 @@
-// ColorBox v1.3.10 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+// ColorBox v1.3.11 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
 // Copyright (c) 2010 Jack Moore - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 (function ($, window) {
@@ -118,14 +118,14 @@
 	// Convert % values to pixels
 	function setSize(size, dimension) {
 		dimension = dimension === 'x' ? $window.width() : $window.height();
-		return (typeof size === 'string') ? Math.round((size.match(/%/) ? (dimension / 100) * parseInt(size, 10) : parseInt(size, 10))) : size;
+		return (typeof size === 'string') ? Math.round((/%/.test(size) ? (dimension / 100) * parseInt(size, 10) : parseInt(size, 10))) : size;
 	}
 	
 	// Checks an href to see if it is a photo.
 	// There is a force photo option (photo: true) for hrefs that cannot be matched by this regex.
 	function isImage(url, target) {
 		url = $.isFunction(url) ? url.call(target) : url;
-		return settings.photo || url.match(/\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(\.*))?$/i);
+		return settings.photo || /\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(\.*))?$/i.test(url);
 	}
 	
 	// Assigns function results to their respective settings.  This allows functions to be used as values.
@@ -152,7 +152,8 @@
 	function slideshow() {
 		var
 		timeOut,
-		className = prefix + 'Slideshow_',
+		className = prefix + "Slideshow_",
+		click = "click." + prefix,
 		start,
 		stop,
 		clear;
@@ -161,36 +162,34 @@
 			start = function () {
 				$slideshow
 					.text(settings.slideshowStop)
+					.unbind(click)
 					.bind(event_complete, function () {
-						timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
+						if (index < $related.length - 1 || settings.loop) {
+							timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
+						}
 					})
 					.bind(event_load, function () {
 						clearTimeout(timeOut);	
-					}).one("click", function () {
-						stop();
-					});
+					})
+					.one(click, stop);
 				$box.removeClass(className + "off").addClass(className + "on");
+				timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
 			};
 			
 			stop = function () {
 				clearTimeout(timeOut);
 				$slideshow
 					.text(settings.slideshowStart)
-					.unbind(event_complete + ' ' + event_load)
-					.one("click", function () {
-						start();
-						timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
-					});
+					.unbind(event_complete + ' ' + event_load + ' ' + click)
+					.one(click, start);
 				$box.removeClass(className + "on").addClass(className + "off");
 			};
 			
 			$slideshow.bind(event_closed, function () {
-				$slideshow.unbind();
 				clearTimeout(timeOut);
-				$box.removeClass(className + "off " + className + "on");
 			});
 			
-			if (settings.slideshowAuto) {
+			if ($box.hasClass(className + "on") || (settings.slideshowAuto && !$box.hasClass(className + "off"))) {
 				start();
 			} else {
 				stop();
@@ -557,9 +556,6 @@
 					
 					if (settings.slideshow) {
 						$slideshow.show();
-						if (index === total - 1 && !loop && $box.is('.' + prefix + 'Slideshow_on')) {
-							$slideshow.click();
-						}
 					}
 					
 					// Preloads images within a rel group
