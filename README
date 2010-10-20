@@ -11,6 +11,10 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 --------------------------------------------------------------------------------------------------------
+Version 1.3.12 - October 20 2010
+Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
+* Minor bug fix involved in preloading images when using a function as a value for the href property.
+
 Version 1.3.11 - October 19 2010
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Fixed the slideshow functionality that broke with 1.3.10
@@ -63,14 +67,12 @@ Version 1.3.6 - Jan 13 2010
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Small change to make ColorBox compatible with jQuery 1.4
 
-
 Version 1.3.5 - December 15 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Fixed a bug introduced in 1.3.4 with IE7's display of example 2 and 3, and auto-width in Opera.
 * Fixed a bug introduced in 1.3.4 where colorbox could not be launched by triggering an element's click
   event through JavaScript.
 * Minor refinements.
-
 
 Version 1.3.4 - December 5 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
@@ -86,12 +88,10 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Fixed a bug where maxHeight and maxWidth did not work for non-photo content.
 * Direct calls no longer need 'open:true', it is assumed.  Example: $.fn.colorbox({html:"<p>Hi</p>"});
 
-
 Version 1.3.3 - November 7 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Changed $.fn.colorbox.element() to return a jQuery object rather the DOM element.
 * jQuery.colorbox-min.js is compressed with Google's Closure Compiler rather than YUI Compressor.
-
 
 Version 1.3.2 - October 27 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
@@ -104,14 +104,12 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Bug fix: In Firefox, opening ColorBox causes a split second shift with a small minority of webpage layouts.
 * Simplified code in a few areas.
 
-
 Version 1.3.1 - September 16 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js/colorbox.css/colorbox-ie.css(removed)
 * Removed the IE-only stylesheets and conditional comments for example styles 1 & 4.  All CSS is
   handled by a single CSS file for all examples.
 * Removed user-agent sniffing from the js and replaced it with feature detection.  This will allow
   correct rendering for visitors masking their agent type.
-
 
 Version 1.3.0 - September 15 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js/colorbox.css
@@ -124,19 +122,16 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js/colorbox.css
 * Fixed a bug where ClearType may not work in IE6&7 if using the fade transition.
 * Minor code optimizations to increase compression.
 
-
 Version 1.2.9 - August 7 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Minor change to enable use with $.getScript();
 * Minor change to the timing of the 'cbox_load' event so that it is more useful.
 * Added a direct link to a YouTube video to the examples.
 
-
 Version 1.2.8 - August 5 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Fixed a bug with the overlay in IE6
 * Fixed a bug where left & right keypress events might be prematurely unbound.
-
 
 Version 1.2.7 - July 31 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js, example stylesheets and background images
@@ -154,7 +149,6 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js, example stylesheets an
 * Optimized pngs for smaller file size.
 * Added slices, grid, and correct sizing to the Adobe Illustrator file, all theme files are now export ready!
 
-
 Version 1.2.6 - July 15 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Fixed a bug with fixed width/height images in Opera 9.64.
@@ -164,19 +158,16 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
   settings if they use JavaScript to update any of those attributes, after ColorBox has been defined.
 * Fixed a FF3 bug where the back button was disabled after closing an iframe.
 
-
 Version 1.2.5 - June 23 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Changed the point at which iframe srcs are set (to eliminate the need to refresh the iframe once it has
   been added to the DOM).
 * Removed unnecessary return values for a very slight code reduction.
 
-
 Version 1.2.4 - June 9 2009
 Files Changed: jquery.colorbox.js, jquery.colorbox-min.js
 * Fixed an issue where ColorBox may not close completely if it is closed during a transition animation.
 * Minor code reduction.
-
 
 Version 1.2.3 - June 4 2009
 * Fixed a png transparency stacking issue in IE.
@@ -188,10 +179,8 @@ Version 1.2.3 - June 4 2009
   that the rest of the browsers use (an alpha transparency PNG8).  This example now only has 2 graphics
   files and 1 stylesheet.
 
-
 Version 1.2.2 - May 28 2009
 * Fixed an issue with the 'resize' option.
-
 
 Version 1.2.1 - May 28 2009
 * Note: If you are upgrading, update your jquery.colorbox.js and colorbox.css files.
@@ -214,7 +203,6 @@ Version 1.2.1 - May 28 2009
 * For user callbacks, 'this' now refers to the element colorbox was opened from.
 * Fixed a minor grouping issue with IE6, when transition type is set to 'none'.
 * Added an Adobe Illustrator file that contains the borders and buttons used in the various examples.
-
 
 Version 1.2 - May 13 2009
 * Note: If you are upgrading from a previous version of ColorBox, see the UPGRADE file.
@@ -244,7 +232,6 @@ Version 1.2 - May 13 2009
 * Removed colorbox.css.  Combined the colorbox.css styles with jquery.colorbox.js:
   the css file was not large enough to warrant being a separate file.
 
-
 Version 1.1.6 - April 28 2009
 * Prevented the default action of the next & previous anchors and the left and right keys for gallery mode.
 * Fixed a bug where the title element was being added back to the DOM when closing ColorBox while using
@@ -254,19 +241,15 @@ Version 1.1.6 - April 28 2009
 * Added a public method for closing ColorBox: $.fn.colorbox.close().  This will allow iframe users to
   add an event to close ColorBox without having to create an additional function.
 
-
 Version 1.1.5 - April 11 2009
 * Fixed minor issues with exiting ColorBox.
  
-
 Version 1.1.4 - April 08 2009
 * Fixed a bug in the fade transition where ColorBox not close completely if instructed to close during the
   fade-in portion of the transition.
 
-
 Version 1.1.3 - April 06 2009
 * Fixed an IE6&7 issue with using ColorBox to display animated GIFs.
-
 
 Version 1.1.2 - April 05 2009
 * Added ability to change content when ColorBox is already open.
@@ -279,14 +262,12 @@ Version 1.1.2 - April 05 2009
   closed mid-transition.
 * Switch from JSMin to Yui Compressor for minification.  Minified code now under 7KB.
 
-
 Version 1.1.1 - March 31 2009
 * More robust image detection regex.  Now detects image file types with url fragments and/or query strings.
 * Added 'nofollow' exception to rel grouping.
 * Changed how images are loaded into the DOM to prevent premature size calculation by ColorBox.
 * Added timestamp to iframe name to prevent caching - this was a problem in some browsers if the user had
   multiple iframes and the visitor left the page and came back, or if they refreshed the page.
-
 
 Version 1.1.0 - March 21 2009
   Major Changes:
@@ -317,11 +298,9 @@ Version 1.1.0 - March 21 2009
 * Added a minified version.
 * Code passes JSLint.
 
-
 Version 1.0.5 - March 11 2009
 * Redo: Fixed a bug where IE would cut off the bottom portion of a photo, if the photo was larger than
   the document dimensions.
-
 
 Version 1.0.4 - March 10 2009
 * Added an option to allow users to automatically open the lightbox. 
@@ -329,20 +308,16 @@ Version 1.0.4 - March 10 2009
 * Fixed a bug where IE would cut off the bottom portion of a photo,
   if the photo was larger than the document dimensions.
 
-
 Version 1.0.3 - March 09 2009
 * Fixed vertical centering for Safari 3.0.x.
-
 
 Version 1.0.2 - March 06 2009
 * Corrected a typo.
 * Changed the content-type check so that it does not assume all links to photos should actually
   display photos.  This allows for Ajax/inline/and iframe calls on anchors linking to picture file types.
 
-
 Version 1.0.1 - March 05 2009
 * Fixed keydown events (esc, left arrow, right arrow) for Webkit browsers.
-
 
 Version 1.0 - March 03 2009
 * First release

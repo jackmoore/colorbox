@@ -1,4 +1,4 @@
-// ColorBox v1.3.11 - a full featured, light-weight, customizable lightbox based on jQuery 1.3
+// ColorBox v1.3.12 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
 // Copyright (c) 2010 Jack Moore - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 (function ($, window) {
@@ -123,8 +123,7 @@
 	
 	// Checks an href to see if it is a photo.
 	// There is a force photo option (photo: true) for hrefs that cannot be matched by this regex.
-	function isImage(url, target) {
-		url = $.isFunction(url) ? url.call(target) : url;
+	function isImage(url) {
 		return settings.photo || /\.(gif|png|jpg|jpeg|bmp)(?:\?([^#]*))?(?:#(\.*))?$/i.test(url);
 	}
 	
@@ -546,7 +545,9 @@
 				$title.show().html(settings.title);
 				
 				if (total > 1) { // handle grouping
-					$current.html(settings.current.replace(/\{current\}/, index + 1).replace(/\{total\}/, total)).show();
+					if (typeof settings.current == "string") {
+						$current.html(settings.current.replace(/\{current\}/, index + 1).replace(/\{total\}/, total)).show();
+					}
 					
 					$next[(loop || index < total - 1) ? "show" : "hide"]().html(settings.next);
 					$prev[(loop || index) ? "show" : "hide"]().html(settings.previous);
@@ -563,11 +564,14 @@
 						nextSrc = $.data(next, colorbox).href || next.href;
 						prevSrc = $.data(prev, colorbox).href || prev.href;
 						
-						if (isImage(nextSrc, next)) {
+						nextSrc = $.isFunction(nextSrc) ? nextSrc.call(next) : nextSrc;
+						prevSrc = $.isFunction(prevSrc) ? prevSrc.call(prev) : prevSrc;
+						
+						if (isImage(nextSrc)) {
 							$('<img/>')[0].src = nextSrc;
 						}
 						
-						if (isImage(prevSrc, prev)) {
+						if (isImage(prevSrc)) {
 							$('<img/>')[0].src = prevSrc;
 						}
 					}
@@ -640,7 +644,7 @@
 		href = settings.href;
 		
 		$loadingOverlay.show();
-		
+
 		if (settings.inline) {
 			// Inserts an empty placeholder where inline content is being pulled from.
 			// An event is bound to put inline content back when ColorBox closes or loads new content.
@@ -662,7 +666,7 @@
 			prep(" ");
 		} else if (settings.html) {
 			prep(settings.html);
-		} else if (isImage(href, element)) {
+		} else if (isImage(href)) {
 			img = new Image();
 			img.onload = function () {
 				var percent;
@@ -703,11 +707,10 @@
 			
 			setTimeout(function () { // Opera 10.6+ will sometimes load the src before the onload function is set
 				img.src = href;
-			}, 1);
-			
-		} else {
-			$div().appendTo($loadingBay).load(href, function (data, status, xhr) {
-				prep(status === 'error' ? 'Request unsuccessful: ' + xhr.statusText : this);
+			}, 1);	
+		} else if (href) {
+			$loadingBay.load(href, function (data, status, xhr) {
+				prep(status === 'error' ? 'Request unsuccessful: ' + xhr.statusText : $(this).children());
 			});
 		}
 	};
