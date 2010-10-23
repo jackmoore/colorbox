@@ -1,4 +1,4 @@
-// ColorBox v1.3.12 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
+// ColorBox v1.3.13 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
 // Copyright (c) 2010 Jack Moore - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 (function ($, window) {
@@ -33,6 +33,7 @@
 		next: "next",
 		close: "close",
 		open: false,
+		returnFocus: true,
 		loop: true,
 		slideshow: false,
 		slideshowAuto: true,
@@ -94,7 +95,6 @@
 	loadedHeight,
 	loadedWidth,
 	element,
-	bookmark,
 	index,
 	settings,
 	open,
@@ -168,9 +168,9 @@
 						}
 					})
 					.bind(event_load, function () {
-						clearTimeout(timeOut);	
+						clearTimeout(timeOut);
 					})
-					.one(click, stop);
+					.one(click + ' ' + event_cleanup, stop);
 				$box.removeClass(className + "off").addClass(className + "on");
 				timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
 			};
@@ -179,16 +179,12 @@
 				clearTimeout(timeOut);
 				$slideshow
 					.text(settings.slideshowStart)
-					.unbind(event_complete + ' ' + event_load + ' ' + click)
+					.unbind([event_complete, event_load, event_cleanup, click].join(' '))
 					.one(click, start);
 				$box.removeClass(className + "on").addClass(className + "off");
 			};
 			
-			$slideshow.bind(event_closed, function () {
-				clearTimeout(timeOut);
-			});
-			
-			if ($box.hasClass(className + "on") || (settings.slideshowAuto && !$box.hasClass(className + "off"))) {
+			if (settings.slideshowAuto) {
 				start();
 			} else {
 				stop();
@@ -226,11 +222,20 @@
 				
 				$box.show();
 				
-				bookmark = element;
-				
-				try {
-					bookmark.blur(); // Remove the focus from the calling element.
-				}catch (e) {}
+				if (settings.returnFocus) {
+					try {
+						element.blur();
+						$(element).one(event_closed, function () {
+							try {
+								this.focus();
+							} catch (e) {
+								// do nothing
+							}
+						});
+					} catch (e) {
+						// do nothing
+					}
+				}
 				
 				// +settings.opacity avoids a problem in IE when using non-zero-prefixed-string-values, like '.5'
 				$overlay.css({"opacity": +settings.opacity, "cursor": settings.overlayClose ? "pointer" : "auto"}).show();
@@ -545,7 +550,7 @@
 				$title.show().html(settings.title);
 				
 				if (total > 1) { // handle grouping
-					if (typeof settings.current == "string") {
+					if (typeof settings.current === "string") {
 						$current.html(settings.current.replace(/\{current\}/, index + 1).replace(/\{total\}/, total)).show();
 					}
 					
@@ -658,9 +663,14 @@
 			$box.one(event_loaded, function () {
 				var $iframe = $("<iframe name='" + new Date().getTime() + "' frameborder=0" + (settings.scrolling ? "" : " scrolling='no'") + (isIE ? " allowtransparency='true'" : '') + " style='width:100%; height:100%; border:0; display:block;'/>");
 				$iframe[0].src = settings.href;
-				$iframe.appendTo($loaded).one(event_purge, function () {
-					$iframe[0].src = 'about:blank';
-				});
+				
+				// the following code was to prevent audio from continuing to place in an iframe
+				// after it had been closed, if it contained an .swf file in IE7.
+				// I am unsure if it is still needed, so I am temporarily removing it.
+				
+				//$iframe.appendTo($loaded).one(event_purge, function () {
+				//	$iframe[0].src = 'about:blank';
+				//});
 			});
 			
 			prep(" ");
@@ -750,12 +760,6 @@
 				$loaded.remove();
 				
 				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
-				
-				try {
-					bookmark.focus();
-				} catch (e) {
-					// do nothing
-				}
 				
 				setTimeout(function () {
 					closing = false;

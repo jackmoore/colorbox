@@ -11,6 +11,14 @@ http://groups.google.com/group/colorbox/topics
 
 RELEASE NOTES:
 --------------------------------------------------------------------------------------------------------
+Version 1.3.13 - October 22 2010
+Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
+* Changed the index.html example files to use YouTube's new embedded link format.
+* By default, ColorBox returns focus to the element it was launched from once it closes.  This can now
+  be disabled by setting the 'returnFocus' property to false.  Focus was causing problems for some
+  users who had their anchor elements inside animated containers.
+* Minor bug fix involved in using a combination of slideshow and non-slideshow content.
+
 Version 1.3.12 - October 20 2010
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Minor bug fix involved in preloading images when using a function as a value for the href property.
@@ -18,7 +26,6 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 Version 1.3.11 - October 19 2010
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Fixed the slideshow functionality that broke with 1.3.10
-* The slideshow now remembers it's on/off state between viewings.
 * The slideshow now respects the loop property.
 
 Version 1.3.10 - October 16 2010
