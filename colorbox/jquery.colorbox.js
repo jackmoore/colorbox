@@ -663,14 +663,9 @@
 			$box.one(event_loaded, function () {
 				var $iframe = $("<iframe name='" + new Date().getTime() + "' frameborder=0" + (settings.scrolling ? "" : " scrolling='no'") + (isIE ? " allowtransparency='true'" : '') + " style='width:100%; height:100%; border:0; display:block;'/>");
 				$iframe[0].src = settings.href;
-				$iframe.appendTo($loaded);
-				// the following code was to prevent audio from continuing to place in an iframe
-				// after it had been closed, if it contained an .swf file in IE7.
-				// I am unsure if it is still needed, so I am temporarily removing it.
-				
-				//$iframe.appendTo($loaded).one(event_purge, function () {
-				//	$iframe[0].src = 'about:blank';
-				//});
+				$iframe.appendTo($loaded).one(event_purge, function () {
+					$iframe[0].src = 'about:blank';
+				});
 			});
 			
 			prep(" ");
