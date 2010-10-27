@@ -1,4 +1,4 @@
-// ColorBox v1.3.13 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
+// ColorBox v1.3.14 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
 // Copyright (c) 2010 Jack Moore - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 (function ($, window) {
@@ -664,7 +664,7 @@
 				var $iframe = $("<iframe name='" + new Date().getTime() + "' frameborder=0" + (settings.scrolling ? "" : " scrolling='no'") + (isIE ? " allowtransparency='true'" : '') + " style='width:100%; height:100%; border:0; display:block;'/>");
 				$iframe[0].src = settings.href;
 				$iframe.appendTo($loaded).one(event_purge, function () {
-					$iframe[0].src = 'about:blank';
+					$iframe[0].src = '//about:blank';
 				});
 			});
 			
