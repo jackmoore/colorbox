@@ -23,11 +23,11 @@
 #colorbox{}
     #cboxContent{margin-top:32px;}
         #cboxLoadedContent{background:#000; padding:1px;}
-        #cboxLoadingGraphic{background:url(images/loading.gif) center center no-repeat;}
+        #cboxLoadingGraphic{background:url(images/loading.gif) no-repeat center center;}
         #cboxLoadingOverlay{background:#000;}
         #cboxTitle{position:absolute; top:-22px; left:0; color:#000;}
         #cboxCurrent{position:absolute; top:-22px; right:205px; text-indent:-9999px;}
-        #cboxSlideshow, #cboxPrevious, #cboxNext, #cboxClose{text-indent:-9999px; width:20px; height:20px; position:absolute; top:-20px; background:url(images/controls.png) 0 0 no-repeat;}
+        #cboxSlideshow, #cboxPrevious, #cboxNext, #cboxClose{text-indent:-9999px; width:20px; height:20px; position:absolute; top:-20px; background:url(images/controls.png) no-repeat 0 0;}
         #cboxPrevious{background-position:0px 0px; right:44px;}
         #cboxPrevious.hover{background-position:0px -25px;}
         #cboxNext{background-position:-25px 0px; right:22px;}
