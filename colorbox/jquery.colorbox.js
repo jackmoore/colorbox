@@ -528,7 +528,7 @@
 				function defilter() {
 					if (isIE) {
 						//IE adds a filter when ColorBox fades in and out that can cause problems if the loaded content contains transparent pngs.
-						$box[0].style.filter = false;
+						$box[0].style.removeAttribute("filter"); 
 					}
 				}
 				
