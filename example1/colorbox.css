@@ -48,15 +48,23 @@
     
     Since this method does not support CSS background-positioning, it is incompatible with CSS sprites.
     Colorbox preloads navigation hover classes to account for this.
-    
-    !! Important Note: AlphaImageLoader src paths are relative to the HTML document,
-    while regular CSS background images are relative to the CSS document.
 */
-.cboxIE #cboxTopLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/internet_explorer/borderTopLeft.png, sizingMethod='scale');}
-.cboxIE #cboxTopCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/internet_explorer/borderTopCenter.png, sizingMethod='scale');}
-.cboxIE #cboxTopRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/internet_explorer/borderTopRight.png, sizingMethod='scale');}
-.cboxIE #cboxBottomLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/internet_explorer/borderBottomLeft.png, sizingMethod='scale');}
-.cboxIE #cboxBottomCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/internet_explorer/borderBottomCenter.png, sizingMethod='scale');}
-.cboxIE #cboxBottomRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/internet_explorer/borderBottomRight.png, sizingMethod='scale');}
-.cboxIE #cboxMiddleLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/internet_explorer/borderMiddleLeft.png, sizingMethod='scale');}
-.cboxIE #cboxMiddleRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=images/internet_explorer/borderMiddleRight.png, sizingMethod='scale');}
+.cboxIE #cboxTopLeft{background:url(images/internet_explorer/borderTopLeft.png);}
+.cboxIE #cboxTopCenter{background:url(images/internet_explorer/borderTopCenter.png);}
+.cboxIE #cboxTopRight{background:url(images/internet_explorer/borderTopRight.png);}
+.cboxIE #cboxBottomLeft{background:url(images/internet_explorer/borderBottomLeft.png);}
+.cboxIE #cboxBottomCenter{background:url(images/internet_explorer/borderBottomCenter.png);}
+.cboxIE #cboxBottomRight{background:url(images/internet_explorer/borderBottomRight.png);}
+.cboxIE #cboxMiddleLeft{background:url(images/internet_explorer/borderMiddleLeft.png);}
+.cboxIE #cboxMiddleRight{background:url(images/internet_explorer/borderMiddleRight.png);}
+
+.cboxIE #cboxTopLeft,
+.cboxIE #cboxTopCenter,
+.cboxIE #cboxTopRight,
+.cboxIE #cboxBottomLeft,
+.cboxIE #cboxBottomCenter,
+.cboxIE #cboxBottomRight,
+.cboxIE #cboxMiddleLeft,
+.cboxIE #cboxMiddleRight {
+  _behavior: expression(this.src = this.src ? this.src : this.currentStyle.backgroundImage.split('"')[1], this.style.background = "none", this.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=" + this.src + ", sizingMethod='scale')");
+}
