@@ -665,12 +665,12 @@
 				iframe.name = prefix + (+new Date());
 				iframe.src = settings.href;
 				
-				if(!settings.scrolling){
+				if (!settings.scrolling) {
 					iframe.scrolling = "no";
 				}
 				
-				if(isIE){
-					iframe.allowtransparency="true";
+				if (isIE) {
+					iframe.allowtransparency = "true";
 				}
 				
 				$(iframe).appendTo($loaded).one(event_purge, function () {
