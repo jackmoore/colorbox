@@ -47,7 +47,9 @@
 		onClosed: false,
 		overlayClose: true,		
 		escKey: true,
-		arrowKey: true
+		arrowKey: true,
+		positionTop: null,
+		positionLeft: null,
 	},
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
@@ -411,9 +413,14 @@
 	publicMethod.position = function (speed, loadedCallback) {
 		var
 		animate_speed,
-		// keeps the top and left positions within the browser's viewport.
-		posTop = Math.max(document.documentElement.clientHeight - settings.h - loadedHeight - interfaceHeight, 0) / 2 + $window.scrollTop(),
-		posLeft = Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2 + $window.scrollLeft();
+		posTop,
+		posLeft;
+
+		// Use user supplied top and left positions if available, otherwise
+		// keep the top and left positions within the browser's viewport.
+
+		posTop = (settings.positionTop != null) ? settings.positionTop : Math.max(document.documentElement.clientHeight - settings.h - loadedHeight - interfaceHeight, 0) / 2 + $window.scrollTop();
+		posLeft = (settings.positionLeft != null) ? settings.positionLeft : Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2 + $window.scrollLeft();
 		
 		// setting the speed to 0 to reduce the delay between same-sized content.
 		animate_speed = ($box.width() === settings.w + loadedWidth && $box.height() === settings.h + loadedHeight) ? 0 : speed;
