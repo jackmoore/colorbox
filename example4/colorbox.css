@@ -39,14 +39,14 @@
         #cboxLoadingOverlay{background:#fff url(images/loading.gif) no-repeat 5px 5px;}
         #cboxClose{position:absolute; bottom:0; right:0; display:block; color:#444;}
 
-#cboxTopLeft{background:url(images/internet_explorer/borderTopLeft.png);}
-#cboxTopCenter{background:url(images/internet_explorer/borderTopCenter.png);}
-#cboxTopRight{background:url(images/internet_explorer/borderTopRight.png);}
-#cboxBottomLeft{background:url(images/internet_explorer/borderBottomLeft.png);}
-#cboxBottomCenter{background:url(images/internet_explorer/borderBottomCenter.png);}
-#cboxBottomRight{background:url(images/internet_explorer/borderBottomRight.png);}
-#cboxMiddleLeft{background:url(images/internet_explorer/borderMiddleLeft.png);}
-#cboxMiddleRight{background:url(images/internet_explorer/borderMiddleRight.png);}
+.cboxIE #cboxTopLeft{background:url(images/internet_explorer/borderTopLeft.png);}
+.cboxIE #cboxTopCenter{background:url(images/internet_explorer/borderTopCenter.png);}
+.cboxIE #cboxTopRight{background:url(images/internet_explorer/borderTopRight.png);}
+.cboxIE #cboxBottomLeft{background:url(images/internet_explorer/borderBottomLeft.png);}
+.cboxIE #cboxBottomCenter{background:url(images/internet_explorer/borderBottomCenter.png);}
+.cboxIE #cboxBottomRight{background:url(images/internet_explorer/borderBottomRight.png);}
+.cboxIE #cboxMiddleLeft{background:url(images/internet_explorer/borderMiddleLeft.png);}
+.cboxIE #cboxMiddleRight{background:url(images/internet_explorer/borderMiddleRight.png);}
 
 /* PNG transparency fix on fadeIn & fadeOut. see http://www.sitepoint.com/forums/showthread.php?t=590295 */
 .cboxIE #cboxTopLeft,
