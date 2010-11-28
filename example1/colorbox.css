@@ -42,22 +42,16 @@
         #cboxClose{position:absolute; bottom:0; right:0; background:url(images/controls.png) no-repeat -25px 0px; width:25px; height:25px; text-indent:-9999px;}
         #cboxClose.hover{background-position:-25px -25px;}
 
-/*
-    The following fixes png-transparency for IE6.  
-    It is also necessary for png-transparency in IE7 & IE8 to avoid 'black halos' with the fade transition
-    
-    Since this method does not support CSS background-positioning, it is incompatible with CSS sprites.
-    Colorbox preloads navigation hover classes to account for this.
-*/
-.cboxIE #cboxTopLeft{background:url(images/internet_explorer/borderTopLeft.png);}
-.cboxIE #cboxTopCenter{background:url(images/internet_explorer/borderTopCenter.png);}
-.cboxIE #cboxTopRight{background:url(images/internet_explorer/borderTopRight.png);}
-.cboxIE #cboxBottomLeft{background:url(images/internet_explorer/borderBottomLeft.png);}
-.cboxIE #cboxBottomCenter{background:url(images/internet_explorer/borderBottomCenter.png);}
-.cboxIE #cboxBottomRight{background:url(images/internet_explorer/borderBottomRight.png);}
-.cboxIE #cboxMiddleLeft{background:url(images/internet_explorer/borderMiddleLeft.png);}
-.cboxIE #cboxMiddleRight{background:url(images/internet_explorer/borderMiddleRight.png);}
+#cboxTopLeft{background:url(images/internet_explorer/borderTopLeft.png);}
+#cboxTopCenter{background:url(images/internet_explorer/borderTopCenter.png);}
+#cboxTopRight{background:url(images/internet_explorer/borderTopRight.png);}
+#cboxBottomLeft{background:url(images/internet_explorer/borderBottomLeft.png);}
+#cboxBottomCenter{background:url(images/internet_explorer/borderBottomCenter.png);}
+#cboxBottomRight{background:url(images/internet_explorer/borderBottomRight.png);}
+#cboxMiddleLeft{background:url(images/internet_explorer/borderMiddleLeft.png);}
+#cboxMiddleRight{background:url(images/internet_explorer/borderMiddleRight.png);}
 
+/* PNG transparency fix on fadeIn & fadeOut. see http://www.sitepoint.com/forums/showthread.php?t=590295 */
 .cboxIE #cboxTopLeft,
 .cboxIE #cboxTopCenter,
 .cboxIE #cboxTopRight,
@@ -66,5 +60,8 @@
 .cboxIE #cboxBottomRight,
 .cboxIE #cboxMiddleLeft,
 .cboxIE #cboxMiddleRight {
-  _behavior: expression(this.src = this.src ? this.src : this.currentStyle.backgroundImage.split('"')[1], this.style.background = "none", this.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=" + this.src + ", sizingMethod='scale')");
+  background: transparent;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#00FFFFFF,endColorstr=#00FFFFFF)"; /* IE8 */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00FFFFFF,endColorstr=#00FFFFFF);   /* IE6 & 7 */
+  zoom: 1;
 }
