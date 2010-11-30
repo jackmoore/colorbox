@@ -310,7 +310,7 @@
 	publicMethod.init = function () {
 		// Create & Append jQuery Objects
 		$window = $(window);
-		$box = $div().attr({id: colorbox, 'class': isIE ? prefix + 'IE' : ''});
+		$box = $div().attr({id: colorbox}).addClass(isIE ? prefix + 'IE' : null).addClass(isIE6 ? prefix + 'IE6' : null);
 		$overlay = $div("Overlay", isIE6 ? 'position:absolute' : '').hide();
 		
 		$wrap = $div("Wrapper");
