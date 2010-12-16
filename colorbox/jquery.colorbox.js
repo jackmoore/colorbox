@@ -460,12 +460,12 @@
 			if (options.innerWidth) {
 				settings.w = setSize(options.innerWidth, 'x');
 			}
-                        if( options.maxWidth ) {
+			if( options.maxWidth ) {
 				var max_width = setSize( options.maxWidth, 'x' );
 				if( settings.w > max_width ) {
 					settings.w = max_width;
 				}
-                        }
+			}
 			$loaded.css({width: settings.w});
 			
 			if (options.height) {
@@ -479,12 +479,12 @@
 				settings.h = $child.height();
 				$child.replaceWith($child.children()); // ditch the temporary wrapper div used in height calculation
 			}
-                        if( options.maxHeight ) {
+			if( options.maxHeight ) {
 				var max_height = setSize( options.maxHeight, 'y' );
 				if( settings.h > max_height ) {
 					settings.h = max_height;
 				}
-                        }
+			}
 			$loaded.css({height: settings.h});
 			
 			publicMethod.position(settings.transition === "none" ? 0 : settings.speed);
