@@ -460,6 +460,12 @@
 			if (options.innerWidth) {
 				settings.w = setSize(options.innerWidth, 'x');
 			}
+                        if( options.maxWidth ) {
+				var max_width = setSize( options.maxWidth, 'x' );
+				if( settings.w > max_width ) {
+					settings.w = max_width;
+				}
+                        }
 			$loaded.css({width: settings.w});
 			
 			if (options.height) {
