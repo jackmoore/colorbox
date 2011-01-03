@@ -734,6 +734,7 @@
 	publicMethod.next = function () {
 		if (!active) {
 			index = index < $related.length - 1 ? index + 1 : 0;
+			publicMethod.refresh();
 			publicMethod.load();
 		}
 	};
@@ -741,6 +742,7 @@
 	publicMethod.prev = function () {
 		if (!active) {
 			index = index ? index - 1 : $related.length - 1;
+			publicMethod.refresh();
 			publicMethod.load();
 		}
 	};
@@ -780,9 +782,24 @@
 		return $(element);
 	};
 
+	// Refresh Colorbox element pool (facilitates elements dynamically
+	// injected in the DOM)
+	publicMethod.refresh = function () {
+		if (!active && $related && open && index >= 0) {
+			element = $related[index];
+			$related = $(element);
+			if (settings.rel !== 'nofollow') {
+				$related = $('.' + boxElement).filter(function () {
+					var relRelated = $.data(this, colorbox).rel || this.rel;
+					return (relRelated === settings.rel);
+				});
+			}
+			$current.html(settings.current.replace(/\{current\}/, index + 1).replace(/\{total\}/, $related.length)).show();
+		}
+	};
+
 	publicMethod.settings = defaults;
 
 	// Initializes ColorBox when the DOM has loaded
 	$(publicMethod.init);
-
 }(jQuery, this));
