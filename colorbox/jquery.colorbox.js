@@ -13,10 +13,12 @@
 		initialWidth: "600",
 		innerWidth: false,
 		maxWidth: false,
+		minWidth : false,
 		height: false,
 		initialHeight: "450",
 		innerHeight: false,
 		maxHeight: false,
+		minHeight: false,
 		scalePhotos: true,
 		scrolling: true,
 		inline: false,
@@ -494,11 +496,13 @@
 		function getWidth() {
 			settings.w = settings.w || $loaded.width();
 			settings.w = settings.mw && settings.mw < settings.w ? settings.mw : settings.w;
+			settings.w = (settings.minWidth && settings.minWidth > settings.w) ? settings.minWidth : settings.w;
 			return settings.w;
 		}
 		function getHeight() {
 			settings.h = settings.h || $loaded.height();
 			settings.h = settings.mh && settings.mh < settings.h ? settings.mh : settings.h;
+			settings.h = (settings.minHeight && settings.minHeight > settings.h) ? settings.minHeight : settings.h;
 			return settings.h;
 		}
 		
