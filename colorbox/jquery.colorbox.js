@@ -47,7 +47,7 @@
 		onClosed: false,
 		overlayClose: true,		
 		escKey: true,
-		arrowKey: true
+		arrowKey: true   
 	},
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
@@ -100,7 +100,8 @@
 	open,
 	active,
 	closing = false,
-	
+	canClose,
+  
 	publicMethod,
 	boxElement = prefix + 'Element';
 	
@@ -137,6 +138,12 @@
 		settings.rel = settings.rel || element.rel || 'nofollow';
 		settings.href = settings.href || $(element).attr('href');
 		settings.title = settings.title || element.title;
+    
+    canClose = settings.canClose;
+    
+    if (!canClose) {
+      $close.remove();
+    }    
 		return settings;
 	}
 
@@ -313,17 +320,18 @@
 		$box = $div().attr({id: colorbox, 'class': isIE ? prefix + 'IE' : ''});
 		$overlay = $div("Overlay", isIE6 ? 'position:absolute' : '').hide();
 		
-		$wrap = $div("Wrapper");
-		$content = $div("Content").append(
-			$loaded = $div("LoadedContent", 'width:0; height:0; overflow:hidden'),
-			$loadingOverlay = $div("LoadingOverlay").add($div("LoadingGraphic")),
-			$title = $div("Title"),
-			$current = $div("Current"),
-			$next = $div("Next"),
-			$prev = $div("Previous"),
-			$slideshow = $div("Slideshow").bind(event_open, slideshow),
-			$close = $div("Close")
-		);
+		$wrap = $div("Wrapper"); 
+    $content = $div("Content").append(
+      $loaded = $div("LoadedContent", 'width:0; height:0; overflow:hidden'),
+      $loadingOverlay = $div("LoadingOverlay").add($div("LoadingGraphic")),
+      $title = $div("Title"),
+      $current = $div("Current"),
+      $next = $div("Next"),
+      $prev = $div("Previous"),
+      $slideshow = $div("Slideshow").bind(event_open, slideshow),
+      $close = $div("Close")
+    );       
+                
 		$wrap.append( // The 3x3 Grid that makes up ColorBox
 			$div().append(
 				$div("TopLeft"),
@@ -337,7 +345,7 @@
 			),
 			$div(false, 'clear:left').append(
 				$div("BottomLeft"),
-				$bottomBorder = $div("BottomCenter"),
+        $bottomBorder = $div("BottomCenter"),				
 				$div("BottomRight")
 			)
 		).children().children().css({'float': 'left'});
@@ -379,6 +387,8 @@
 			}
 		});
 		
+ 
+    
 		$overlay.click(function () {
 			if (settings.overlayClose) {
 				publicMethod.close();
@@ -747,7 +757,7 @@
 
 	// Note: to use this within an iframe use the following format: parent.$.fn.colorbox.close();
 	publicMethod.close = function () {
-		if (open && !closing) {
+		if (open && !closing && canClose) {
 			closing = true;
 			
 			open = false;
