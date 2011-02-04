@@ -47,7 +47,8 @@
 		onClosed: false,
 		overlayClose: true,		
 		escKey: true,
-		arrowKey: true
+		arrowKey: true,
+		parentSelector: 'body'
 	},
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
@@ -343,8 +344,8 @@
 		).children().children().css({'float': 'left'});
 		
 		$loadingBay = $div(false, 'position:absolute; width:9999px; visibility:hidden; display:none');
-		
-		$('body').prepend($overlay, $box.append($wrap, $loadingBay));
+
+		$(publicMethod.settings.parentSelector).eq(0).prepend($overlay, $box.append($wrap, $loadingBay));
 		
 		$content.children()
 		.hover(function () {
