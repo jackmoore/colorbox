@@ -1,5 +1,5 @@
-// ColorBox v1.3.15 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
-// Copyright (c) 2010 Jack Moore - jack@colorpowered.com
+// ColorBox v1.4 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
+// Copyright (c) 2011 Jack Moore - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 (function ($, window) {
 	
@@ -135,7 +135,7 @@
 			}
 		}
 		settings.rel = settings.rel || element.rel || 'nofollow';
-		settings.href = settings.href || $(element).attr('href');
+		settings.href = $.trim(settings.href || $(element).attr('href'));
 		settings.title = settings.title || element.title;
 		return settings;
 	}
@@ -310,7 +310,7 @@
 	publicMethod.init = function () {
 		// Create & Append jQuery Objects
 		$window = $(window);
-		$box = $div().attr({id: colorbox, 'class': isIE ? prefix + 'IE' : ''});
+		$box = $div().attr({id: colorbox, 'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : ''});
 		$overlay = $div("Overlay", isIE6 ? 'position:absolute' : '').hide();
 		
 		$wrap = $div("Wrapper");
@@ -521,17 +521,10 @@
 				this.style.visibility = 'inherit';
 			});
 		}
-				
+		
 		function setPosition(s) {
 			var prev, prevSrc, next, nextSrc, total = $related.length, loop = settings.loop;
 			publicMethod.position(s, function () {
-				function defilter() {
-					if (isIE) {
-						//IE adds a filter when ColorBox fades in and out that can cause problems if the loaded content contains transparent pngs.
-						$box[0].style.removeAttribute("filter"); 
-					}
-				}
-				
 				if (!open) {
 					return;
 				}
@@ -586,10 +579,10 @@
 				
 				if (settings.transition === 'fade') {
 					$box.fadeTo(speed, 1, function () {
-						defilter();
+						$box[0].style.filter = "";
 					});
 				} else {
-					defilter();
+					$box[0].style.filter = "";
 				}
 				
 				$window.bind('resize.' + prefix, function () {
@@ -756,16 +749,16 @@
 			
 			$window.unbind('.' + prefix + ' .' + event_ie6);
 			
-			$overlay.fadeTo('fast', 0);
+			$overlay.fadeTo(200, 0);
 			
-			$box.stop().fadeTo('fast', 0, function () {
+			$box.stop().fadeTo(200, 0, function () {
+				
+				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
 				
 				trigger(event_purge);
 				
 				$loaded.remove();
-				
-				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
-				
+								
 				setTimeout(function () {
 					closing = false;
 					trigger(event_closed, settings.onClosed);
