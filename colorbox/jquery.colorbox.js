@@ -112,7 +112,7 @@
 	// jQuery object generator to reduce code size
 	function $div(id, cssText) { 
 		var div = document.createElement('div');
-		div.id = id ? prefix + id : false;
+		if (id) div.id = prefix + id;
 		div.style.cssText = cssText || false;
 		return $(div);
 	}
