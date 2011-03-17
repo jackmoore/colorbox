@@ -112,7 +112,9 @@
 	// jQuery object generator to reduce code size
 	function $div(id, cssText) { 
 		var div = document.createElement('div');
-		div.id = id ? prefix + id : false;
+		if (id) {
+                        div.id = prefix + id;
+                }
 		div.style.cssText = cssText || false;
 		return $(div);
 	}
@@ -395,16 +397,17 @@
 		});
 		
 		// Set Navigation Key Bindings
-		$(document).bind("keydown", function (e) {
-			if (open && settings.escKey && e.keyCode === 27) {
+		$(document).bind('keypress.' + prefix, function (e) {
+                        var key = e.keyCode;
+			if (open && settings.escKey && key === 27) {
 				e.preventDefault();
 				publicMethod.close();
 			}
-			if (open && settings.arrowKey && !active && $related[1]) {
-				if (e.keyCode === 37 && (index || settings.loop)) {
+			if (open && settings.arrowKey && $related[1]) {
+				if (key === 37) {
 					e.preventDefault();
 					$prev.click();
-				} else if (e.keyCode === 39 && (index < $related.length - 1 || settings.loop)) {
+				} else if (key === 39) {
 					e.preventDefault();
 					$next.click();
 				}
@@ -590,7 +593,7 @@
 				}
 				
 				if (settings.iframe) {
-					iframe = $('<iframe frameborder=0/>').addClass(prefix + 'Iframe')[0];
+					iframe = $('<iframe/>').addClass(prefix + 'Iframe')[0];
 					
 					if (settings.fastIframe) {
 						complete();
@@ -605,6 +608,7 @@
 					}
 					
 					if (isIE) {
+                                                iframe.frameborder=0;
 						iframe.allowTransparency = "true";
 					}
 					
@@ -750,17 +754,17 @@
 			});
 		}
 	};
-
+        
 	// Navigates to the next page/image in a set.
 	publicMethod.next = function () {
-		if (!active) {
+		if (!active && $related[1] && (index < $related.length - 1 || settings.loop)) {
 			index = index < $related.length - 1 ? index + 1 : 0;
 			publicMethod.load();
 		}
 	};
 	
 	publicMethod.prev = function () {
-		if (!active) {
+		if (!active && $related[1] && (index || settings.loop)) {
 			index = index ? index - 1 : $related.length - 1;
 			publicMethod.load();
 		}
