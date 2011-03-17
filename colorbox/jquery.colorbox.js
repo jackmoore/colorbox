@@ -397,7 +397,7 @@
 		});
 		
 		// Set Navigation Key Bindings
-		$(document).bind('keypress.' + prefix, function (e) {
+		$(document).bind('keydown.' + prefix, function (e) {
                         var key = e.keyCode;
 			if (open && settings.escKey && key === 27) {
 				e.preventDefault();
