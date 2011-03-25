@@ -113,8 +113,8 @@
 	function $div(id, cssText) { 
 		var div = document.createElement('div');
 		if (id) {
-                        div.id = prefix + id;
-                }
+            div.id = prefix + id;
+        }
 		div.style.cssText = cssText || false;
 		return $(div);
 	}
@@ -608,7 +608,7 @@
 					}
 					
 					if (isIE) {
-                                                iframe.frameborder=0;
+                        iframe.frameBorder=0;
 						iframe.allowTransparency = "true";
 					}
 					
@@ -624,7 +624,7 @@
 						$box[0].style.filter = "";
 					});
 				} else {
-                                        $box[0].style.filter = "";
+                     $box[0].style.filter = "";
 				}
 				
 				$window.bind('resize.' + prefix, function () {
