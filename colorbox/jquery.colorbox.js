@@ -487,7 +487,7 @@
 			}
 			$loaded.css({height: settings.h});
 			
-			publicMethod.position(settings.transition === "none" ? 0 : settings.speed);
+			publicMethod.position(settings.transition === "none" ? 0 : settings.speed, options.onResized);
 		}
 	};
 
