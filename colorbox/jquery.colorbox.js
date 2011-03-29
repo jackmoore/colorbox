@@ -63,7 +63,7 @@
 	event_purge = prefix + '_purge',
 	
 	// Special Handling for IE
-	isIE = $.browser.msie && !$.support.opacity, // feature detection alone gave a false positive on at least one phone browser and on some development versions of Chrome.
+	isIE = $.browser.msie && !$.support.opacity, // Detects IE6,7,8.  IE9 supports opacity.  Feature detection alone gave a false positive on at least one phone browser and on some development versions of Chrome, hence the user-agent test.
 	isIE6 = isIE && $.browser.version < 7,
 	event_ie6 = prefix + '_IE6',
 
@@ -429,7 +429,7 @@
 		
 		// setting the speed to 0 to reduce the delay between same-sized content.
 		animate_speed = ($box.width() === settings.w + loadedWidth && $box.height() === settings.h + loadedHeight) ? 0 : speed;
-		
+        
 		// this gives the wrapper plenty of breathing room so it's floated contents can move around smoothly,
 		// but it has to be shrank down around the size of div#colorbox when it's done.  If not,
 		// it can invoke an obscure IE bug when using iframes.
