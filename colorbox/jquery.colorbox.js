@@ -139,7 +139,8 @@
 			}
 		}
 		settings.rel = settings.rel || element.rel || 'nofollow';
-		settings.href = $.trim(settings.href || $(element).attr('href'));
+		if (!settings.href || typeof(settings.href) == "string")
+			settings.href = $.trim(settings.href || $(element).attr('href'));
 		settings.title = settings.title || element.title;
 	}
 
