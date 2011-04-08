@@ -792,6 +792,8 @@
 				
 				$loaded.remove();
 				
+				$box.removeClass(prefix+"Slideshow_on, "+prefix+"Slideshow_off");
+				
 				setTimeout(function () {
 					closing = false;
 					trigger(event_closed, settings.onClosed);
