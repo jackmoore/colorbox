@@ -16,6 +16,7 @@
 		initialHeight: "450",
 		innerHeight: false,
 		maxHeight: false,
+		fromTop: "center",
 		scalePhotos: true,
 		scrolling: true,
 		inline: false,
@@ -25,6 +26,7 @@
 		photo: false,
 		href: false,
 		title: false,
+		description: false,
 		rel: false,
 		opacity: 0.9,
 		preloading: true,
@@ -82,6 +84,7 @@
 	$loadingBay,
 	$loadingOverlay,
 	$title,
+	$description,
 	$current,
 	$slideshow,
 	$next,
@@ -141,6 +144,7 @@
 		settings.rel = settings.rel || element.rel || 'nofollow';
 		settings.href = $.trim(settings.href || $(element).attr('href'));
 		settings.title = settings.title || element.title;
+		settings.description = settings.description || $(element).attr('description');
 	}
 
 	function trigger(event, callback) {
@@ -257,6 +261,7 @@
 				trigger(event_open, settings.onOpen);
 				
 				$groupControls.add($title).hide();
+				$groupControls.add($description).hide();
 				
 				$close.html(settings.close).show();
 			}
@@ -345,6 +350,10 @@
 			)
 		).children().children().css({'float': 'left'});
 		
+		$description = $div("Description");
+		
+		$loaded.after($description);
+		
 		$loadingBay = $div(false, 'position:absolute; width:9999px; visibility:hidden; display:none');
 		
 		$('body').prepend($overlay, $box.append($wrap, $loadingBay));
@@ -424,7 +433,7 @@
 		var
 		animate_speed,
 		// keeps the top and left positions within the browser's viewport.
-		posTop = Math.max(document.documentElement.clientHeight - settings.h - loadedHeight - interfaceHeight, 0) / 2 + $window.scrollTop(),
+		posTop = ((settings.fromTop !='center')?settings.fromTop:Math.max(document.documentElement.clientHeight - settings.h - loadedHeight - interfaceHeight, 0) / 2 + $window.scrollTop()),
 		posLeft = Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2 + $window.scrollLeft();
 		
 		// setting the speed to 0 to reduce the delay between same-sized content.
@@ -556,6 +565,7 @@
 				}
 				
 				$title.html(settings.title).add($loaded).show();
+				$description.html(settings.description).add($loaded).show();
 				
 				if (total > 1) { // handle grouping
 					if (typeof settings.current === "string") {
