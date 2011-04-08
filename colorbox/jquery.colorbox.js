@@ -26,7 +26,6 @@
 		photo: false,
 		href: false,
 		title: false,
-		description: false,
 		rel: false,
 		opacity: 0.9,
 		preloading: true,
@@ -84,7 +83,6 @@
 	$loadingBay,
 	$loadingOverlay,
 	$title,
-	$description,
 	$current,
 	$slideshow,
 	$next,
@@ -145,7 +143,6 @@
 		if (!settings.href || typeof(settings.href) == "string")
 			settings.href = $.trim(settings.href || $(element).attr('href'));
 		settings.title = settings.title || element.title;
-		settings.description = settings.description || $(element).attr('description');
 	}
 
 	function trigger(event, callback) {
@@ -262,7 +259,6 @@
 				trigger(event_open, settings.onOpen);
 				
 				$groupControls.add($title).hide();
-				$groupControls.add($description).hide();
 				
 				$close.html(settings.close).show();
 			}
@@ -350,10 +346,6 @@
 				$div("BottomRight")
 			)
 		).children().children().css({'float': 'left'});
-		
-		$description = $div("Description");
-		
-		$loaded.after($description);
 		
 		$loadingBay = $div(false, 'position:absolute; width:9999px; visibility:hidden; display:none');
 		
@@ -572,7 +564,6 @@
 				}
 				
 				$title.html(settings.title).add($loaded).show();
-				$description.html(settings.description).add($loaded).show();
 				
 				if (total > 1) { // handle grouping
 					if (typeof settings.current === "string") {
