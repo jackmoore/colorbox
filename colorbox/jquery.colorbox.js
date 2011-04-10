@@ -17,6 +17,7 @@
 		innerHeight: false,
 		maxHeight: false,
 		fromTop: "center",
+		fixedPos: false,
 		scalePhotos: true,
 		scrolling: true,
 		inline: false,
@@ -224,6 +225,8 @@
 			
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
+				
+				if(settings.fixedPos){$box.addClass(prefix+"Fixed");}
 				
 				$box.show();
 				
@@ -496,6 +499,7 @@
 			$loaded.css({height: settings.h});
 			
 			publicMethod.position(settings.transition === "none" ? 0 : settings.speed, options.onResized);
+			
 		}
 	};
 
@@ -800,7 +804,7 @@
 				
 				$loaded.remove();
 				
-				$box.removeClass(prefix+"Slideshow_on, "+prefix+"Slideshow_off");
+				$box.removeClass(prefix+"Slideshow_on, "+prefix+"Slideshow_off, "+prefix+"Fixed");
 				
 				setTimeout(function () {
 					closing = false;
