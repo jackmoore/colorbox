@@ -2,15 +2,31 @@
 <html lang="en">
 	<head>
 	<meta charset=utf-8 />
-	<title>iFrame Examples</title>
+	<title>IFrame Examples</title>
     <style type="text/css">
 		body{padding:10px; background:#fff;}
 	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script>
+		$(document).ready(function(){
+			
+			$(".btn_close").click(function(){
+				parent.jQuery.colorbox.close();
+				return false;
+			})
+			
+			$(".btn_example2").click(function(){
+    			parent.jQuery.colorbox({iframe:true, width:"80%", height:"80%", href:"http://www.google.com"});
+			})
+			
+		});
+	</script>
     
 </head>
 <body>
-    <h1>I'm a iFrame :-)</h1>
+	<h1>I'm a IFrame :-)</h1>
     
-    <a href='#' onclick='parent.jQuery.colorbox.close(); return false;'>Close</a> 
+	<p><a href="#" class="btn_close">Close IFrame</a></p>
+	<p><a href="#" class="btn_example2">Open colorbox in parent window</a></p>
 </body>
 </html>
