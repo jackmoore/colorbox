@@ -818,7 +818,7 @@
 				
 				$loaded.remove();
 				
-				$box.removeClass(prefix+"Slideshow_on, "+prefix+"Slideshow_off, "+prefix+"Fixed");
+				$box.removeClass(prefix+"Slideshow_on "+prefix+"Slideshow_off "+prefix+"Fixed");
 				
 				setTimeout(function () {
 					closing = false;
