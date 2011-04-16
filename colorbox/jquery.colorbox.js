@@ -26,6 +26,8 @@
 		fastIframe: true,
 		photo: false,
 		href: false,
+		type: 'GET',
+		data: {},
 		title: false,
 		rel: false,
 		opacity: 0.9,
@@ -761,9 +763,21 @@
 				photo.src = href;
 			}, 1);
 		} else if (href) {
-			$loadingBay.load(href, function (data, status, xhr) {
-				prep(status === 'error' ? $div('Error').text('Request unsuccessful: ' + xhr.statusText) : $(this).contents());
-			});
+			if( settings.type == 'GET' ) {
+				$loadingBay.load(href, settings.data, function (data, status, xhr) {
+					prep(status === 'error' ? $div('Error').text('Request unsuccessful: ' + xhr.statusText) : $(this).contents());
+				});
+			}
+			else {
+				$j.ajax({
+					url: href,
+					type: settings.type,
+					data: settings.data,
+					complete: function( data, status, xhr) {
+						prep(status === 'error' ? $div('Error').text('Request unsuccessful: ' + xhr.statusText) : data.responseText );
+					}
+				});
+			}
 		}
 	};
         
