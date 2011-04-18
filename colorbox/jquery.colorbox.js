@@ -25,7 +25,7 @@
 		photo: false,
 		href: false,
 		type: 'GET',
-		data: {},
+		data: null,
 		title: false,
 		rel: false,
 		opacity: 0.9,
