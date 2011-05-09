@@ -138,8 +138,11 @@
 			    settings[i] = settings[i].call(element);
 			}
 		}
+		var href = settings.href || $(element).attr('href');
+		if (typeof href == "string") {
+		  settings.href = $.trim(settings.href || $(element).attr('href'));
+		}
 		settings.rel = settings.rel || element.rel || 'nofollow';
-		settings.href = $.trim(settings.href || $(element).attr('href'));
 		settings.title = settings.title || element.title;
 	}
 
