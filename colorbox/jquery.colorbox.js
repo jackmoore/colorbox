@@ -140,7 +140,7 @@
 		}
 		var href = settings.href || $(element).attr('href');
 		if (typeof href == "string") {
-		  settings.href = $.trim(settings.href || $(element).attr('href'));
+		  settings.href = $.trim(href);
 		}
 		settings.rel = settings.rel || element.rel || 'nofollow';
 		settings.title = settings.title || element.title;
