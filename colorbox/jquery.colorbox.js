@@ -139,7 +139,8 @@
 			}
 		}
 		settings.rel = settings.rel || element.rel || 'nofollow';
-		settings.href = $.trim(settings.href || $(element).attr('href'));
+		if (!settings.href || typeof(settings.href) == "string")
+			settings.href = $.trim(settings.href || $(element).attr('href'));
 		settings.title = settings.title || element.title;
 	}
 
@@ -382,13 +383,19 @@
 		// background graphics.  The class can now can be removed.
 		$content.children().removeClass('hover');
 		
-		$('.' + boxElement).live('click', function (e) {
+		var handler = function (e) {
 			// checks to see if it was a non-left mouse-click and for clicks modified with ctrl, shift, or alt.
 			if (!((e.button !== 0 && typeof e.button !== 'undefined') || e.ctrlKey || e.shiftKey || e.altKey)) {
 				e.preventDefault();
 				launch(this);
 			}
-		});
+		};
+		
+		if ($.fn.delegate){
+			$(document).delegate('.' + boxElement, 'click', handler);
+		}else{
+			$('.' + boxElement).live('click', handler);
+		}
 		
 		$overlay.click(function () {
 			if (settings.overlayClose) {
