@@ -1,4 +1,4 @@
-// ColorBox v1.3.16 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
+// ColorBox v1.3.17 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
 // Copyright (c) 2011 Jack Moore - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 (function ($, document, window) {
@@ -47,7 +47,13 @@
 		onClosed: false,
 		overlayClose: true,		
 		escKey: true,
-		arrowKey: true
+		arrowKey: true,
+        top: false,
+        bottom: false,
+        left: false,
+        right: false,
+        fixed: false,
+        data: false
 	},
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
@@ -100,7 +106,9 @@
 	photo,
 	open,
 	active,
-	closing = false,
+	closing,
+    handler,
+    loadingTimer,
 	
 	publicMethod,
 	boxElement = prefix + 'Element';
@@ -115,7 +123,7 @@
 		if (id) {
             div.id = prefix + id;
         }
-		div.style.cssText = cssText || false;
+		div.style.cssText = cssText || '';
 		return $(div);
 	}
 
@@ -138,9 +146,14 @@
 			    settings[i] = settings[i].call(element);
 			}
 		}
+        
 		settings.rel = settings.rel || element.rel || 'nofollow';
-		settings.href = $.trim(settings.href || $(element).attr('href'));
+		settings.href = settings.href || $(element).attr('href');
 		settings.title = settings.title || element.title;
+        
+        if (typeof settings.href === "string") {
+            settings.href = $.trim(settings.href);
+        }
 	}
 
 	function trigger(event, callback) {
@@ -192,7 +205,9 @@
 			} else {
 				stop();
 			}
-		}
+		} else {
+            $box.removeClass(className + "off " + className + "on");
+        }
 	}
 
 	function launch(elem) {
@@ -365,16 +380,16 @@
 		// Setting padding to remove the need to do size conversions during the animation step.
 		$box.css({"padding-bottom": interfaceHeight, "padding-right": interfaceWidth}).hide();
 		
-                // Setup button events.
-                $next.click(function () {
-                        publicMethod.next();
-                });
-                $prev.click(function () {
-                        publicMethod.prev();
-                });
-                $close.click(function () {
-                        publicMethod.close();
-                });
+        // Setup button events.
+        $next.click(function () {
+            publicMethod.next();
+        });
+        $prev.click(function () {
+            publicMethod.prev();
+        });
+        $close.click(function () {
+            publicMethod.close();
+        });
 		
 		$groupControls = $next.add($prev).add($current).add($slideshow);
 		
@@ -382,14 +397,9 @@
 		// background graphics.  The class can now can be removed.
 		$content.children().removeClass('hover');
 		
-		$('.' + boxElement).live('click', function (e) {
-			// checks to see if it was a non-left mouse-click and for clicks modified with ctrl, shift, or alt.
-			if (!((e.button !== 0 && typeof e.button !== 'undefined') || e.ctrlKey || e.shiftKey || e.altKey)) {
-				e.preventDefault();
-				launch(this);
-			}
-		});
-		
+
+
+        
 		$overlay.click(function () {
 			if (settings.overlayClose) {
 				publicMethod.close();
@@ -398,7 +408,7 @@
 		
 		// Set Navigation Key Bindings
 		$(document).bind('keydown.' + prefix, function (e) {
-                        var key = e.keyCode;
+            var key = e.keyCode;
 			if (open && settings.escKey && key === 27) {
 				e.preventDefault();
 				publicMethod.close();
@@ -417,16 +427,42 @@
 	
 	publicMethod.remove = function () {
 		$box.add($overlay).remove();
-		$('.' + boxElement).die('click').removeData(colorbox).removeClass(boxElement);
+		$('.' + boxElement).removeData(colorbox).removeClass(boxElement);
 	};
 
 	publicMethod.position = function (speed, loadedCallback) {
-		var
-		animate_speed,
+        var animate_speed, top = 0, left = 0;
+        
+        // remove the modal so that it doesn't influence the document width/height        
+        $box.hide();
+        
+        if (settings.fixed && !isIE6) {
+            $box.css({position: 'fixed'});
+        } else {
+            top = $window.scrollTop();
+            left = $window.scrollLeft();
+            $box.css({position: 'absolute'});
+        }
+        
 		// keeps the top and left positions within the browser's viewport.
-		posTop = Math.max(document.documentElement.clientHeight - settings.h - loadedHeight - interfaceHeight, 0) / 2 + $window.scrollTop(),
-		posLeft = Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2 + $window.scrollLeft();
-		
+        if (settings.right !== false) {
+            left += Math.max($window.width() - settings.w - loadedWidth - interfaceWidth - setSize(settings.right, 'x'), 0);
+        } else if (settings.left !== false) {
+            left += setSize(settings.right, 'x') / 2;
+        } else {
+            left += Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2;
+        }
+        
+        if (settings.bottom !== false) {
+            top += Math.max(document.documentElement.clientHeight - settings.h - loadedHeight - interfaceHeight - setSize(settings.bottom, 'y'), 0);
+        } else if (settings.top !== false) {
+            top += setSize(settings.top, 'y') / 2;
+        } else {
+            top += Math.max(document.documentElement.clientHeight - settings.h - loadedHeight - interfaceHeight, 0) / 2;
+        }
+        
+        $box.show();
+        
 		// setting the speed to 0 to reduce the delay between same-sized content.
 		animate_speed = ($box.width() === settings.w + loadedWidth && $box.height() === settings.h + loadedHeight) ? 0 : speed;
         
@@ -441,7 +477,7 @@
 			$loadingOverlay[0].style.height = $loadingOverlay[1].style.height = $content[0].style.height = $leftBorder[0].style.height = $rightBorder[0].style.height = that.style.height;
 		}
 		
-		$box.dequeue().animate({width: settings.w + loadedWidth, height: settings.h + loadedHeight, top: posTop, left: posLeft}, {
+		$box.dequeue().animate({width: settings.w + loadedWidth, height: settings.h + loadedHeight, top: top, left: left}, {
 			duration: animate_speed,
 			complete: function () {
 				modalDimensions(this);
@@ -524,8 +560,8 @@
 		// floating the IMG removes the bottom line-height and fixed a problem where IE miscalculates the width of the parent element as 100% of the document width.
 		//$(photo).css({'float': 'none', marginLeft: 'auto', marginRight: 'auto'});
 		
-                $(photo).css({'float': 'none'});
-                
+        $(photo).css({'float': 'none'});
+        
 		// Hides SELECT elements in IE6 because they would otherwise sit on top of the overlay.
 		if (isIE6) {
 			$('select').not($box.find('select')).filter(function () {
@@ -543,7 +579,14 @@
 					return;
 				}
 				
+                function removeFilter() {
+                    if (isIE) {
+                        $box[0].style.removeAttribute('filter');
+                    }
+                }
+                
 				complete = function () {
+                    clearTimeout(loadingTimer);
 					$loadingOverlay.hide();
 					trigger(event_complete, settings.onComplete);
 				};
@@ -598,7 +641,7 @@
 					if (settings.fastIframe) {
 						complete();
 					} else {
-						$(iframe).load(complete);
+						$(iframe).one('load', complete);
 					}
 					iframe.name = prefix + (+new Date());
 					iframe.src = settings.href;
@@ -608,7 +651,7 @@
 					}
 					
 					if (isIE) {
-                        iframe.frameBorder=0;
+                        iframe.frameBorder = 0;
 						iframe.allowTransparency = "true";
 					}
 					
@@ -620,11 +663,9 @@
 				}
 				
 				if (settings.transition === 'fade') {
-					$box.fadeTo(speed, 1, function () {
-						$box[0].style.filter = "";
-					});
+					$box.fadeTo(speed, 1, removeFilter);
 				} else {
-                     $box[0].style.filter = "";
+                    removeFilter();
 				}
 				
 				$window.bind('resize.' + prefix, function () {
@@ -684,8 +725,10 @@
 		
 		href = settings.href;
 		
-		$loadingOverlay.show();
-
+        loadingTimer = setTimeout(function () {
+            $loadingOverlay.show();
+        }, 100);
+        
 		if (settings.inline) {
 			// Inserts an empty placeholder where inline content is being pulled from.
 			// An event is bound to put inline content back when ColorBox closes or loads new content.
@@ -732,8 +775,8 @@
 				if ($related[1] && (index < $related.length - 1 || settings.loop)) {
 					photo.style.cursor = 'pointer';
 					photo.onclick = function () {
-                                                publicMethod.next();
-                                        };
+                        publicMethod.next();
+                    };
 				}
 				
 				if (isIE) {
@@ -749,7 +792,7 @@
 				photo.src = href;
 			}, 1);
 		} else if (href) {
-			$loadingBay.load(href, function (data, status, xhr) {
+			$loadingBay.load(href, settings.data, function (data, status, xhr) {
 				prep(status === 'error' ? $div('Error').text('Request unsuccessful: ' + xhr.statusText) : $(this).contents());
 			});
 		}
@@ -785,7 +828,7 @@
 			$overlay.fadeTo(200, 0);
 			
 			$box.stop().fadeTo(300, 0, function () {
-                                
+                 
 				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
 				
 				trigger(event_purge);
@@ -807,7 +850,22 @@
 	};
 
 	publicMethod.settings = defaults;
-
+    
+	// Bind the live event before DOM-ready for maximum performance in IE6 & 7.
+    handler = function (e) {
+        // checks to see if it was a non-left mouse-click and for clicks modified with ctrl, shift, or alt.
+        if (!((e.button !== 0 && typeof e.button !== 'undefined') || e.ctrlKey || e.shiftKey || e.altKey)) {
+            e.preventDefault();
+            launch(this);
+        }
+    };
+    
+    if ($.fn.delegate) {
+        $(document).delegate('.' + boxElement, 'click', handler);
+    } else {
+        $('.' + boxElement).live('click', handler);
+    }
+    
 	// Initializes ColorBox when the DOM has loaded
 	$(publicMethod.init);
 
