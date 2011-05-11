@@ -1,4 +1,4 @@
-// ColorBox v1.3.17 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
+// ColorBox v1.3.17.1 - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
 // Copyright (c) 2011 Jack Moore - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 (function ($, document, window) {
@@ -448,7 +448,7 @@
         if (settings.right !== false) {
             left += Math.max($window.width() - settings.w - loadedWidth - interfaceWidth - setSize(settings.right, 'x'), 0);
         } else if (settings.left !== false) {
-            left += setSize(settings.right, 'x') / 2;
+            left += setSize(settings.left, 'x');
         } else {
             left += Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2;
         }
@@ -456,7 +456,7 @@
         if (settings.bottom !== false) {
             top += Math.max(document.documentElement.clientHeight - settings.h - loadedHeight - interfaceHeight - setSize(settings.bottom, 'y'), 0);
         } else if (settings.top !== false) {
-            top += setSize(settings.top, 'y') / 2;
+            top += setSize(settings.top, 'y');
         } else {
             top += Math.max(document.documentElement.clientHeight - settings.h - loadedHeight - interfaceHeight, 0) / 2;
         }
