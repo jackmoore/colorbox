@@ -8,6 +8,7 @@ See: http://colorpowered.com/colorbox/#help
 
 ### Version 1.3.17 - May 11 2011
 Files Changed:jquery.colorbox.js/jquery.colorbox-min.js
+
 * Added properties "top", "bottom", "left" and "right" to specify a position relative to the viewport, rather than using the default centering.
 * Added property "data" to specify GET or POST data when using Ajax.  ColorBox's ajax functionality is handled by jQuery's .load() method, so the data property works the same way as it does with .load().
 * Added property "fixed" which can provide fixed positioning for ColorBox, rather than absolute positioning.  This will allow ColorBox to remain in a fixed position within the visitors viewport, despite scrolling.  IE6 support for this was not added, it will continue to use the default absolute positioning.
