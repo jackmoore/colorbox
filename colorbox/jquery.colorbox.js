@@ -2,6 +2,7 @@
 // Copyright (c) 2011 Jack Moore - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 // + minWidth&minHeight support
+// + colorbox_class support
 (function ($, document, window) {
 	var
 	// ColorBox Default Settings.	
@@ -61,6 +62,7 @@
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
 	colorbox = 'colorbox',
+	colorbox_class = '',
 	prefix = 'cbox',
 	
 	// Events	
@@ -331,7 +333,7 @@
 	publicMethod.init = function () {
 		// Create & Append jQuery Objects
 		$window = $(window);
-		$box = $div().attr({id: colorbox, 'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : ''});
+		$box = $div().attr({id: colorbox, 'class': (isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : '')+colorbox_class});
 		$overlay = $div("Overlay", isIE6 ? 'position:absolute' : '').hide();
 		
 		$wrap = $div("Wrapper");
