@@ -361,6 +361,7 @@
 		).children().children().css({'float': 'left'});
 		
 		$loadingBay = $div(false, 'position:absolute; width:9999px; visibility:hidden; display:none');
+		$loadingBay.addClass(prefix + '_loadingbay');
 		
 		$('body').prepend($overlay, $box.append($wrap, $loadingBay));
 		
@@ -793,7 +794,17 @@
 			}, 1);
 		} else if (href) {
 			$loadingBay.load(href, settings.data, function (data, status, xhr) {
-				prep(status === 'error' ? $div('Error').text('Request unsuccessful: ' + xhr.statusText) : $(this).contents());
+				if (status === 'error') {
+					prep($div('Error').text('Request unsuccessful: ' + xhr.statusText));
+				} else {
+					// wait for all images with the prefix_wait flag on them to load before displaying anything
+					var $images = $(this).find('img.' + prefix + '_wait');
+					$images.load(function() {
+						$(this).removeClass(prefix + '_wait');
+						var $lb = $(this).parents('.' + prefix + '_loadingbay');
+						if($lb.find('img.' + prefix + '_wait').length == 0) prep($lb.contents());
+					});
+				}
 			});
 		}
 	};
