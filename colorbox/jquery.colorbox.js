@@ -438,9 +438,9 @@
         
         if (settings.fixed && !isIE6) {
             $box.css({position: 'fixed'});
-        } else {
-            top = $window.scrollTop();
-            left = $window.scrollLeft();
+        } else { 
+            top = typeof FB==="object" ? FB.Canvas.getPageInfo().scrollTop : $window.scrollTop();
+            left = typeof FB==="object" ? FB.Canvas.getPageInfo().scrollLeft : $window.scrollLeft();
             $box.css({position: 'absolute'});
         }
         
