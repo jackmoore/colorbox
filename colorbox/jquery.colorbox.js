@@ -1,4 +1,4 @@
-// ColorBox v1.3.17.1mb - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
+// ColorBox v1.3.17.1(mb) - a full featured, light-weight, customizable lightbox based on jQuery 1.3+
 // Copyright (c) 2011 Jack Moore - jack@colorpowered.com
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 (function ($, document, window) {
@@ -48,12 +48,13 @@
 		overlayClose: true,		
 		escKey: true,
 		arrowKey: true,
-        top: false,
-        bottom: false,
-        left: false,
-        right: false,
-        fixed: false,
-        data: false
+                top: false,
+                bottom: false,
+                left: false,
+                right: false,
+                fixed: false,
+                data: false,
+                inFBiframe: false
 	},
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
@@ -107,8 +108,8 @@
 	open,
 	active,
 	closing,
-    handler,
-    loadingTimer,
+        handler,
+        loadingTimer,
 	
 	publicMethod,
 	boxElement = prefix + 'Element';
@@ -439,8 +440,8 @@
         if (settings.fixed && !isIE6) {
             $box.css({position: 'fixed'});
         } else { 
-            top = typeof FB==="object" ? FB.Canvas.getPageInfo().scrollTop : $window.scrollTop();
-            left = typeof FB==="object" ? FB.Canvas.getPageInfo().scrollLeft : $window.scrollLeft();
+            top = (inFBiframe && (typeof FB==="object")) ? FB.Canvas.getPageInfo().scrollTop : $window.scrollTop();
+            left = (inFBiframe && (typeof FB==="object")) ? FB.Canvas.getPageInfo().scrollLeft : $window.scrollLeft();
             $box.css({position: 'absolute'});
         }
         
