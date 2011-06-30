@@ -846,7 +846,7 @@
 	// Bind the live event before DOM-ready for maximum performance in IE6 & 7.
     handler = function (e) {
         // checks to see if it was a non-left mouse-click and for clicks modified with ctrl, shift, or alt.
-        if (!((e.button !== 0 && typeof e.button !== 'undefined') || e.ctrlKey || e.shiftKey || e.altKey)) {
+        if (!((e.button !== 0 && typeof e.button !== 'undefined') || e.ctrlKey || e.shiftKey || e.altKey || e.metaKey)) {
             e.preventDefault();
             launch(this);
         }
