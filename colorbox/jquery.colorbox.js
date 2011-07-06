@@ -20,6 +20,7 @@
 		scalePhotos: true,
 		scrolling: true,
 		inline: false,
+		hideInlineContent: true,
 		html: false,
 		iframe: false,
 		fastIframe: true,
@@ -724,7 +725,11 @@
 		if (settings.inline) {
 			// Inserts an empty placeholder where inline content is being pulled from.
 			// An event is bound to put inline content back when ColorBox closes or loads new content.
+			$(href).show();
 			$div().hide().insertBefore($(href)[0]).one(event_purge, function () {
+				if(settings.hideInlineContent) {
+					$(href).hide();
+				}
 				$(this).replaceWith($loaded.children());
 			});
 			prep($(href));
