@@ -733,6 +733,7 @@
 		if (settings.inline) {
 			// Inserts an empty placeholder where inline content is being pulled from.
 			// An event is bound to put inline content back when ColorBox closes or loads new content.
+			$box.addClass("inlineContent");
 			$div().hide().insertBefore($(href)[0]).one(event_purge, function () {
 				$(this).replaceWith($loaded.children());
 			});
@@ -740,10 +741,13 @@
 		} else if (settings.iframe) {
 			// IFrame element won't be added to the DOM until it is ready to be displayed,
 			// to avoid problems with DOM-ready JS that might be trying to run in that iframe.
+			$box.addClass("iframe");
 			prep(" ");
 		} else if (settings.html) {
+			$box.addClass("inlineHTML");
 			prep(settings.html);
 		} else if (isImage(href)) {
+			$box.addClass("image");
 			$(photo = new Image())
 			.addClass(prefix + 'Photo')
 			.error(function () {
