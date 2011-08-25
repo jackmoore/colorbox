@@ -43,6 +43,7 @@
 		slideshowStop: "stop slideshow",
 		onOpen: false,
 		onLoad: false,
+		onBeforeComplete: false,
 		onComplete: false,
 		onCleanup: false,
 		onClosed: false,
@@ -65,6 +66,7 @@
 	// Events	
 	event_open = prefix + '_open',
 	event_load = prefix + '_load',
+	event_before_complete = prefix + '_before_complete',
 	event_complete = prefix + '_complete',
 	event_cleanup = prefix + '_cleanup',
 	event_closed = prefix + '_closed',
@@ -583,6 +585,7 @@
             }
             
             complete = function () {
+                trigger(event_before_complete, settings.onBeforeComplete);
                 clearTimeout(loadingTimer);
                 $loadingOverlay.hide();
                 trigger(event_complete, settings.onComplete);
