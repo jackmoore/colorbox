@@ -54,7 +54,8 @@
         left: false,
         right: false,
         fixed: false,
-        data: false
+        data: false,
+        appendElement: "body"
 	},
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
@@ -222,6 +223,11 @@
 			
 			index = 0;
 			
+			if (settings.appendElement !== defaults.appendElement) {
+			    $overlay.appendTo($(settings.appendElement));
+			    $box.appendTo($(settings.appendElement));
+			}
+			
 			if (settings.rel !== 'nofollow') {
 				$related = $('.' + boxElement).filter(function () {
 					var relRelated = $.data(this, colorbox).rel || this.rel;
@@ -357,7 +363,7 @@
 		
 		$loadingBay = $div(false, 'position:absolute; width:9999px; visibility:hidden; display:none');
 		
-		$('body').prepend($overlay, $box.append($wrap, $loadingBay));
+		$(defaults.appendElement).prepend($overlay, $box.append($wrap, $loadingBay));
 		
 		$content.children()
 		.hover(function () {
