@@ -29,6 +29,7 @@
     #cboxMiddleLeft{width:25px; background:url(images/border2.png) repeat-y 0 0;}
     #cboxMiddleRight{width:25px; background:url(images/border2.png) repeat-y -25px 0;}
     #cboxContent{background:#fff; overflow:hidden;}
+        .cboxIframe{background:#fff;}
         #cboxError{padding:50px; border:1px solid #ccc;}
         #cboxLoadedContent{margin-bottom:20px;}
         #cboxTitle{position:absolute; bottom:0px; left:0; text-align:center; width:100%; color:#999;}
@@ -41,7 +42,8 @@
 
 /*
   The following fixes a problem where IE7 and IE8 replace a PNG's alpha transparency with a black fill
-  when an alpha filter (opacity change) is set on the element or ancestor element.  This style is not applied to IE9.
+  when an alpha filter (opacity change) is set on the element or ancestor element.  This style is not applied to or needed in IE9.
+  See: http://jacklmoore.com/notes/ie-transparency-problems/
 */
 .cboxIE #cboxTopLeft,
 .cboxIE #cboxTopCenter,
@@ -56,6 +58,7 @@
 
 /*
   The following provides PNG transparency support for IE6
+  Feel free to remove this and the /ie6/ directory if you have dropped IE6 support.
 */
 .cboxIE6 #cboxTopLeft{background:url(images/ie6/borderTopLeft.png);}
 .cboxIE6 #cboxTopCenter{background:url(images/ie6/borderTopCenter.png);}
