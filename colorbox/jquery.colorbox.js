@@ -86,6 +86,7 @@
 	$bottomBorder,
 	$related,
 	$window,
+	$html,
 	$loaded,
 	$loadingBay,
 	$loadingOverlay,
@@ -323,6 +324,7 @@
 	publicMethod.init = function () {
 		// Create & Append jQuery Objects
 		$window = $(window);
+		$html = $('html');
 		$box = $div().attr({id: colorbox, 'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : ''});
 		$overlay = $div("Overlay", isIE6 ? 'position:absolute' : '').hide();
 		
@@ -434,8 +436,8 @@
         if (settings.fixed && !isIE6) {
             $box.css({position: 'fixed'});
         } else {
-            top = $window.scrollTop();
-            left = $window.scrollLeft();
+            top = (!isIE) ? $window.scrollTop() : $html.scrollTop();
+            left = (!isIE) ? $window.scrollLeft() : $html.scrollTop();
             $box.css({position: 'absolute'});
         }
         
