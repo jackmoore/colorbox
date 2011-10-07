@@ -516,9 +516,8 @@
 				settings.h = setSize(options.innerHeight, 'y');
 			}
 			if (!options.innerHeight && !options.height) {				
-				var $child = $loaded.wrapInner("<div style='overflow:auto'></div>").children(); // temporary wrapper to get an accurate estimate of just how high the total content should be.
-				settings.h = $child.height();
-				$child.replaceWith($child.children()); // ditch the temporary wrapper div used in height calculation
+				$loaded.css("height", "auto");
+				settings.h = $loaded.height();
 			}
 			$loaded.css({height: settings.h});
 			
