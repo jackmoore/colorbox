@@ -507,6 +507,10 @@
 			if (options.innerWidth) {
 				settings.w = setSize(options.innerWidth, 'x');
 			}
+			if (options.maxWidth) {
+				settings.mw = setSize(options.maxWidth, 'x') - loadedWidth - interfaceWidth;
+			}
+			settings.w = settings.mw && settings.mw < settings.w ? settings.mw : settings.w;
 			$loaded.css({width: settings.w});
 			
 			if (options.height) {
@@ -515,10 +519,14 @@
 			if (options.innerHeight) {
 				settings.h = setSize(options.innerHeight, 'y');
 			}
+			if (options.maxHeight) {
+				settings.mh = setSize(options.maxHeight, 'y') - loadedHeight - interfaceHeight;
+			}
 			if (!options.innerHeight && !options.height) {				
 				$loaded.css("height", "auto");
 				settings.h = $loaded.height();
 			}
+			settings.h = settings.mh && settings.mh < settings.h ? settings.mh : settings.h;
 			$loaded.css({height: settings.h});
 			
 			publicMethod.position(settings.transition === "none" ? 0 : settings.speed);
