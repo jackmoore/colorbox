@@ -551,7 +551,11 @@
 		
 		var callback, speed = settings.transition === "none" ? 0 : settings.speed;
 		
-		$loaded.remove();
+		if(settings.transition === "fade") {
+			$loaded.fadeOut(settings.speed, function() { $(this).remove(); });
+		} else {
+			$loaded.remove();
+		}
 		$loaded = $tag(div, 'LoadedContent').append(object);
 		
 		function getWidth() {
