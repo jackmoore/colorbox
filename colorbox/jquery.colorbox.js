@@ -543,6 +543,14 @@
 			publicMethod.position(settings.transition === "none" ? 0 : settings.speed);
 		}
 	};
+	
+	publicMethod.removeSlide = function( slide ) {
+		//For fades we want the transition speed, everything else is 0
+		var speed = settings.transition === "fade" ? settings.speed : 0;
+		slide.fadeOut(speed,function() {
+			slide.remove();
+		});
+	};
 
 	publicMethod.prep = function (object) {
 		if (!open) {
@@ -551,7 +559,8 @@
 		
 		var callback, speed = settings.transition === "none" ? 0 : settings.speed;
 		
-		$loaded.remove();
+		publicMethod.removeSlide($loaded);
+		
 		$loaded = $tag(div, 'LoadedContent').append(object);
 		
 		function getWidth() {
