@@ -843,7 +843,7 @@
 				trigger(event_purge);
 				
 				$loaded.empty().remove();
-				$old.empty();
+				$old.remove();
 				
 				setTimeout(function () {
 					closing = false;
