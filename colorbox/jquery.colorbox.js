@@ -842,8 +842,8 @@
 				
 				trigger(event_purge);
 				
-				$loaded.remove();
-				$old.remove();
+				$loaded.empty().remove();
+				$old.empty();
 				
 				setTimeout(function () {
 					closing = false;
