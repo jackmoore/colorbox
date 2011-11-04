@@ -230,6 +230,15 @@
             $box.removeClass(className + "off " + className + "on");
         }
 	}
+	
+	function loadInline(target) {
+		// Inserts an empty placeholder where inline content is being pulled from.
+		// An event is bound to put inline content back when ColorBox closes or loads new content.
+		$tag(div).hide().insertBefore($(target)[0]).one(event_purge, function () {
+			$(this).replaceWith($loaded.children());
+		});
+		publicMethod.prep($(target));
+	}
 
 	function launch(target) {
 		if (!closing) {
@@ -740,29 +749,18 @@
         }, 100);
         
 		if (settings.inline) {
-			// Inserts an empty placeholder where inline content is being pulled from.
-			// An event is bound to put inline content back when ColorBox closes or loads new content.
-			$tag(div).hide().insertBefore($(href)[0]).one(event_purge, function () {
-				$(this).replaceWith($loaded.children());
-			});
-			prep($(href));
+			loadInline(href);
 		} else if (settings.ajaxInline) {
-			// Get inline target
-			var $target = $(settings.inlineTarget);
-			
 			// Only load once
-			if ($target.children().length == 0) {
+			if ($(settings.inlineTarget).children().length == 0) {
 				$loadingBay.load(href, settings.data, function (data, status, xhr) {
-					$target.html(status === 'error' ? $tag(div, 'Error').text('Request unsuccessful: ' + xhr.statusText) : $(this).contents());
+					$(settings.inlineTarget).html(status === 'error' ? $tag(div, 'Error').text('Request unsuccessful: ' + xhr.statusText) : $(this).contents());
+					loadInline(settings.inlineTarget);
 				});
 			}
-			
-			// Inserts an empty placeholder where inline content is being pulled from.
-			// An event is bound to put inline content back when ColorBox closes or loads new content.
-			$tag(div).hide().insertBefore($target[0]).one(event_purge, function () {
-				$(this).replaceWith($loaded.children());
-			});
-			prep($target);
+			else {
+				loadInline(settings.inlineTarget);
+			}
 		} else if (settings.iframe) {
 			// IFrame element won't be added to the DOM until it is ready to be displayed,
 			// to avoid problems with DOM-ready JS that might be trying to run in that iframe.
