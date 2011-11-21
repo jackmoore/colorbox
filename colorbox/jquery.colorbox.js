@@ -74,6 +74,7 @@
     isIE = $.browser.msie && !$.support.opacity, // Detects IE6,7,8.  IE9 supports opacity.  Feature detection alone gave a false positive on at least one phone browser and on some development versions of Chrome, hence the user-agent test.
     isIE6 = isIE && $.browser.version < 7,
     event_ie6 = prefix + '_IE6',
+    isiPad = (navigator.userAgent.match(/iPad/i)),
     
     // Cached jQuery Object Variables
     $overlay,
@@ -282,7 +283,8 @@
 				settings.h = setSize(settings.initialHeight, 'y');
 				publicMethod.position();
 				
-				if (isIE6) {
+				// iPad requres IE6-like overlay rendering
+				if (isIE6 || isiPad) {
 					$window.bind('resize.' + event_ie6 + ' scroll.' + event_ie6, function () {
 						$overlay.css({width: $window.width(), height: $window.height(), top: $window.scrollTop(), left: $window.scrollLeft()});
 					}).trigger('resize.' + event_ie6);
