@@ -821,6 +821,24 @@
 		}
 	};
 
+	// jump to specified index
+	publicMethod.setindex = function (val) {
+		if (!active && $related[1] && (index || settings.loop) && ((val+1) <= $related.length) && index != val) {
+			index = val;
+			publicMethod.load();
+		}
+	};
+	
+	// get specified index
+	publicMethod.index = function () {
+		return index;
+	};
+	
+	// returns related elements
+	publicMethod.related = function () {
+		return $related;
+	};
+
 	// Note: to use this within an iframe use the following format: parent.$.fn.colorbox.close();
 	publicMethod.close = function () {
 		if (open && !closing) {
