@@ -4,7 +4,7 @@
 Files Changed:jquery.colorbox.js/jquery.colorbox-min.js, colorbox.css (all)
 
 * Fixed bug related to using the 'fixed' property.
-* Optimized ColorBox's setup procedure to be more efficient.
+* Optimized the setup procedure to be more efficient.
 * Removed $.colorbox.init() as it will no longer be needed (will self-init when called).
 * Removed use of $.browser.
 
