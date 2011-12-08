@@ -1,5 +1,13 @@
 ## Changelog:
 
+### Version 1.3.19 - December 08 2011
+Files Changed:jquery.colorbox.js/jquery.colorbox-min.js, colorbox.css (all)
+
+* Fixed bug related to using the 'fixed' property.
+* Optimized ColorBox's setup procedure to be more efficient.
+* Removed $.colorbox.init() as it will no longer be needed (will self-init when called).
+* Removed use of $.browser.
+
 ### Version 1.3.18 - October 07 2011
 Files Changed:jquery.colorbox.js/jquery.colorbox-min.js, colorbox.css (all) and example 1's controls.png
 
