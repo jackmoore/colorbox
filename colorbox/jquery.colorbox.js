@@ -816,7 +816,35 @@
 			}, 1);
 		} else if (href) {
 			$loadingBay.load(href, settings.data, function (data, status, xhr) {
-				prep(status === 'error' ? $tag(div, 'Error').text('Request unsuccessful: ' + xhr.statusText) : $(this).contents());
+				// When content is loaded using ajax and DOM is ready, nodes having an "src" attribute like images
+				// might not be fully loaded yet, thus their width and height will be "0". So we need to preload
+				// all elements having an src attribute and reassign their dimensions.
+				var $element = $(this).contents();
+				var $elements = $('*', $element).andSelf().filter('[src]');
+				var totalCount = $elements.size();
+				var loadedCount = 0;
+				
+				if (totalCount) {
+					$elements.each(function() {
+						var $this = $(this);
+						var src = $this.attr('src');
+						if (this.complete || this.readyState === 4) $(this).trigger("load");				
+						$this
+							.attr("src", '')
+							.attr("src", src)
+							.load(function() {
+								$(this).width($this[0].width);
+								$(this).height($this[0].height);
+								loadedCount++;
+								if (loadedCount >= totalCount) {
+									prep(status === 'error' ? $div('Error').text('Request unsuccessful: ' + xhr.statusText) : $element);
+								}
+							});
+					});
+				}
+				else {
+					prep(status === 'error' ? $div('Error').text('Request unsuccessful: ' + xhr.statusText) : $element);
+				}
 			});
 		}
 	};
