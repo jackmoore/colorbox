@@ -87,6 +87,7 @@
     $related,
     $window,
     $loaded,
+    $old,
     $loadingBay,
     $loadingOverlay,
     $title,
@@ -302,7 +303,8 @@
 			$overlay = $tag(div, "Overlay", isIE6 ? 'position:absolute' : '').hide();
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
-				$loaded = $tag(div, "LoadedContent", 'width:0; height:0; overflow:hidden'),
+				$loaded = $tag(div, "LoadedContent", 'width:0; height:0; overflow:hidden; position:absolute'),
+				$old = $tag(div, "LoadedContent", 'width:0; height:0; overflow:hidden; position:absolute'),
 				$loadingOverlay = $tag(div, "LoadingOverlay").add($tag(div, "LoadingGraphic")),
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
@@ -566,7 +568,9 @@
 		
 		var callback, speed = settings.transition === "none" ? 0 : settings.speed;
 		
-		$loaded.remove();
+		$old.empty().width($loaded.width()).height($loaded.height()).show();
+		$loaded.children.appendTo($old);		
+		$loaded.remove();		
 		$loaded = $tag(div, 'LoadedContent').append(object);
 		
 		function getWidth() {
@@ -582,7 +586,7 @@
 		
 		$loaded.hide()
 		.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
-		.css({width: getWidth(), overflow: settings.scrolling ? 'auto' : 'hidden'})
+		.css({width: getWidth(), overflow: settings.scrolling ? 'auto' : 'hidden',position:'absolute'})
 		.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
 		.prependTo($content);
 		
@@ -619,14 +623,11 @@
                 clearTimeout(loadingTimer);
                 $loadingOverlay.hide();
                 trigger(event_complete, settings.onComplete);
-            };
+            };            
             
-            if (isIE) {
-                //This fadeIn helps the bicubic resampling to kick-in.
-                if (photo) {
-                    $loaded.fadeIn(100);
-                }
-            }
+            $old.fadeOut(speed);  
+            $loaded.fadeIn(speed);
+            
             
             $title.html(settings.title).add($loaded).show();
             
@@ -856,7 +857,8 @@
 				
 				trigger(event_purge);
 				
-				$loaded.remove();
+				$loaded.empty().remove();
+				$old.remove();
 				
 				setTimeout(function () {
 					closing = false;
