@@ -32,6 +32,7 @@
         previous: "previous",
         next: "next",
         close: "close",
+        modal: false,
         open: false,
         returnFocus: true,
         reposition: true,
@@ -267,7 +268,10 @@
 				}
 				
 				// +settings.opacity avoids a problem in IE when using non-zero-prefixed-string-values, like '.5'
-				$overlay.css({"opacity": +settings.opacity, "cursor": settings.overlayClose ? "pointer" : "auto"}).show();
+				$overlay.css({
+					"opacity": +settings.opacity, 
+					"cursor": (!settings.modal && settings.overlayClose) ? "pointer" : "auto"})
+					.show();
 				
 				// Opens inital empty ColorBox prior to content being loaded.
 				settings.w = setSize(settings.initialWidth, 'x');
@@ -283,8 +287,9 @@
 				trigger(event_open, settings.onOpen);
 				
 				$groupControls.add($title).hide();
-				
-				$close.html(settings.close).show();
+				if (!settings.modal) {
+					$close.html(settings.close).show();
+				}
 			}
 			
 			publicMethod.load(true);
@@ -361,10 +366,12 @@
 					publicMethod.prev();
 				});
 				$close.click(function () {
-					publicMethod.close();
+					if (!settings.modal) {
+						publicMethod.close();
+					}
 				});
 				$overlay.click(function () {
-					if (settings.overlayClose) {
+					if (!settings.modal && settings.overlayClose) {
 						publicMethod.close();
 					}
 				});
@@ -372,7 +379,7 @@
 				// Key Bindings
 				$(document).bind('keydown.' + prefix, function (e) {
 					var key = e.keyCode;
-					if (open && settings.escKey && key === 27) {
+					if (!settings.modal && open && settings.escKey && key === 27) {
 						e.preventDefault();
 						publicMethod.close();
 					}
@@ -581,10 +588,10 @@
 		}
 		
 		$loaded.hide()
-		.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
-		.css({width: getWidth(), overflow: settings.scrolling ? 'auto' : 'hidden'})
-		.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
-		.prependTo($content);
+			.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
+			.css({width: getWidth(), overflow: settings.scrolling ? 'auto' : 'hidden'})
+			.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
+			.prependTo($content);
 		
 		$loadingBay.hide();
 		
