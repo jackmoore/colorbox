@@ -110,6 +110,7 @@
     open,
     active,
     closing,
+	modal,
     loadingTimer,
     publicMethod,
     div = "div",
@@ -634,6 +635,10 @@
                     $loaded.fadeIn(100);
                 }
             }
+			
+			if (settings.modal) {
+				$close.remove();
+			}
             
             $title.html(settings.title).add($loaded).show();
             
