@@ -291,6 +291,10 @@
 				if (!settings.modal) {
 					$close.html(settings.close).show();
 				}
+				else {
+					$close.remove();
+				}
+            
 			}
 			
 			publicMethod.load(true);
@@ -636,10 +640,6 @@
                 }
             }
 			
-			if (settings.modal) {
-				$close.remove();
-			}
-            
             $title.html(settings.title).add($loaded).show();
             
             if (total > 1) { // handle grouping
