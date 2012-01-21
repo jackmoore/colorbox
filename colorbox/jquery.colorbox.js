@@ -384,7 +384,7 @@
 				// Key Bindings
 				$(document).bind('keydown.' + prefix, function (e) {
 					var key = e.keyCode;
-					if (!settings.modal && open && settings.escKey && key === 27) {
+					if (open && !settings.modal && settings.escKey && key === 27) {
 						e.preventDefault();
 						publicMethod.close();
 					}
