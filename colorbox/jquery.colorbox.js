@@ -454,13 +454,16 @@
         top = 0, 
         left = 0, 
         offset = $box.offset(),
-        scrollTop = $window.scrollTop(), 
-        scrollLeft = $window.scrollLeft();
+        scrollTop,
+        scrollLeft;
         
         $window.unbind('resize.' + prefix);
 
         // remove the modal so that it doesn't influence the document width/height        
         $box.css({top: -9e4, left: -9e4});
+        // after the modal was removed we can safely get all scroll values
+        scrollTop = $window.scrollTop();
+        scrollLeft = $window.scrollLeft();
 
         if (settings.fixed && !isIE6) {
 			offset.top -= scrollTop;
