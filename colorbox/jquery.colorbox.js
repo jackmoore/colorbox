@@ -22,6 +22,7 @@
         html: false,
         iframe: false,
         fastIframe: true,
+        iframeTitle: true,
         photo: false,
         href: false,
         title: false,
@@ -628,7 +629,9 @@
                 }
             }
             
-            $title.html(settings.title).add($loaded).show();
+            //Set an empty title initially if we are going to use the iframe title
+            //This prevents the title from flashing
+            $title.html((settings.iframeTitle && settings.iframe) ? "" : settings.title).add($loaded).show();
             
             if (total > 1) { // handle grouping
                 if (typeof settings.current === "string") {
@@ -674,11 +677,22 @@
                 }
                 // give the iframe a unique name to prevent caching
                 iframe.name = prefix + (+new Date());
-                if (settings.fastIframe) {
-                    complete();
-                } else {
-                    $(iframe).one('load', complete);
-                }
+                
+                //Run the complete function now if using fastIframe
+                if (settings.fastIframe) complete();
+
+                //Once the iframe has completed loading...
+                $(iframe).one('load', function () {
+                        //Run the complete function now if not using fastIframe
+                        if (!settings.fastIframe) complete();
+                        //If we can use the iframe title OR the title was not already set in the settings,
+                        //grab the title out of the iframe document instead
+                        if (settings.iframeTitle || !settings.title) {
+                                settings.title = iframe.contentWindow.document.title;
+                                $title.html(settings.title);
+                        }
+                });
+                                
                 iframe.src = settings.href;
                 if (!settings.scrolling) {
                     iframe.scrolling = "no";
