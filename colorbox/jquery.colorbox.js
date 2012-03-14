@@ -674,11 +674,18 @@
                 }
                 // give the iframe a unique name to prevent caching
                 iframe.name = prefix + (+new Date());
-                if (settings.fastIframe) {
-                    complete();
-                } else {
-                    $(iframe).one('load', complete);
-                }
+                
+                //Run the complete function now if using fastIframe
+                if(settings.fastIframe) complete();
+                
+                //Once the iframe has completed loading...
+                $(iframe).one('load', function() {
+                        //Run the complete function now if not using fastIframe
+                        if(!settings.fastIframe) complete();
+                        //If the title was not set in the settings, grab the title out of the iframe document instead
+                        if(!settings.title) $title.html(iframe.contentWindow.document.title);
+                });
+		
                 iframe.src = settings.href;
                 if (!settings.scrolling) {
                     iframe.scrolling = "no";
