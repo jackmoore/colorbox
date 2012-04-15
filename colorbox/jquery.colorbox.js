@@ -174,9 +174,16 @@
 	}
 
 	function trigger(event, callback) {
-		$.event.trigger(event);
+		var ret = null;
+		ret = $.event.trigger(event);
+		if ($.isPlainObject(ret)) {
+			settiongs = $.extend(settings, ret);
+		}
 		if (callback) {
-			callback.call(element);
+			ret = callback.call(element);
+			if ($.isPlainObject(ret)) {
+				settiongs = $.extend(settings, ret);
+			}
 		}
 	}
 
