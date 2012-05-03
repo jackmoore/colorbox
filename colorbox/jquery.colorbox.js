@@ -243,7 +243,7 @@
 			
 			if (settings.rel !== 'nofollow') {
 				$related = $('.' + boxElement).filter(function () {
-					var relRelated = $.data(this, colorbox).rel || this.rel;
+					var relRelated = ($.data(this, colorbox) && $.data(this, colorbox).rel) ? $.data(this, colorbox).rel : this.rel;
 					return (relRelated === settings.rel);
 				});
 				index = $related.index(element);
