@@ -808,7 +808,7 @@
 			.addClass(prefix + 'Photo')
 			.error(function () {
 				settings.title = false;
-				prep($tag(div, 'Error').text(settings.imgError));
+				prep($tag(div, 'Error').html(settings.imgError));
 			})
 			.load(function () {
 				var percent;
@@ -854,7 +854,7 @@
 			}, 1);
 		} else if (href) {
 			$loadingBay.load(href, settings.data, function (data, status, xhr) {
-				prep(status === 'error' ? $tag(div, 'Error').text(settings.xhrError) : $(this).contents());
+				prep(status === 'error' ? $tag(div, 'Error').html(settings.xhrError) : $(this).contents());
 			});
 		}
 	};
