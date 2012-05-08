@@ -1,4 +1,4 @@
-// ColorBox v1.3.19.1 - jQuery lightbox plugin
+// ColorBox v1.3.19.2 - jQuery lightbox plugin
 // (c) 2011 Jack Moore - jacklmoore.com
 // License: http://www.opensource.org/licenses/mit-license.php
 (function ($, document, window, console) {
@@ -255,7 +255,7 @@
 					var data = $.data(this, colorbox), 
 						relRelated;
 
-					if (data && data.rel) {
+					if (data) {
 						relRelated =  data.rel || this.rel;
 					}
 					
@@ -469,13 +469,16 @@
 		top = 0, 
 		left = 0, 
 		offset = $box.offset(),
-		scrollTop = $window.scrollTop(), 
-		scrollLeft = $window.scrollLeft();
+		scrollTop, 
+		scrollLeft;
 		
 		$window.unbind('resize.' + prefix);
 
 		// remove the modal so that it doesn't influence the document width/height        
 		$box.css({top: -9e4, left: -9e4});
+
+		scrollTop = $window.scrollTop();
+		scrollLeft = $window.scrollLeft();
 
 		if (settings.fixed && !isIE6) {
 			offset.top -= scrollTop;
@@ -618,7 +621,16 @@
 		}
 		
 		callback = function () {
-			var preload, i, total = $related.length, iframe, frameBorder = 'frameBorder', allowTransparency = 'allowTransparency', complete, src, img;
+			var preload, 
+				i, 
+				total = $related.length, 
+				iframe, 
+				frameBorder = 'frameBorder', 
+				allowTransparency = 'allowTransparency', 
+				complete, 
+				src, 
+				img, 
+				data;
 			
 			if (!open) {
 				return;
@@ -664,10 +676,17 @@
 						getIndex(1)
 					];
 					while (i = $related[preload.pop()]) {
-						src = $.data(i, colorbox).href || i.href;
-						if ($.isFunction(src)) {
-							src = src.call(i);
+						data = $.data(i, colorbox);
+						
+						if (data && data.href) {
+							src = data.href;
+							if ($.isFunction(src)) {
+								src = src.call(i);
+							}
+						} else {
+							src = i.href;
 						}
+
 						if (isImage(src)) {
 							img = new Image();
 							img.src = src;
