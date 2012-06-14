@@ -886,10 +886,11 @@
 			
 			$window.unbind('.' + prefix + ' .' + event_ie6);
 			
-			$overlay.fadeTo(200, 0);
+			if (settings.transition === "none") $overlay.css({'opacity': 0});
+			else $overlay.fadeTo(settings.speed, 0);
 			
-			$box.stop().fadeTo(300, 0, function () {
-				 
+			var cleanup = function() {
+			
 				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
 				
 				trigger(event_purge);
@@ -900,7 +901,15 @@
 					closing = false;
 					trigger(event_closed, settings.onClosed);
 				}, 1);
-			});
+			};
+			
+			$box.stop();
+			
+			if (settings.transition === "none") {
+				$box.css({'opacity': 0});
+				cleanup();
+			}
+			else $box.fadeTo(settings.speed + 100, 0, cleanup);
 		}
 	};
 
