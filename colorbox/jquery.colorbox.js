@@ -3,7 +3,7 @@
 // License: http://www.opensource.org/licenses/mit-license.php
 (function ($, document, window) {
 	var
-	// Default settings object.	
+	// Default settings object.
 	// See http://jacklmoore.com/colorbox for details.
 	defaults = {
 		transition: "elastic",
@@ -50,7 +50,7 @@
 		onComplete: false,
 		onCleanup: false,
 		onClosed: false,
-		overlayClose: true,		
+		overlayClose: true,
 		escKey: true,
 		arrowKey: true,
 		top: false,
@@ -66,7 +66,7 @@
 	prefix = 'cbox',
 	boxElement = prefix + 'Element',
 	
-	// Events	
+	// Events
 	event_open = prefix + '_open',
 	event_load = prefix + '_load',
 	event_complete = prefix + '_complete',
@@ -139,8 +139,8 @@
 
 	// Determine the next and previous members in a group.
 	function getIndex(increment) {
-		var 
-		max = $related.length, 
+		var
+		max = $related.length,
 		newIndex = (index + increment) % max;
 		
 		return (newIndex < 0) ? max + newIndex : newIndex;
@@ -165,10 +165,10 @@
 		if (data == null) {
 			settings = $.extend({}, defaults);
 			if (console && console.log) {
-				console.log('Error: cboxElement missing settings object')
+				console.log('Error: cboxElement missing settings object');
 			}
 		} else {
-			settings = $.extend({}, data);    		
+			settings = $.extend({}, data);
 		}
 		
 		for (i in settings) {
@@ -256,7 +256,7 @@
 			
 			if (settings.rel !== 'nofollow') {
 				$related = $('.' + boxElement).filter(function () {
-					var data = $.data(this, colorbox), 
+					var data = $.data(this, colorbox),
 						relRelated;
 
 					if (data) {
@@ -469,16 +469,16 @@
 	};
 
 	publicMethod.position = function (speed, loadedCallback) {
-		var 
-		top = 0, 
-		left = 0, 
+		var
+		top = 0,
+		left = 0,
 		offset = $box.offset(),
-		scrollTop, 
+		scrollTop,
 		scrollLeft;
 		
 		$window.unbind('resize.' + prefix);
 
-		// remove the modal so that it doesn't influence the document width/height        
+		// remove the modal so that it doesn't influence the document width/height
 		$box.css({top: -9e4, left: -9e4});
 
 		scrollTop = $window.scrollTop();
@@ -625,15 +625,15 @@
 		}
 		
 		callback = function () {
-			var preload, 
-				i, 
-				total = $related.length, 
-				iframe, 
-				frameBorder = 'frameBorder', 
-				allowTransparency = 'allowTransparency', 
-				complete, 
-				src, 
-				img, 
+			var preload,
+				i,
+				total = $related.length,
+				iframe,
+				frameBorder = 'frameBorder',
+				allowTransparency = 'allowTransparency',
+				complete,
+				src,
+				img,
 				data;
 			
 			if (!open) {
@@ -817,7 +817,7 @@
 				if (settings.scalePhotos) {
 					setResize = function () {
 						photo.height -= photo.height * percent;
-						photo.width -= photo.width * percent;	
+						photo.width -= photo.width * percent;
 					};
 					if (settings.mw && photo.width > settings.mw) {
 						percent = (photo.width - settings.mw) / photo.width;
@@ -889,7 +889,7 @@
 			$overlay.fadeTo(200, 0);
 			
 			$box.stop().fadeTo(300, 0, function () {
-				 
+			
 				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
 				
 				trigger(event_purge);
