@@ -563,6 +563,12 @@
 			if (options.innerWidth) {
 				settings.w = setSize(options.innerWidth, 'x');
 			}
+			if( options.maxWidth ) {
+				var max_width = setSize( options.maxWidth, 'x' );
+				if( settings.w > max_width ) {
+					settings.w = max_width;
+				}
+			}
 			$loaded.css({width: settings.w});
 			
 			if (options.height) {
@@ -574,6 +580,12 @@
 			if (!options.innerHeight && !options.height) {
 				$loaded.css({height: "auto"});
 				settings.h = $loaded.height();
+			}
+			if( options.maxHeight ) {
+				var max_height = setSize( options.maxHeight, 'y' );
+				if( settings.h > max_height ) {
+					settings.h = max_height;
+				}
 			}
 			$loaded.css({height: settings.h});
 			
