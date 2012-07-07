@@ -553,7 +553,7 @@
 		});
 	};
 
-	publicMethod.resize = function (options) {
+	publicMethod.resize = function (options, loadedCallback) {
 		if (open) {
 			options = options || {};
 			
@@ -577,7 +577,7 @@
 			}
 			$loaded.css({height: settings.h});
 			
-			publicMethod.position(settings.transition === "none" ? 0 : settings.speed);
+			publicMethod.position(settings.transition === "none" ? 0 : settings.speed, loadedCallback);
 		}
 	};
 
