@@ -154,7 +154,7 @@
 	// Checks an href to see if it is a photo.
 	// There is a force photo option (photo: true) for hrefs that cannot be matched by this regex.
 	function isImage(url) {
-		return settings.photo || /\.(gif|png|jpe?g|bmp|ico)((#|\?).*)?$/i.test(url);
+		return settings.photo || /\.(gif|png|jp(e|g|eg)|bmp|ico)((#|\?).*)?$/i.test(url);
 	}
 	
 	// Assigns function results to their respective properties
