@@ -3,8 +3,14 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.3.20 - August 15 2012
+Files Changed:jquery.colorbox.js
+
+* Added temporary workaround for jQuery-UI 1.8 bug (http://bugs.jquery.com/ticket/12273)
+* Added *.jpe extension to the list of image types.
+
 ### Version 1.3.19 - December 08 2011
-Files Changed:jquery.colorbox.js/jquery.colorbox-min.js, colorbox.css (all)
+Files Changed:jquery.colorbox.js, colorbox.css (all)
 
 * Fixed bug related to using the 'fixed' property.
 * Optimized the setup procedure to be more efficient.
