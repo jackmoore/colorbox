@@ -470,6 +470,7 @@
 
 	publicMethod.position = function (speed, loadedCallback) {
 		var
+		css,
 		top = 0,
 		left = 0,
 		offset = $box.offset(),
@@ -525,8 +526,12 @@
 			$topBorder[0].style.width = $bottomBorder[0].style.width = $content[0].style.width = that.style.width;
 			$content[0].style.height = $leftBorder[0].style.height = $rightBorder[0].style.height = that.style.height;
 		}
-		
-		$box.dequeue().animate({width: settings.w + loadedWidth, height: settings.h + loadedHeight, top: top, left: left}, {
+
+		css = {width: settings.w + loadedWidth, height: settings.h + loadedHeight, top: top, left: left};
+		if(speed===0){ // temporary workaround to side-step jQuery-UI 1.8 bug (http://bugs.jquery.com/ticket/12273)
+			$box.css(css);
+		}
+		$box.dequeue().animate(css, {
 			duration: speed,
 			complete: function () {
 				modalDimensions(this);
