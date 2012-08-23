@@ -319,10 +319,10 @@
 			$window = $(window);
 			$box = $tag(div).attr({id: colorbox, 'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : ''}).hide();
 			$overlay = $tag(div, "Overlay", isIE6 ? 'position:absolute' : '').hide();
+			$loadingOverlay = $tag(div, "LoadingOverlay").add($tag(div, "LoadingGraphic"));
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
 				$loaded = $tag(div, "LoadedContent", 'width:0; height:0; overflow:hidden'),
-				$loadingOverlay = $tag(div, "LoadingOverlay").add($tag(div, "LoadingGraphic")),
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
 				$next = $tag(div, "Next"),
@@ -653,8 +653,8 @@
 			
 			complete = function () {
 				clearTimeout(loadingTimer);
-				// setting the visibility to hidden avoids a bug in the Android stock browser.
-				$loadingOverlay.css({display:'none', visibility:'hidden'});
+				// Detaching forces Andriod stock browser to redraw the area underneat the loading overlay.  Hiding alone isn't enough.
+				$loadingOverlay.detach().hide();
 				trigger(event_complete, settings.onComplete);
 			};
 			
@@ -793,7 +793,7 @@
 		href = settings.href;
 		
 		loadingTimer = setTimeout(function () {
-			$loadingOverlay.css({display:'', visibility:''});
+			$loadingOverlay.show().appendTo($content);
 		}, 100);
 		
 		if (settings.inline) {
