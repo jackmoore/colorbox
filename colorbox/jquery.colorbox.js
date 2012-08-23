@@ -1,4 +1,4 @@
-// ColorBox v1.3.20 - jQuery lightbox plugin
+// ColorBox v1.3.20.1 - jQuery lightbox plugin
 // (c) 2011 Jack Moore - jacklmoore.com
 // License: http://www.opensource.org/licenses/mit-license.php
 (function ($, document, window) {
@@ -653,7 +653,8 @@
 			
 			complete = function () {
 				clearTimeout(loadingTimer);
-				$loadingOverlay.hide();
+				// setting the visibility to hidden avoids a bug in the Android stock browser.
+				$loadingOverlay.css({display:'none', visibility:'hidden'});
 				trigger(event_complete, settings.onComplete);
 			};
 			
@@ -792,7 +793,7 @@
 		href = settings.href;
 		
 		loadingTimer = setTimeout(function () {
-			$loadingOverlay.show();
+			$loadingOverlay.css({display:'', visibility:''});
 		}, 100);
 		
 		if (settings.inline) {
