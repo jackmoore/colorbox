@@ -287,7 +287,9 @@
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
 				
-				$box.show();
+				if(settings.transition != 'fade') {
+					$box.show();
+				}
 				
 				if (settings.returnFocus) {
 					$(element).blur().one(event_closed, function () {
