@@ -187,7 +187,7 @@
 			}
 		}
 		
-		settings.rel = settings.rel || element.rel || 'nofollow';
+		settings.rel = settings.rel || element.rel || $(element).data('rel') || 'nofollow';
 		settings.href = settings.href || $(element).attr('href');
 		settings.title = settings.title || element.title;
 		
@@ -270,7 +270,7 @@
 						relRelated;
 
 					if (data) {
-						relRelated =  data.rel || this.rel;
+						relRelated =  $(this).data('rel') || data.rel || this.rel;
 					}
 					
 					return (relRelated === settings.rel);
