@@ -827,10 +827,10 @@
 				prep($tag(div, 'Error').html(settings.imgError));
 			})
 			.load(function () {
-				var percent;
+				var percent, ratio;
 				photo.onload = null; //stops animated gifs from firing the onload repeatedly.
 				
-				if (settings.scalePhotos) {
+				if (settings.scalePhotos === true || settings.scalePhotos == 'contain') {
 					setResize = function () {
 						photo.height -= photo.height * percent;
 						photo.width -= photo.width * percent;
@@ -843,10 +843,15 @@
 						percent = (photo.height - settings.mh) / photo.height;
 						setResize();
 					}
+				} else if (settings.scalePhotos == 'cover') {
+					ratio = Math.max(settings.mw/photo.width, settings.mh/photo.height);
+					
+					photo.height = photo.height * ratio;
+					photo.width = photo.width * ratio;
 				}
 				
 				if (settings.h) {
-					photo.style.marginTop = Math.max(settings.h - photo.height, 0) / 2 + 'px';
+					photo.style.marginTop = Math.floor(settings.h - photo.height) / 2 + 'px';
 				}
 				
 				if ($related[1] && (settings.loop || $related[index + 1])) {
