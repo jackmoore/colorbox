@@ -48,6 +48,7 @@
 		onOpen: false,
 		onLoad: false,
 		onComplete: false,
+	    onAnimationComplete: false,
 		onCleanup: false,
 		onClosed: false,
 		overlayClose: true,
@@ -70,6 +71,7 @@
 	event_open = prefix + '_open',
 	event_load = prefix + '_load',
 	event_complete = prefix + '_complete',
+	event_animationComplete = prefix + "_animationComplete",
 	event_cleanup = prefix + '_cleanup',
 	event_closed = prefix + '_closed',
 	event_purge = prefix + '_purge',
@@ -561,6 +563,8 @@
 				if (loadedCallback) {
 					loadedCallback();
 				}
+
+                trigger(event_animationComplete, settings.onAnimationComplete);
 			},
 			step: function () {
 				modalDimensions(this);
