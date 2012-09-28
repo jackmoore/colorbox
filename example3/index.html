@@ -9,7 +9,7 @@
 			h2{font-size:13px; margin:15px 0 0 0;}
 		</style>
 		<link rel="stylesheet" href="colorbox.css" />
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<script src="../colorbox/jquery.colorbox.js"></script>
 		<script>
 			$(document).ready(function(){
@@ -20,6 +20,7 @@
 				$(".group4").colorbox({rel:'group4', slideshow:true});
 				$(".ajax").colorbox();
 				$(".youtube").colorbox({iframe:true, innerWidth:425, innerHeight:344});
+				$(".vimeo").colorbox({iframe:true, innerWidth:500, innerHeight:409});
 				$(".iframe").colorbox({iframe:true, width:"80%", height:"80%"});
 				$(".inline").colorbox({inline:true, width:"50%"});
 				$(".callbacks").colorbox({
@@ -63,8 +64,8 @@
 		
 		<h2>Other Content Types</h2>
 		<p><a class='ajax' href="../content/ajax.html" title="Homer Defined">Outside HTML (Ajax)</a></p>
-		<p><a class='ajax' href="../content/flash.html" title="Royksopp: Remind Me">Flash / Video (Ajax/Embedded)</a></p>
 		<p><a class='youtube' href="http://www.youtube.com/embed/617ANIA5Rqs?rel=0&amp;wmode=transparent" title="The Knife: We Share Our Mother's Health">Flash / Video (Iframe/Direct Link To YouTube)</a></p>
+		<p><a class='vimeo' href="http://player.vimeo.com/video/2285902" title="R&ouml;yksopp: Remind Me">Flash / Video (Iframe/Direct Link To Vimeo)</a></p>
 		<p><a class='iframe' href="http://threadless.com">Outside Webpage (Iframe)</a></p>
 		<p><a class='inline' href="#inline_content">Inline HTML</a></p>
 		
