@@ -216,7 +216,7 @@
 		if (settings.slideshow && $related[1]) {
 			start = function () {
 				$slideshow
-					.text(settings.slideshowStop)
+					.html(settings.slideshowStop)
 					.unbind(click)
 					.bind(event_complete, function () {
 						if (settings.loop || $related[index + 1]) {
@@ -234,7 +234,7 @@
 			stop = function () {
 				clearTimeout(timeOut);
 				$slideshow
-					.text(settings.slideshowStart)
+					.html(settings.slideshowStart)
 					.unbind([event_complete, event_load, event_cleanup, click].join(' '))
 					.one(click, function () {
 						publicMethod.next();
