@@ -736,7 +736,10 @@
 					.attr({
 						src: settings.href,
 						name: (new Date()).getTime(), // give the iframe a unique name to prevent caching
-						'class': prefix + 'Iframe'
+						'class': prefix + 'Iframe',
+						allowFullScreen : true, // allow HTML5 video to go fullscreen
+						webkitAllowFullScreen : true,
+						mozallowfullscreen : true
 					})
 					.one('load', complete)
 					.one(event_purge, function () {
