@@ -170,7 +170,8 @@
 	// Assigns function results to their respective properties
 	function makeSettings() {
 		var i,
-			data = $.data(element, colorbox);
+			data = $.data(element, colorbox),
+			title = document.getElementById(element.getAttribute('data-title'));
 		
 		if (data == null) {
 			settings = $.extend({}, defaults);
@@ -189,7 +190,7 @@
 		
 		settings.rel = settings.rel || element.rel || $(element).data('rel') || 'nofollow';
 		settings.href = settings.href || $(element).attr('href');
-		settings.title = settings.title || element.title;
+		settings.title = settings.title || (title && title.innerHTML) || element.title;
 		
 		if (typeof settings.href === "string") {
 			settings.href = $.trim(settings.href);
