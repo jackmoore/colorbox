@@ -616,12 +616,31 @@
 			settings.h = settings.mh && settings.mh < settings.h ? settings.mh : settings.h;
 			return settings.h;
 		}
+		function getWidthWithScrollbar(){
+			// we have to "show" the content to calculate the scrollWidth and clientWidth correctly
+			$loaded.css('visibility', 'hidden').show();
+			
+			// modify the box width to accomodate for vertical scollbar
+			var widthDifference = $loaded[0].scrollWidth - $loaded[0].clientWidth;
+			if(widthDifference > 0)
+			{
+				settings.w = getWidth() + widthDifference;
+				settings.w = settings.mw && settings.mw < settings.w ? settings.mw : settings.w;
+			}
+			$loaded.hide().css('visibility', '');
+			return settings.w;
+		}
 		
 		$loaded.hide()
 		.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
 		.css({width: getWidth(), overflow: settings.scrolling ? 'auto' : 'hidden'})
 		.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
 		.prependTo($content);
+		
+		if(settings.scrolling){
+			// update width to account for potential vertical scrollbar
+			$loaded.width(getWidthWithScrollbar());
+		}
 		
 		$loadingBay.hide();
 		
