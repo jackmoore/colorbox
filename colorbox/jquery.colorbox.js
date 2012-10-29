@@ -1,4 +1,4 @@
-// ColorBox v1.3.20 - jQuery lightbox plugin
+// ColorBox v1.3.20.1 - jQuery lightbox plugin
 // (c) 2011 Jack Moore - jacklmoore.com
 // License: http://www.opensource.org/licenses/mit-license.php
 (function ($, document, window) {
@@ -150,7 +150,7 @@
 
 	// Convert '%' and 'px' values to integers
 	function setSize(size, dimension) {
-		return Math.round((/%/.test(size) ? ((dimension === 'x' ? $window.width() : $window.height()) / 100) : 1) * parseInt(size, 10));
+		return Math.round((/%/.test(size) ? ((dimension === 'x' ? winWidth() : winHeight()) / 100) : 1) * parseInt(size, 10));
 	}
 	
 	// Checks an href to see if it is a photo.
@@ -159,6 +159,16 @@
 		return settings.photo || /\.(gif|png|jp(e|g|eg)|bmp|ico)((#|\?).*)?$/i.test(url);
 	}
 	
+	function winWidth() {
+		// $(window).width() is incorrect for some mobile browsers, but
+		// window.innerWidth is unsupported in IE8 and lower.
+		return window.innerWidth || $window.width();
+	}
+
+	function winHeight() {
+		return window.innerHeight || $window.height();
+	}
+
 	// Assigns function results to their respective properties
 	function makeSettings() {
 		var i,
@@ -179,7 +189,7 @@
 			}
 		}
 		
-		settings.rel = settings.rel || element.rel || 'nofollow';
+		settings.rel = settings.rel || element.rel || $(element).data('rel') || 'nofollow';
 		settings.href = settings.href || $(element).attr('href');
 		settings.title = settings.title || element.title;
 		
@@ -208,7 +218,7 @@
 		if (settings.slideshow && $related[1]) {
 			start = function () {
 				$slideshow
-					.text(settings.slideshowStop)
+					.html(settings.slideshowStop)
 					.unbind(click)
 					.bind(event_complete, function () {
 						if (settings.loop || $related[index + 1]) {
@@ -226,7 +236,7 @@
 			stop = function () {
 				clearTimeout(timeOut);
 				$slideshow
-					.text(settings.slideshowStart)
+					.html(settings.slideshowStart)
 					.unbind([event_complete, event_load, event_cleanup, click].join(' '))
 					.one(click, function () {
 						publicMethod.next();
@@ -262,7 +272,7 @@
 						relRelated;
 
 					if (data) {
-						relRelated =  data.rel || this.rel;
+						relRelated =  $(this).data('rel') || data.rel || this.rel;
 					}
 					
 					return (relRelated === settings.rel);
@@ -297,7 +307,7 @@
 				
 				if (isIE6) {
 					$window.bind('resize.' + event_ie6 + ' scroll.' + event_ie6, function () {
-						$overlay.css({width: $window.width(), height: $window.height(), top: $window.scrollTop(), left: $window.scrollLeft()});
+						$overlay.css({width: winWidth(), height: winHeight(), top: $window.scrollTop(), left: $window.scrollLeft()});
 					}).trigger('resize.' + event_ie6);
 				}
 				
@@ -325,10 +335,10 @@
 			$window = $(window);
 			$box = $tag(div).attr({id: colorbox, 'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : ''}).hide();
 			$overlay = $tag(div, "Overlay", isIE6 ? 'position:absolute' : '').hide();
+			$loadingOverlay = $tag(div, "LoadingOverlay").add($tag(div, "LoadingGraphic"));
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
 				$loaded = $tag(div, "LoadedContent", 'width:0; height:0; overflow:hidden'),
-				$loadingOverlay = $tag(div, "LoadingOverlay").add($tag(div, "LoadingGraphic")),
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
 				$next = $tag(div, "Next"),
@@ -508,19 +518,19 @@
 
 		// keeps the top and left positions within the browser's viewport.
 		if (settings.right !== false) {
-			left += Math.max($window.width() - settings.w - loadedWidth - interfaceWidth - setSize(settings.right, 'x'), 0);
+			left += Math.max(winWidth() - settings.w - loadedWidth - interfaceWidth - setSize(settings.right, 'x'), 0);
 		} else if (settings.left !== false) {
 			left += setSize(settings.left, 'x');
 		} else {
-			left += Math.round(Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2);
+			left += Math.round(Math.max(winWidth() - settings.w - loadedWidth - interfaceWidth, 0) / 2);
 		}
 		
 		if (settings.bottom !== false) {
-			top += Math.max($window.height() - settings.h - loadedHeight - interfaceHeight - setSize(settings.bottom, 'y'), 0);
+			top += Math.max(winHeight() - settings.h - loadedHeight - interfaceHeight - setSize(settings.bottom, 'y'), 0);
 		} else if (settings.top !== false) {
 			top += setSize(settings.top, 'y');
 		} else {
-			top += Math.round(Math.max($window.height() - settings.h - loadedHeight - interfaceHeight, 0) / 2);
+			top += Math.round(Math.max(winHeight() - settings.h - loadedHeight - interfaceHeight, 0) / 2);
 		}
 
 		$box.css({top: offset.top, left: offset.left});
@@ -664,7 +674,8 @@
 			
 			complete = function () {
 				clearTimeout(loadingTimer);
-				$loadingOverlay.hide();
+				// Detaching forces Andriod stock browser to redraw the area underneat the loading overlay.  Hiding alone isn't enough.
+				$loadingOverlay.detach().hide();
 				trigger(event_complete, settings.onComplete);
 			};
 			
@@ -723,23 +734,33 @@
 				if (frameBorder in iframe) {
 					iframe[frameBorder] = 0;
 				}
+				
 				if (allowTransparency in iframe) {
 					iframe[allowTransparency] = "true";
 				}
-				// give the iframe a unique name to prevent caching
-				iframe.name = prefix + (+new Date());
-				if (settings.fastIframe) {
-					complete();
-				} else {
-					$(iframe).one('load', complete);
-				}
-				iframe.src = settings.href;
+
 				if (!settings.scrolling) {
 					iframe.scrolling = "no";
 				}
-				$(iframe).addClass(prefix + 'Iframe').appendTo($loaded).one(event_purge, function () {
-					iframe.src = "//about:blank";
-				});
+				
+				$(iframe)
+					.attr({
+						src: settings.href,
+						name: (new Date()).getTime(), // give the iframe a unique name to prevent caching
+						'class': prefix + 'Iframe',
+						allowFullScreen : true, // allow HTML5 video to go fullscreen
+						webkitAllowFullScreen : true,
+						mozallowfullscreen : true
+					})
+					.one('load', complete)
+					.one(event_purge, function () {
+						iframe.src = "//about:blank";
+					})
+					.appendTo($loaded);
+				
+				if (settings.fastIframe) {
+					$(iframe).trigger('load');
+				}
 			} else {
 				complete();
 			}
@@ -803,7 +824,7 @@
 		href = settings.href;
 		
 		loadingTimer = setTimeout(function () {
-			$loadingOverlay.show();
+			$loadingOverlay.show().appendTo($content);
 		}, 100);
 		
 		if (settings.inline) {
@@ -939,4 +960,4 @@
 
 	publicMethod.settings = defaults;
 
-}(jQuery, document, this));
+}(jQuery, document, window));
