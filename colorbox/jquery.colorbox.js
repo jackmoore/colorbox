@@ -58,7 +58,8 @@
 		left: false,
 		right: false,
 		fixed: false,
-		data: undefined
+		data: undefined,
+		type: undefined
 	},
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
@@ -879,9 +880,29 @@
 				photo.src = href;
 			}, 1);
 		} else if (href) {
-			$loadingBay.load(href, settings.data, function (data, status, xhr) {
-				prep(status === 'error' ? $tag(div, 'Error').html(settings.xhrError) : $(this).contents());
-			});
+			var type;
+
+			// emulate jQuery.load() functionality, but add forcing request type
+			if( settings.type) {
+				type = settings.type;
+			} else {
+				if ( settings.data && typeof settings.data === "object" ) {
+					type = 'POST';
+				} else {
+					type = 'GET';
+				}
+			}
+
+			jQuery.ajax({
+				url      : href,
+				dataType : 'html',
+				type     : type,
+				data     : settings.data,
+				error    : function( jqXHR, textStatus, errorThrown ) { prep($tag(div, 'Error').html(settings.xhrError)); }
+			}).done(function( responseText ) {
+				$loadingBay.html(responseText);
+				prep($loadingBay.contents());
+			})
 		}
 	};
 		
