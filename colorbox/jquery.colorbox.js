@@ -1,5 +1,5 @@
-// ColorBox v1.3.20.1 - jQuery lightbox plugin
-// (c) 2011 Jack Moore - jacklmoore.com
+// ColorBox v1.3.20.2 - jQuery lightbox plugin
+// (c) 2012 Jack Moore - jacklmoore.com
 // License: http://www.opensource.org/licenses/mit-license.php
 (function ($, document, window) {
 	var
@@ -210,8 +210,7 @@
 		className = prefix + "Slideshow_",
 		click = "click." + prefix,
 		start,
-		stop,
-		clear;
+		stop;
 		
 		if (settings.slideshow && $related[1]) {
 			start = function () {
@@ -416,7 +415,7 @@
 					}
 				});
 
-				$('.' + boxElement, document).live('click', function (e) {
+				$(document).delegate('.'+boxElement, 'click', function(e) {
 					// ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
 					// See: http://jacklmoore.com/notes/click-events/
 					if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey)) {
@@ -879,7 +878,7 @@
 				photo.src = href;
 			}, 1);
 		} else if (href) {
-			$loadingBay.load(href, settings.data, function (data, status, xhr) {
+			$loadingBay.load(href, settings.data, function (data, status) {
 				prep(status === 'error' ? $tag(div, 'Error').html(settings.xhrError) : $(this).contents());
 			});
 		}
@@ -937,8 +936,9 @@
 		$box = null;
 		$('.' + boxElement)
 			.removeData(colorbox)
-			.removeClass(boxElement)
-			.die();
+			.removeClass(boxElement);
+
+		$(document).undelegate('.'+boxElement);
 	};
 
 	// A method for fetching the current element ColorBox is referencing.
