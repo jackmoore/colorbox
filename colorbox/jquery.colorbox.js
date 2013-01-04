@@ -821,7 +821,7 @@
 		} else if (isImage(href)) {
 			$(photo = new Image())
 			.addClass(prefix + 'Photo')
-			.error(function () {
+			.bind('error',function () {
 				settings.title = false;
 				prep($tag(div, 'Error').html(settings.imgError));
 			})
