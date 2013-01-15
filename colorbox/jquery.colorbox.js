@@ -1,4 +1,4 @@
-// ColorBox v1.3.20.2 - jQuery lightbox plugin
+// ColorBox v1.3.21 - jQuery lightbox plugin
 // (c) 2012 Jack Moore - jacklmoore.com
 // License: http://www.opensource.org/licenses/mit-license.php
 (function ($, document, window) {
@@ -187,7 +187,7 @@
 	}
 
 	function trigger(event, callback) {
-		$.event.trigger(event);
+		$(document).trigger(event);
 		if (callback) {
 			callback.call(element);
 		}
@@ -367,9 +367,6 @@
 				interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true) - $content.width();
 				loadedHeight = $loaded.outerHeight(true);
 				loadedWidth = $loaded.outerWidth(true);
-				
-				// Setting padding to remove the need to do size conversions during the animation step.
-				$box.css({"padding-bottom": interfaceHeight, "padding-right": interfaceWidth});
 
 				// Anonymous functions here keep the public method from being cached, thereby allowing them to be redefined on the fly.
 				$next.click(function () {
@@ -522,11 +519,12 @@
 		$wrap[0].style.width = $wrap[0].style.height = "9999px";
 		
 		function modalDimensions(that) {
-			$topBorder[0].style.width = $bottomBorder[0].style.width = $content[0].style.width = that.style.width;
-			$content[0].style.height = $leftBorder[0].style.height = $rightBorder[0].style.height = that.style.height;
+			$topBorder[0].style.width = $bottomBorder[0].style.width = $content[0].style.width = (parseInt(that.style.width,10) - interfaceWidth)+'px';
+			$content[0].style.height = $leftBorder[0].style.height = $rightBorder[0].style.height = (parseInt(that.style.height,10) - interfaceHeight)+'px';
 		}
 
-		css = {width: settings.w + loadedWidth, height: settings.h + loadedHeight, top: top, left: left};
+		css = {width: settings.w + loadedWidth + interfaceWidth, height: settings.h + loadedHeight + interfaceHeight, top: top, left: left};
+
 		if(speed===0){ // temporary workaround to side-step jQuery-UI 1.8 bug (http://bugs.jquery.com/ticket/12273)
 			$box.css(css);
 		}
