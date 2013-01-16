@@ -1,9 +1,3 @@
-/*
-	ColorBox v1.3.21 - jQuery lightbox plugin
-	@copyright 2013 Jack Moore - jacklmoore.com
-	@license http://www.opensource.org/licenses/mit-license.php
-*/
-
 (function ($, document, window) {
 	var
 	// Default settings object.
@@ -681,13 +675,12 @@
 				
 				// Preloads images within a rel group
 				if (settings.preloading) {
-					preload = [
-						getIndex(-1),
-						getIndex(1)
-					];
-					while (i = $related[preload.pop()]) {
-						data = $.data(i, colorbox);
-						
+					$.each([getIndex(-1), getIndex(1)], function(){
+						var src,
+							img,
+							i = $related[this],
+							data = $.data(i, colorbox);
+
 						if (data && data.href) {
 							src = data.href;
 							if ($.isFunction(src)) {
@@ -701,7 +694,7 @@
 							img = new Image();
 							img.src = src;
 						}
-					}
+					});
 				}
 			} else {
 				$groupControls.hide();
