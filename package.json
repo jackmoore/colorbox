@@ -1,0 +1,21 @@
+{
+  "name": "ColorBox",
+  "version": "1.3.21",
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-jshint": "~0.1.0",
+    "grunt-contrib-uglify": "~0.1.1rc5",
+    "grunt-contrib-concat": "~0.1.2rc5",
+    "grunt-contrib-watch": "~0.1.4"
+  },
+  "readmeFilename": "README.md",
+  "description": "A customizable lightbox plugin for jQuery.  See the [project page](http://jacklmoore.com/colorbox/) for documentation and a demonstration, and the [FAQ](http://jacklmoore.com/colorbox/faq/) for solutions and examples to common issues.  Released under the [MIT license](http://www.opensource.org/licenses/mit-license.php).",
+  "main": "Gruntfile.js",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jackmoore/colorbox.git"
+  },
+  "author": "Jack Moore",
+  "license": "MIT"
+}
