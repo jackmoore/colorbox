@@ -185,6 +185,7 @@
 
 	function trigger(event, callback) {
 		$(document).trigger(event);
+		$('*', $box).trigger(event);
 		if (callback) {
 			callback.call(element);
 		}
@@ -276,8 +277,9 @@
 				$box.show();
 				
 				if (settings.returnFocus) {
-					$(element).blur().one(event_closed, function () {
-						$(this).focus();
+					$(element).blur();
+					$(document).one(event_closed, function () {
+						$(element).focus();
 					});
 				}
 				
@@ -613,27 +615,14 @@
 		//$(photo).css({'float': 'none', marginLeft: 'auto', marginRight: 'auto'});
 		
 		$(photo).css({'float': 'none'});
-		
-		// Hides SELECT elements in IE6 because they would otherwise sit on top of the overlay.
-		if (isIE6) {
-			$('select').not($box.find('select')).filter(function () {
-				return this.style.visibility !== 'hidden';
-			}).css({'visibility': 'hidden'}).one(event_cleanup, function () {
-				this.style.visibility = 'inherit';
-			});
-		}
+
 		
 		callback = function () {
-			var preload,
-				i,
-				total = $related.length,
+			var total = $related.length,
 				iframe,
 				frameBorder = 'frameBorder',
 				allowTransparency = 'allowTransparency',
-				complete,
-				src,
-				img,
-				data;
+				complete;
 			
 			if (!open) {
 				return;
@@ -725,11 +714,12 @@
 						mozallowfullscreen : true
 					})
 					.one('load', complete)
-					.one(event_purge, function () {
-						iframe.src = "//about:blank";
-					})
 					.appendTo($loaded);
 				
+				$(document).one(event_purge, function () {
+					iframe.src = "//about:blank";
+				});
+
 				if (settings.fastIframe) {
 					$(iframe).trigger('load');
 				}
@@ -754,7 +744,7 @@
 	};
 
 	publicMethod.load = function (launched) {
-		var href, setResize, prep = publicMethod.prep;
+		var href, setResize, prep = publicMethod.prep, $inline;
 		
 		active = true;
 		
@@ -802,9 +792,12 @@
 		if (settings.inline) {
 			// Inserts an empty placeholder where inline content is being pulled from.
 			// An event is bound to put inline content back when ColorBox closes or loads new content.
-			$tag(div).hide().insertBefore($(href)[0]).one(event_purge, function () {
-				$(this).replaceWith($loaded.children());
+			$inline = $tag(div).hide().insertBefore($(href)[0]);
+
+			$(document).one(event_purge, function () {
+				$inline.replaceWith($loaded.children());
 			});
+
 			prep($(href));
 		} else if (settings.iframe) {
 			// IFrame element won't be added to the DOM until it is ready to be displayed,
