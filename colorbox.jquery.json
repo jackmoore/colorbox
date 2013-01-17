@@ -6,7 +6,8 @@
 		"modal",
 		"lightbox",
 		"window",
-		"popup"
+		"popup",
+		"ui"
 	],
 	"version": "1.3.21",
 	"author": {
