@@ -438,13 +438,11 @@
 		appendHTML();
 
 		if (addBindings()) {
-			if (!$this[0]) {
-				if ($this.selector) { // if a selector was given and it didn't match any elements, go ahead and exit.
-					return $this;
-				}
-				// if no selector was given (ie. $.colorbox()), create a temporary element to work with
+			if ($.isFunction($this)) { // assume a call to $.colorbox
 				$this = $('<a/>');
-				options.open = true; // assume an immediate open
+				options.open = true;
+			} else if (!$this[0]) { // colorbox being applied to empty collection
+				return $this;
 			}
 			
 			if (callback) {

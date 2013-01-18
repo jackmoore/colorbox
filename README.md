@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.3.23 - 2013/1/18
+
+* Minor bugfix for calling ColorBox on empty jQuery collections without a selector.
+
 ### Version 1.3.22 - 2013/1/17
 
 * Recommit for plugins.jquery.com
