@@ -587,7 +587,11 @@
 		
 		var callback, speed = settings.transition === "none" ? 0 : settings.speed;
 		
-		$loaded.remove();
+		if (isIE) {
+			$loaded.empty().remove(); // Fix IE7 crash bug
+		} else {
+			$loaded.remove();
+		}
 		$loaded = $tag(div, 'LoadedContent').append(object);
 		
 		function getWidth() {
@@ -894,7 +898,11 @@
 				
 				trigger(event_purge);
 				
-				$loaded.remove();
+				if (isIE) {
+					$loaded.empty().remove(); // Fix IE7 crash bug
+				} else {
+					$loaded.remove();
+				}
 				
 				setTimeout(function () {
 					closing = false;
