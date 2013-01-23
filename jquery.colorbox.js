@@ -1,3 +1,9 @@
+/*
+	jQuery ColorBox v1.3.25
+	(c) 2013 Jack Moore - jacklmoore.com
+	updated: 2013-01-23
+	license: http://www.opensource.org/licenses/mit-license.php
+*/
 (function ($, document, window) {
 	var
 	// Default settings object.
