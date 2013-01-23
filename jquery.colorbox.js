@@ -9,6 +9,7 @@
 	// Default settings object.
 	// See http://jacklmoore.com/colorbox for details.
 	defaults = {
+		customClass: false,
 		transition: "elastic",
 		speed: 300,
 		width: false,
@@ -288,6 +289,11 @@
 						$(element).focus();
 					});
 				}
+
+				if (settings.customClass) {
+					$box.addClass(settings.customClass);
+					$overlay.addClass(settings.customClass);
+				};
 				
 				// +settings.opacity avoids a problem in IE when using non-zero-prefixed-string-values, like '.5'
 				$overlay.css({"opacity": +settings.opacity, "cursor": settings.overlayClose ? "pointer" : "auto"}).show();
@@ -894,6 +900,11 @@
 			$window.unbind('.' + prefix + ' .' + event_ie6);
 			
 			$overlay.fadeTo(200, 0);
+
+			if (settings.customClass){
+				$box.removeClass(settings.customClass);
+				$overlay.removeClass(settings.customClass);
+			};
 			
 			$box.stop().fadeTo(300, 0, function () {
 			
