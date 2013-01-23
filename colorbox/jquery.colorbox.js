@@ -1,3 +1,8 @@
+/*
+	ColorBox v1.3.24
+	(c) 2013 Jack Moore - jacklmoore.com
+	license: http://www.opensource.org/licenses/mit-license.php
+*/
 (function ($, document, window) {
 	var
 	// Default settings object.
