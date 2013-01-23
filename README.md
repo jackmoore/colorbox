@@ -3,6 +3,14 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.3.26 - 2013/1/23
+
+* Minor bugfix: clear the onload event handler after photo has loaded.
+
+### Version 1.3.25 - 2013/1/23
+
+* Removed grunt file & added Bower component.json.
+
 ### Version 1.3.24 - 2013/1/22
 
 * Added generated files (jquery.colorbox.js / jquery.colorbox-min.js) back to the repository.

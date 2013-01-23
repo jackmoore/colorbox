@@ -1,6 +1,6 @@
 /*
-	jQuery ColorBox v1.3.25
-	(c) 2013 Jack Moore - jacklmoore.com
+	jQuery ColorBox v1.3.26
+	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	updated: 2013-01-23
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -817,10 +817,9 @@
 				settings.title = false;
 				prep($tag(div, 'Error').html(settings.imgError));
 			})
-			.load(function () {
+			.on('load', function () {
 				var percent;
-				photo.onload = null; //stops animated gifs from firing the onload repeatedly.
-				
+
 				if (settings.scalePhotos) {
 					setResize = function () {
 						photo.height -= photo.height * percent;
