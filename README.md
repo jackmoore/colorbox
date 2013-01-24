@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.3.28 - 2013/1/24
+
+* Fixed compatibility issue with old versions of jQuery (1.3.2-1.4.2)
+
 ### Version 1.3.27 - 2013/1/23
 
 * Added className property.
