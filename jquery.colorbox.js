@@ -1,7 +1,7 @@
 /*
-	jQuery ColorBox v1.3.27
+	jQuery ColorBox v1.3.28
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
-	updated: 2013-01-23
+	updated: 2013-01-24
 	license: http://www.opensource.org/licenses/mit-license.php
 */
 (function ($, document, window) {
@@ -370,12 +370,17 @@
 		if ($box) {
 			if (!init) {
 				init = true;
-
+				
+				// Show colorbox so the sizes can be calculated in older versions of jQuery
+				$box.css({visibility:'hidden', display:'block'});
+				
 				// Cache values needed for size calculations
 				interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(true) - $content.height();//Subtraction needed for IE6
 				interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true) - $content.width();
 				loadedHeight = $loaded.outerHeight(true);
 				loadedWidth = $loaded.outerWidth(true);
+
+				$box.css({visibility:'visible', display:'none'});
 
 				// Anonymous functions here keep the public method from being cached, thereby allowing them to be redefined on the fly.
 				$next.click(function () {
@@ -411,12 +416,15 @@
 					}
 				});
 
-				$(document).delegate('.'+boxElement, 'click', function(e) {
-					// ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
-					// See: http://jacklmoore.com/notes/click-events/
-					if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey)) {
-						e.preventDefault();
-						launch(this);
+				// Manual event delegation for older versions of jQuery
+				$(document).click(function(e) {
+					if ($(e.target).is('.'+boxElement)) {
+						// ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
+						// See: http://jacklmoore.com/notes/click-events/
+						if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey)) {
+							e.preventDefault();
+							launch(e.target);
+						}
 					}
 				});
 			}
@@ -645,8 +653,7 @@
 			
 			complete = function () {
 				clearTimeout(loadingTimer);
-				// Detaching forces Andriod stock browser to redraw the area underneat the loading overlay.  Hiding alone isn't enough.
-				$loadingOverlay.detach().hide();
+				$loadingOverlay.remove();
 				trigger(event_complete, settings.onComplete);
 			};
 			
@@ -803,7 +810,7 @@
 		href = settings.href;
 		
 		loadingTimer = setTimeout(function () {
-			$loadingOverlay.show().appendTo($content);
+			$loadingOverlay.appendTo($content);
 		}, 100);
 		
 		if (settings.inline) {
@@ -829,7 +836,7 @@
 				settings.title = false;
 				prep($tag(div, 'Error').html(settings.imgError));
 			})
-			.on('load', function () {
+			.one('load', function () {
 				var percent;
 
 				if (settings.scalePhotos) {
