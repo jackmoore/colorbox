@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.3.27 - 2013/1/23
+
+* Added className property.
+
 ### Version 1.3.26 - 2013/1/23
 
 * Minor bugfix: clear the onload event handler after photo has loaded.
