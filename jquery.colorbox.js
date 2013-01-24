@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox v1.3.28
+	jQuery ColorBox v1.3.29
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	updated: 2013-01-24
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -367,6 +367,15 @@
 
 	// Add ColorBox's event bindings
 	function addBindings() {
+		function clickHandler(e) {
+			// ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
+			// See: http://jacklmoore.com/notes/click-events/
+			if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey)) {
+				e.preventDefault();
+				launch(this);
+			}
+		}
+
 		if ($box) {
 			if (!init) {
 				init = true;
@@ -416,17 +425,11 @@
 					}
 				});
 
-				// Manual event delegation for older versions of jQuery
-				$(document).click(function(e) {
-					if ($(e.target).is('.'+boxElement)) {
-						// ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
-						// See: http://jacklmoore.com/notes/click-events/
-						if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey)) {
-							e.preventDefault();
-							launch(e.target);
-						}
-					}
-				});
+				if ($.isFunction($.fn.on)) {
+					$(document).on('click.'+prefix, '.'+boxElement, clickHandler);
+				} else { // For jQuery 1.3.x -> 1.6.x
+					$('.'+boxElement).live('click.'+prefix, clickHandler);
+				}
 			}
 			return true;
 		}

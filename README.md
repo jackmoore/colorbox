@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.3.29 - 2013/1/24
+
+* Fixes bug with bubbling delegated events, introduced in the previous commit.
+
 ### Version 1.3.28 - 2013/1/24
 
 * Fixed compatibility issue with old versions of jQuery (1.3.2-1.4.2)
