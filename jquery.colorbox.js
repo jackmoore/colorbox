@@ -1,7 +1,7 @@
 /*
-	jQuery ColorBox v1.3.29
+	jQuery ColorBox v1.3.30
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
-	updated: 2013-01-24
+	updated: 2013-01-25
 	license: http://www.opensource.org/licenses/mit-license.php
 */
 (function ($, document, window) {
@@ -282,8 +282,16 @@
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
 				
-				$box.show();
-				
+				// Show colorbox so the sizes can be calculated in older versions of jQuery
+				$box.css({visibility:'hidden', display:'block'});
+				$loaded.css({width:0, height:0});
+
+				// Cache values needed for size calculations
+				interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(true) - $content.height();//Subtraction needed for IE6
+				interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true) - $content.width();
+				loadedHeight = $loaded.outerHeight(true);
+				loadedWidth = $loaded.outerWidth(true);
+
 				if (settings.returnFocus) {
 					$(element).blur();
 					$(document).one(event_closed, function () {
@@ -293,14 +301,15 @@
 				
 				$overlay.css({
 					opacity: parseFloat(settings.opacity),
-					cursor: settings.overlayClose ? "pointer" : "auto"
+					cursor: settings.overlayClose ? "pointer" : "auto",
+					visibility: 'visible'
 				}).show();
 				
 				// Opens inital empty ColorBox prior to content being loaded.
 				settings.w = setSize(settings.initialWidth, 'x');
 				settings.h = setSize(settings.initialHeight, 'y');
 				publicMethod.position();
-				
+
 				if (isIE6) {
 					$window.bind('resize.' + event_ie6 + ' scroll.' + event_ie6, function () {
 						$overlay.css({width: $window.width(), height: $window.height(), top: $window.scrollTop(), left: $window.scrollLeft()});
@@ -379,17 +388,6 @@
 		if ($box) {
 			if (!init) {
 				init = true;
-				
-				// Show colorbox so the sizes can be calculated in older versions of jQuery
-				$box.css({visibility:'hidden', display:'block'});
-				
-				// Cache values needed for size calculations
-				interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(true) - $content.height();//Subtraction needed for IE6
-				interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true) - $content.width();
-				loadedHeight = $loaded.outerHeight(true);
-				loadedWidth = $loaded.outerWidth(true);
-
-				$box.css({visibility:'visible', display:'none'});
 
 				// Anonymous functions here keep the public method from being cached, thereby allowing them to be redefined on the fly.
 				$next.click(function () {
@@ -526,7 +524,7 @@
 			top += Math.round(Math.max($window.height() - settings.h - loadedHeight - interfaceHeight, 0) / 2);
 		}
 
-		$box.css({top: offset.top, left: offset.left});
+		$box.css({top: offset.top, left: offset.left, visibility:'visible'});
 
 		// setting the speed to 0 to reduce the delay between same-sized content.
 		speed = ($box.width() === settings.w + loadedWidth && $box.height() === settings.h + loadedHeight) ? 0 : speed || 0;
@@ -941,7 +939,7 @@
 			.removeData(colorbox)
 			.removeClass(boxElement);
 
-		$(document).undelegate('.'+boxElement);
+		$(document).unbind('click.'+prefix);
 	};
 
 	// A method for fetching the current element ColorBox is referencing.

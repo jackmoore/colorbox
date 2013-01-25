@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.3.30 - 2013/1/25
+
+* Delayed border-width calculations until after opening, to avoid a bug in FF when using ColorBox in a hidden iframe.
+
 ### Version 1.3.29 - 2013/1/24
 
 * Fixes bug with bubbling delegated events, introduced in the previous commit.
