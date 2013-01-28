@@ -1,7 +1,7 @@
 /*
-	jQuery ColorBox v1.3.30
+	jQuery ColorBox v1.3.31
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
-	updated: 2013-01-25
+	updated: 2013-01-28
 	license: http://www.opensource.org/licenses/mit-license.php
 */
 (function ($, document, window) {
@@ -284,7 +284,8 @@
 				
 				// Show colorbox so the sizes can be calculated in older versions of jQuery
 				$box.css({visibility:'hidden', display:'block'});
-				$loaded.css({width:0, height:0});
+				
+				$loaded = $tag(div, 'LoadedContent', 'width:0; height:0; overflow:hidden').appendTo($content);
 
 				// Cache values needed for size calculations
 				interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(true) - $content.height();//Subtraction needed for IE6
@@ -339,7 +340,6 @@
 			$loadingOverlay = $tag(div, "LoadingOverlay").add($tag(div, "LoadingGraphic"));
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
-				$loaded = $tag(div, "LoadedContent", 'width:0; height:0; overflow:hidden'),
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
 				$next = $tag(div, "Next"),
