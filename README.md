@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.3.32 - 2013/1/31
+
+* Improved internal event subscribing & fixed event bug introduced in v1.3.21
+
 ### Version 1.3.31 - 2013/1/28
 
 * Fixed a size-calculation bug introduced in the previous commit.
