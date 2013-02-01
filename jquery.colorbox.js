@@ -878,7 +878,7 @@
 				}
 				
 				if (settings.h) {
-					photo.style.marginTop = Math.max(settings.h - photo.height, 0) / 2 + 'px';
+					photo.style.marginTop = Math.max(settings.mh - photo.height, 0) / 2 + 'px';
 				}
 				
 				if ($related[1] && (settings.loop || $related[index + 1])) {
