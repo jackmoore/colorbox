@@ -715,7 +715,7 @@
 								src = src.call(i);
 							}
 						} else {
-							src = i.href;
+							src = i.getAttribute('href');
 						}
 
 						if (isImage(src)) {
