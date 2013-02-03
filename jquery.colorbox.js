@@ -715,10 +715,10 @@
 								src = src.call(i);
 							}
 						} else {
-							src = i.href;
+							src = $(i).attr('href');
 						}
 
-						if (isImage(src)) {
+						if (src && (isImage(src) || data.photo)) {
 							img = new Image();
 							img.src = src;
 						}
