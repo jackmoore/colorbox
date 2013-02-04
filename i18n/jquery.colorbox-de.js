@@ -9,5 +9,7 @@ jQuery.extend(jQuery.colorbox.settings, {
 	next: "Vor",
 	close: "Schließen",
 	xhrError: "Dieser Inhalt konnte nicht geladen werden.",
-	imgError: "Dieses Bild konnte nicht geladen werden."
+	imgError: "Dieses Bild konnte nicht geladen werden.",
+	slideshowStart: "Slideshow starten",
+	slideshowStop: "Slideshow anhalten"
 });
