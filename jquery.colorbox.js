@@ -33,8 +33,8 @@
 		className: false,
 		
 		// alternate image paths for high-res displays
-		retinaImages: false,
-		retinaUrls: false,
+		retinaImage: false,
+		retinaUrl: false,
 		retinaSuffix: '@2x.$1',
 
 		// internationalization
@@ -170,8 +170,8 @@
 		return settings.photo || settings.photoRegex.test(url);
 	}
 
-	function retinaUrls(url) {
-		return settings.retinaUrls && window.devicePixelRatio > 1 ? url.replace(settings.photoRegex, settings.retinaSuffix) : url;
+	function retinaUrl(url) {
+		return settings.retinaUrl && window.devicePixelRatio > 1 ? url.replace(settings.photoRegex, settings.retinaSuffix) : url;
 	}
 
 	// Assigns function results to their respective properties
@@ -864,7 +864,7 @@
 			prep(settings.html);
 		} else if (isImage(href)) {
 
-			href = retinaUrls(href);
+			href = retinaUrl(href);
 
 			$(photo = new Image())
 			.addClass(prefix + 'Photo')
@@ -875,7 +875,7 @@
 			.one('load', function () {
 				var percent;
 
-				if (settings.retinaImages && window.devicePixelRatio > 1) {
+				if (settings.retinaImage && window.devicePixelRatio > 1) {
 					photo.height = photo.height / window.devicePixelRatio;
 					photo.width = photo.width / window.devicePixelRatio;
 				}
