@@ -23,7 +23,6 @@
 	],
 	"homepage": "http://jacklmoore.com/colorbox",
 	"demo": "http://jacklmoore.com/colorbox",
-	"download": "http://jacklmoore.com/colorbox/colorbox.zip",
 	"dependencies": {
 		"jquery": ">=1.3.2"
 	}
