@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.3.34 - 2013/2/4
+
+* Updated manifest for plugins.jquery.com
+
 ### Version 1.3.33 - 2013/2/4
 
 * Added retina display properties: retinaImage, retinaUrl, retinaSuffix
