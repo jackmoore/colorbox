@@ -448,7 +448,7 @@
 				if ($.isFunction($.fn.on)) {
 					$(document).on('click.'+prefix, '.'+boxElement, clickHandler);
 				} else { // For jQuery 1.3.x -> 1.6.x
-					$('.'+boxElement).live('click.'+prefix, clickHandler);
+					$('.'+boxElement).on('click.'+prefix, clickHandler);
 				}
 			}
 			return true;
