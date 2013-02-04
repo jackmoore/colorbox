@@ -10,5 +10,7 @@ jQuery.extend(jQuery.colorbox.settings, {
 	next: "следующее",
 	close: "закрыть",
 	xhrError: "Не удалось загрузить содержимое.",
-	imgError: "Не удалось загрузить изображение."
+	imgError: "Не удалось загрузить изображение.",
+        slideshowStart: "начать слайд-шоу",
+        slideshowStop: "остановить слайд-шоу"
 });
