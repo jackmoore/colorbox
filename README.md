@@ -6,6 +6,11 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.3.33 - 2013/2/4
+
+* Added retina display properties: retinaImages, retinaUrls, retinaSuffix
+* Fixed iframe scrolling on iOS devices.
+
 ### Version 1.3.32 - 2013/1/31
 
 * Improved internal event subscribing & fixed event bug introduced in v1.3.21

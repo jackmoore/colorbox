@@ -1,5 +1,5 @@
-/*
-	jQuery ColorBox v1.3.32 - 2013-01-31
+/*!
+	jQuery ColorBox v1.3.33 - 2013-02-04
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -31,7 +31,13 @@
 		opacity: 0.9,
 		preloading: true,
 		className: false,
+		
+		// alternate image paths for high-res displays
+		retinaImages: false,
+		retinaUrls: false,
+		retinaSuffix: '@2x.$1',
 
+		// internationalization
 		current: "image {current} of {total}",
 		previous: "previous",
 		next: "next",
@@ -48,6 +54,8 @@
 		slideshowSpeed: 2500,
 		slideshowStart: "start slideshow",
 		slideshowStop: "stop slideshow",
+		photoRegex: /\.(gif|png|jp(e|g|eg)|bmp|ico)((#|\?).*)?$/i,
+
 		onOpen: false,
 		onLoad: false,
 		onComplete: false,
@@ -157,9 +165,13 @@
 	}
 	
 	// Checks an href to see if it is a photo.
-	// There is a force photo option (photo: true) for hrefs that cannot be matched by this regex.
+	// There is a force photo option (photo: true) for hrefs that cannot be matched by the regex.
 	function isImage(url) {
-		return settings.photo || /\.(gif|png|jp(e|g|eg)|bmp|ico)((#|\?).*)?$/i.test(url);
+		return settings.photo || settings.photoRegex.test(url);
+	}
+
+	function retinaUrls(url) {
+		return settings.retinaUrls && window.devicePixelRatio > 1 ? url.replace(settings.photoRegex, settings.retinaSuffix) : url;
 	}
 
 	// Assigns function results to their respective properties
@@ -652,11 +664,9 @@
 		$loadingBay.hide();
 		
 		// floating the IMG removes the bottom line-height and fixed a problem where IE miscalculates the width of the parent element as 100% of the document width.
-		//$(photo).css({'float': 'none', marginLeft: 'auto', marginRight: 'auto'});
 		
 		$(photo).css({'float': 'none'});
 
-		
 		callback = function () {
 			var total = $related.length,
 				iframe,
@@ -853,6 +863,9 @@
 		} else if (settings.html) {
 			prep(settings.html);
 		} else if (isImage(href)) {
+
+			href = retinaUrls(href);
+
 			$(photo = new Image())
 			.addClass(prefix + 'Photo')
 			.bind('error',function () {
@@ -861,6 +874,11 @@
 			})
 			.one('load', function () {
 				var percent;
+
+				if (settings.retinaImages && window.devicePixelRatio > 1) {
+					photo.height = photo.height / window.devicePixelRatio;
+					photo.width = photo.width / window.devicePixelRatio;
+				}
 
 				if (settings.scalePhotos) {
 					setResize = function () {
