@@ -10,5 +10,7 @@ jQuery.extend(jQuery.colorbox.settings, {
 	next: "Næste",
 	close: "Luk",
 	xhrError: "Indholdet fejlede i indlæsningen.",
-	imgError: "Billedet fejlede i indlæsningen."
+	imgError: "Billedet fejlede i indlæsningen.",
+	slideshowStart: "Start slideshow",
+	slideshowStop: "Stop slideshow"
 });
