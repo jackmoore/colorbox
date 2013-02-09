@@ -9,12 +9,12 @@
 			h2{font-size:13px; margin:15px 0 0 0;}
 		</style>
 		<link rel="stylesheet" href="colorbox.css" />
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="../jquery.colorbox.js"></script>
 		<script>
 			$(document).ready(function(){
 				//Examples of how to assign the ColorBox event to elements
-				$(".group1").colorbox({rel:'group1'});
+				$(".group1").colorbox({rel:'group1', open:true});
 				$(".group2").colorbox({rel:'group2', transition:"fade"});
 				$(".group3").colorbox({rel:'group3', transition:"none", width:"75%", height:"75%"});
 				$(".group4").colorbox({rel:'group4', slideshow:true});
