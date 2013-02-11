@@ -45,6 +45,7 @@
 .cbox-photo {
     display: block;
     max-width:none;
+    margin:auto;
 }
 
 .cbox-is-loading:before {
@@ -58,5 +59,40 @@
 }
 
 .cbox-error {
-    
+
+}
+
+/*
+    Custom Styles
+ */
+.cbox-controls {
+    display:table;
+    clear:both;
+    width:100%;
+    border:1px solid #f00;
+    display:none;
+}
+
+.cbox-next {
+    display:table-cell;
+}
+
+.cbox-prev {
+    display:table-cell;
+}
+
+.cbox-current {
+    display:table-cell;
+}
+
+.cbox-title {
+    display:table-cell;
+}
+
+.cbox-close {
+    display:table-cell;
+    background:url(controls.svg) 0 0 no-repeat;
+    width:22px;
+    height:22px;
+    text-indent:-999px;
 }
