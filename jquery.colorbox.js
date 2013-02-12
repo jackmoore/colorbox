@@ -115,7 +115,6 @@
 
     // Variables for cached values or use across multiple functions
     settings,
-    options,
     cache = {},
     interfaceHeight,
     interfaceWidth,
@@ -156,7 +155,7 @@
     }
 
     // Assigns function results to their respective properties
-    function makeSettings() {
+    function makeSettings(options) {
         settings = $.extend({}, defaults, options);
         // console.log(options);
         $.each(settings, function(i){
@@ -185,11 +184,9 @@
 
             $.each(cache, function(i){
                 if ($(element).is(i)) {
-                    options = cache[i];
+                    makeSettings(cache[i]);
                 }
             });
-            
-            makeSettings();
 
             if (!open) {
                 open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
@@ -389,8 +386,9 @@
             .append(object)
             .css({width: getWidth(), overflow: settings.scrolling ? 'auto' : 'hidden'})
             .css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
-            .prependTo($body)
-            .css({visibility:'', display:''});
+            .css({visibility:''})
+            .addClass('cbox-is-loading')
+            .prependTo($body);
         
         callback = function () {
             var total = $related.length,
@@ -537,9 +535,9 @@
         href = settings.href;
         
         // short delay before showing loading state
-        loadingTimer = setTimeout(function () {
-            $content.addClass('cbox-is-loading');
-        }, 100);
+        // loadingTimer = setTimeout(function () {
+        //     $content.addClass('cbox-is-loading');
+        // }, 100);
 
         if (settings.inline) {
             // Inserts an empty placeholder where inline content is being pulled from.
@@ -561,7 +559,6 @@
             var photo = new Image();
 
             $(photo)
-            .addClass('cbox-photo')
             .on('error',function () {
                 settings.title = false;
                 prep($('<div class="cbox-error"/>').html(settings.imgError));
@@ -589,16 +586,15 @@
                     }
                 }
                 
-                if (settings.h) {
-                    photo.style.marginTop = Math.max(settings.mh - photo.height, 0) / 2 + 'px';
-                }
+                photo.style.marginTop = -photo.height/2 + 'px';
+                photo.style.marginLeft = -photo.width/2 + 'px';
                 
                 if ($related[1] && (settings.loop || $related[index + 1])) {
                     photo.style.cursor = 'pointer';
                     photo.onclick = publicMethod.next;
                 }
 
-                prep(photo);
+                prep($('<div class="cbox-photo"/>').css({width:photo.width, height:photo.height}).append(photo));
             });
 
             photo.src = retinaUrl(href);
