@@ -176,7 +176,7 @@
 
     function trapFocus(e) {
         if (!$.contains($box[0], e.target) && $box[0] !== e.target) {
-            event.stopPropagation();
+            e.stopPropagation();
             $box.focus();
         }
     }
