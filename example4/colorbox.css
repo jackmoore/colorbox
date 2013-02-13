@@ -20,7 +20,7 @@
     ordered & tabbed in a way that represents the nesting of the generated HTML.
 */
 #cboxOverlay{background:#fff;}
-#colorbox{}
+#colorbox{outline:0;}
     #cboxTopLeft{width:25px; height:25px; background:url(images/border1.png) no-repeat 0 0;}
     #cboxTopCenter{height:25px; background:url(images/border1.png) repeat-x 0 -50px;}
     #cboxTopRight{width:25px; height:25px; background:url(images/border1.png) no-repeat -25px 0;}
@@ -35,10 +35,17 @@
         #cboxLoadedContent{margin-bottom:20px;}
         #cboxTitle{position:absolute; bottom:0px; left:0; text-align:center; width:100%; color:#999;}
         #cboxCurrent{position:absolute; bottom:0px; left:100px; color:#999;}
+        #cboxLoadingOverlay{background:#fff url(images/loading.gif) no-repeat 5px 5px;}
+
+        /* these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles */
+        #cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {border:0; padding:0; margin:0; overflow:visible; width:auto; background:none; }
+        
+        /* avoid outlines on :active (mouseclick), but preserve outlines on :focus (tabbed navigating) */
+        #cboxPrevious:active, #cboxNext:active, #cboxSlideshow:active, #cboxClose:active {outline:0;}
+
         #cboxSlideshow{position:absolute; bottom:0px; right:42px; color:#444;}
         #cboxPrevious{position:absolute; bottom:0px; left:0; color:#444;}
         #cboxNext{position:absolute; bottom:0px; left:63px; color:#444;}
-        #cboxLoadingOverlay{background:#fff url(images/loading.gif) no-repeat 5px 5px;}
         #cboxClose{position:absolute; bottom:0; right:0; display:block; color:#444;}
 
 /*

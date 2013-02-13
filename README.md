@@ -6,6 +6,13 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.0 - 2013/2/12
+
+* Better accessibility:
+	* Replaced div controls with buttons
+	* Tabbed navigation confined to modal window
+	* Added aria role
+
 ### Version 1.3.34 - 2013/2/4
 
 * Updated manifest for plugins.jquery.com

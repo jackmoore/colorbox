@@ -1,5 +1,5 @@
 /*!
-	jQuery ColorBox v1.3.34 - 2013-02-04
+	jQuery ColorBox v1.4.0 - 2013-02-12
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -174,6 +174,13 @@
 		return settings.retinaUrl && window.devicePixelRatio > 1 ? url.replace(settings.photoRegex, settings.retinaSuffix) : url;
 	}
 
+    function trapFocus(e) {
+        if (!$.contains($box[0], e.target) && $box[0] !== e.target) {
+            event.stopPropagation();
+            $box.focus();
+        }
+    }
+
 	// Assigns function results to their respective properties
 	function makeSettings() {
 		var i,
@@ -324,13 +331,6 @@
 				interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true) - $content.width();
 				loadedHeight = $loaded.outerHeight(true);
 				loadedWidth = $loaded.outerWidth(true);
-
-				if (settings.returnFocus) {
-					$(element).blur();
-					$events.one(event_closed, function () {
-						$(element).focus();
-					});
-				}
 				
 				$overlay.css({
 					opacity: parseFloat(settings.opacity),
@@ -356,6 +356,26 @@
 				$groupControls.add($title).hide();
 				
 				$close.html(settings.close).show();
+
+                $box.focus();
+                
+                // Confine focus to the modal
+                // Uses event capturing that is not supported in IE8-
+                if (document.addEventListener) {
+
+                    document.addEventListener('focus', trapFocus, true);
+                    
+                    $events.one(event_closed, function () {
+                        document.removeEventListener('focus', trapFocus, true);
+                    });
+                }
+
+                // Return focus on closing
+                if (settings.returnFocus) {
+                    $events.one(event_closed, function () {
+                        $(element).focus();
+                    });
+                }
 			}
 			
 			publicMethod.load(true);
@@ -369,17 +389,23 @@
 			init = false;
 
 			$window = $(window);
-			$box = $tag(div).attr({id: colorbox, 'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : ''}).hide();
+			$box = $tag(div).attr({
+                id: colorbox,
+                'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : '',
+                role: 'dialog',
+                tabindex: '-1'
+            }).hide();
 			$overlay = $tag(div, "Overlay", isIE6 ? 'position:absolute' : '').hide();
 			$loadingOverlay = $tag(div, "LoadingOverlay").add($tag(div, "LoadingGraphic"));
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
-				$next = $tag(div, "Next"),
-				$prev = $tag(div, "Previous"),
-				$slideshow = $tag(div, "Slideshow"),
-				$close = $tag(div, "Close")
+                $prev = $tag('button', "Previous"),
+				$next = $tag('button', "Next"),
+				$slideshow = $tag('button', "Slideshow"),
+                $loadingOverlay,
+				$close = $tag('button', "Close")
 			);
 			
 			$wrap.append( // The 3x3 Grid that makes up ColorBox
@@ -446,7 +472,7 @@
 						e.preventDefault();
 						publicMethod.close();
 					}
-					if (open && settings.arrowKey && $related[1]) {
+                    if (open && settings.arrowKey && $related[1]) {
 						if (key === 37) {
 							e.preventDefault();
 							$prev.click();
@@ -643,7 +669,7 @@
 		}
 		
 		var callback, speed = settings.transition === "none" ? 0 : settings.speed;
-		
+
 		$loaded.empty().remove(); // Using empty first may prevent some IE7 issues.
 
 		$loaded = $tag(div, 'LoadedContent').append(object);
@@ -690,7 +716,7 @@
 			
 			complete = function () {
 				clearTimeout(loadingTimer);
-				$loadingOverlay.remove();
+				$loadingOverlay.hide();
 				trigger(event_complete, settings.onComplete);
 			};
 			
@@ -847,7 +873,7 @@
 		href = settings.href;
 		
 		loadingTimer = setTimeout(function () {
-			$loadingOverlay.appendTo($content);
+			$loadingOverlay.show();
 		}, 100);
 		
 		if (settings.inline) {
