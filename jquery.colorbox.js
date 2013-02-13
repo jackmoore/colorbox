@@ -62,9 +62,7 @@
         onComplete: false,
         onCleanup: false,
         onClosed: false,
-        overlayClose: true,
-        escKey: true,
-        arrowKey: true,
+
         top: false,
         bottom: false,
         left: false,
@@ -74,17 +72,47 @@
 
         structure:
         "<div class='cbox-root'>"+
-            "<div class='cbox-body'>"+
+            "<div class='cbox-body' role='dialog' tabindex='-1'>"+
                 "<div class='cbox-content'></div>"+
                 "<div class='cbox-controls'>"+
-                    "<a class='cbox-previous' href='#'></a>"+
-                    "<a class='cbox-next' href='#'></a>"+
+                    "<button class='cbox-prev'></button>"+
+                    "<button class='cbox-next'></button>"+
                     "<div class='cbox-current'></div>"+
                     "<div class='cbox-title'></div>"+
-                    "<div class='cbox-close'></div>"+
+                    "<button class='cbox-close'></button>"+
                 "</div>"+
             "</div>"+
-        "</div>"
+        "</div>",
+
+        clickActions: {
+            '.cbox-prev': function(){ $.colorbox.prev(); },
+            '.cbox-next': function(){ $.colorbox.next(); },
+            '.cbox-close': function(){ $.colorbox.close(); },
+            '.cbox-root': function(e){
+                if (e.target === this) {
+                    $.colorbox.close();
+                }
+            }
+        },
+
+        keyActions: {
+            '27': function(e){
+                e.preventDefault();
+                $.colorbox.close();
+            },
+            '37': function(e){
+                if ($.colorbox.group.length) {
+                    e.preventDefault();
+                    $.colorbox.prev();
+                }
+            },
+            '39': function(e){
+                if ($.colorbox.group.length) {
+                    e.preventDefault();
+                    $.colorbox.next();
+                }
+            }
+        }
     },
     
 
@@ -165,6 +193,13 @@
         });
     }
 
+    function trapFocus(e) {
+        if (!$.contains($body[0], e.target) && $body[0] !== e.target) {
+            e.stopPropagation();
+            $body.focus();
+        }
+    }
+
     function trigger(event, callback) {
         // for external use
         $(document).trigger(event);
@@ -195,16 +230,9 @@
                 // Cache values needed for size calculations
                 interfaceHeight = $body.outerHeight(true);
                 interfaceWidth = $body.outerWidth(true);
+                
+                $root.css({visibility:'visible'});
 
-                if (settings.returnFocus) {
-                    $(element).blur();
-                    $events.one(event_closed, function () {
-                        $(element).focus();
-                    });
-                }
-                
-                $root.css({cursor: settings.overlayClose ? "pointer" : "auto", visibility:'visible'});
-                
                 // Opens inital empty ColorBox prior to content being loaded.
                 settings.w = setSize(settings.initialWidth, 'x');
                 settings.h = setSize(settings.initialHeight, 'y');
@@ -230,6 +258,24 @@
                     index = 0;
                     $related = $(element);
                 }
+
+                $body.focus();
+                
+                // Confine focus to the modal
+                // Uses event capturing, therefor is unsupported in IE8.
+                if (document.addEventListener) {
+                    document.addEventListener('focus', trapFocus, true);
+                    $events.one(event_closed, function () {
+                        document.removeEventListener('focus', trapFocus, true);
+                    });
+                }
+
+                // Return focus on closing
+                if (settings.returnFocus) {
+                    $events.one(event_closed, function () {
+                        $(element).focus();
+                    });
+                }
             }
             
             publicMethod.load();
@@ -245,17 +291,17 @@
 
             $body = $('.cbox-body', $root);
             $content = $('.cbox-content', $root);
-            $close = $('.cbox-close', $root);
+            $prev = $('.cbox-prev', $root);
             $next = $('.cbox-next', $root);
-            $prev = $('.cbox-previous', $root);
-            $title = $('.cbox-title', $root);
             $current = $('.cbox-current', $root);
+            $title = $('.cbox-title', $root);
+            $close = $('.cbox-close', $root);
             
             $groupControls = $next.add($prev).add($current);
 
             $root
-                .on('click', '.cbox-next', publicMethod.next)
                 .on('click', '.cbox-prev', publicMethod.prev)
+                .on('click', '.cbox-next', publicMethod.next)
                 .on('click', '.cbox-close', publicMethod.close)
                 .on('click', function (e) {
                     if (settings.overlayClose && e.target === this) {

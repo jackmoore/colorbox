@@ -28,6 +28,8 @@
     position: absolute;
     top: 0;
     left: 0;
+    outline:0;
+    cursor: default;
 }
 
 .cbox-content {
@@ -65,27 +67,26 @@
     z-index:1;
 }
 
-.cbox-error {
-
-}
-
 /*
     Custom Styles
  */
+
+ .cbox-overlay {
+     cursor: -webkit-zoom-out;
+     cursor: -moz-zoom-out;
+     cursor: zoom-out;
+ }
+
 .cbox-controls {
     display:table;
     clear:both;
     width:100%;
     border:1px solid #f00;
-    display:none;
-}
-
-.cbox-next {
-    display:table-cell;
-}
-
-.cbox-prev {
-    display:table-cell;
+    position: absolute;
+    bottom:0;
+    left:0;
+    min-width:200px;
+    /*display:none;*/
 }
 
 .cbox-current {
@@ -96,11 +97,34 @@
     display:table-cell;
 }
 
-.cbox-close {
-    display:table-cell;
+/* these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles */
+.cbox-next, .cbox-prev, .cbox-close {
+    display: table-cell;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
     background:url(controls.svg) 0 0 no-repeat;
     width:22px;
     height:22px;
     text-indent:-999px;
     overflow:hidden;
+}
+
+/* avoid outlines on :active (mouseclick), but preserve outlines on :focus (tabbed navigating) */
+.cbox-next:active, .cbox-prev:active, .cbox-close:active {
+    outline:0;
+}
+
+.cbox-prev { background-position: -50px 0; }
+.cbox-prev:hover { background-position: -50px -25px; }
+
+.cbox-next { background-position: -25px 0; }
+.cbox-next:hover { background-position: -25px -25px; }
+
+.cbox-close { background-position: 0 0; }
+.cbox-close:hover { background-position:0 -25px; }
+
+.cbox-error {
+
 }
