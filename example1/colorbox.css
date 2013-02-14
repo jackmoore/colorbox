@@ -11,13 +11,13 @@
 }
 
 .cbox-root {
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.8);
     position: fixed;
+    z-index:999;
     top: 0;
+    left: 0;
     right: 0;
     bottom: 0;
-    left: 0;
-    z-index:999;
 }
 
 .cbox-body {
@@ -70,12 +70,6 @@
 /*
     Custom Styles
  */
-
- .cbox-overlay {
-     cursor: -webkit-zoom-out;
-     cursor: -moz-zoom-out;
-     cursor: zoom-out;
- }
 
 .cbox-controls {
     display:table;

@@ -318,7 +318,7 @@
                     e.preventDefault();
                     publicMethod.close();
                 }
-                if (open && settings.arrowKey && $related[1]) {
+                if (open && settings.arrowKey && $related[1] && !e.altKey) {
                     if (key === 37) {
                         e.preventDefault();
                         $prev.click();
