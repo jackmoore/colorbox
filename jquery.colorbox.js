@@ -1,5 +1,5 @@
 /*!
-	jQuery ColorBox v1.4.0 - 2013-02-12
+	jQuery ColorBox v1.4.1 - 2013-02-14
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -472,7 +472,7 @@
 						e.preventDefault();
 						publicMethod.close();
 					}
-                    if (open && settings.arrowKey && $related[1]) {
+                    if (open && settings.arrowKey && $related[1] && !e.altKey) {
 						if (key === 37) {
 							e.preventDefault();
 							$prev.click();
