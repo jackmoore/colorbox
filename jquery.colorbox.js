@@ -318,6 +318,12 @@
 				}
 			}
 			
+            $overlay.css({
+                opacity: parseFloat(settings.opacity),
+                cursor: settings.overlayClose ? "pointer" : "auto",
+                visibility: 'visible'
+            }).show();
+            
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
 				
@@ -332,11 +338,6 @@
 				loadedHeight = $loaded.outerHeight(true);
 				loadedWidth = $loaded.outerWidth(true);
 				
-				$overlay.css({
-					opacity: parseFloat(settings.opacity),
-					cursor: settings.overlayClose ? "pointer" : "auto",
-					visibility: 'visible'
-				}).show();
 				
 				// Opens inital empty ColorBox prior to content being loaded.
 				settings.w = setSize(settings.initialWidth, 'x');
