@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.2 - 2013/1/18
+
+* Removed $.contains for compatibility with jQuery 1.3.x
+
 ### Version 1.4.1 - 2013/2/14
 
 * Ignored left and right arrow keypresses if combined with the alt key.

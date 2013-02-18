@@ -1,5 +1,5 @@
 /*!
-	jQuery ColorBox v1.4.1 - 2013-02-14
+	jQuery ColorBox v1.4.2 - 2013-02-18
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -174,12 +174,12 @@
 		return settings.retinaUrl && window.devicePixelRatio > 1 ? url.replace(settings.photoRegex, settings.retinaSuffix) : url;
 	}
 
-    function trapFocus(e) {
-        if (!$.contains($box[0], e.target) && $box[0] !== e.target) {
-            e.stopPropagation();
-            $box.focus();
-        }
-    }
+	function trapFocus(e) {
+		if ('contains' in $box[0] && !$box[0].contains(e.target)) {
+			e.stopPropagation();
+			$box.focus();
+		}
+	}
 
 	// Assigns function results to their respective properties
 	function makeSettings() {
