@@ -952,7 +952,27 @@
 			}, 1);
 		} else if (href) {
 			$loadingBay.load(href, settings.data, function (data, status) {
-				prep(status === 'error' ? $tag(div, 'Error').html(settings.xhrError) : $(this).contents());
+				if (status === 'error') {
+		                    prep($tag(div, 'Error').html(settings.xhrError));
+		                }
+		                else {
+		                    var $contents = $(this).contents();
+		                    var images = $contents.find('img');		                    
+		                    if (images.length > 0) { // when there are images, preload them before showing content
+		                    	var totalLoaded = 0;
+		                        images.each(function() {
+		                            jQuery(this).one('load',function() {
+		                                totalLoaded++;
+		                                if (totalLoaded == images.length) {
+		                                    prep($contents);
+		                                }
+		                            })
+		                        });
+		                    }
+		                    else {
+		                        prep($contents);
+		                    }
+		                }
 			});
 		}
 	};
