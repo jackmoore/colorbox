@@ -386,7 +386,9 @@
 	// ColorBox's markup needs to be added to the DOM prior to being called
 	// so that the browser will go ahead and load the CSS background images.
 	function appendHTML() {
-		if (!$box && document.body) {
+		var existing = $('#'+colorbox).length;
+		
+		if (!$box && document.body && existing == 0) {
 			init = false;
 
 			$window = $(window);
