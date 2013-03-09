@@ -149,6 +149,11 @@
 
 		return $(element);
 	}
+	
+	//Calculate window height - solves iOS Safari bug
+	function winheight() {
+		return window.innerHeight ? window.innerHeight:$(window).height();
+	}
 
 	// Determine the next and previous members in a group.
 	function getIndex(increment) {
@@ -161,7 +166,7 @@
 
 	// Convert '%' and 'px' values to integers
 	function setSize(size, dimension) {
-		return Math.round((/%/.test(size) ? ((dimension === 'x' ? $window.width() : $window.height()) / 100) : 1) * parseInt(size, 10));
+		return Math.round((/%/.test(size) ? ((dimension === 'x' ? $window.width() : winheight()) / 100) : 1) * parseInt(size, 10));
 	}
 	
 	// Checks an href to see if it is a photo.
@@ -346,7 +351,7 @@
 
 				if (isIE6) {
 					$window.bind('resize.' + event_ie6 + ' scroll.' + event_ie6, function () {
-						$overlay.css({width: $window.width(), height: $window.height(), top: $window.scrollTop(), left: $window.scrollLeft()});
+						$overlay.css({width: $window.width(), height: winheight(), top: $window.scrollTop(), left: $window.scrollLeft()});
 					}).trigger('resize.' + event_ie6);
 				}
 				
@@ -582,11 +587,11 @@
 		}
 		
 		if (settings.bottom !== false) {
-			top += Math.max($window.height() - settings.h - loadedHeight - interfaceHeight - setSize(settings.bottom, 'y'), 0);
+			top += Math.max(winheight() - settings.h - loadedHeight - interfaceHeight - setSize(settings.bottom, 'y'), 0);
 		} else if (settings.top !== false) {
 			top += setSize(settings.top, 'y');
 		} else {
-			top += Math.round(Math.max($window.height() - settings.h - loadedHeight - interfaceHeight, 0) / 2);
+			top += Math.round(Math.max(winheight() - settings.h - loadedHeight - interfaceHeight, 0) / 2);
 		}
 
 		$box.css({top: offset.top, left: offset.left, visibility:'visible'});
