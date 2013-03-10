@@ -6,6 +6,11 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.4 - 2013/3/10
+
+* Fixed an issue with percent-based heights in iOS
+* Fixed an issue with ajax requests being applied at the wrong time.
+
 ### Version 1.4.3 - 2013/2/18
 
 * Made image preloading aware of retina settings.
