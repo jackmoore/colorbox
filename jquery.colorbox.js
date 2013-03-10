@@ -129,6 +129,7 @@
 	publicMethod,
 	div = "div",
 	className,
+	requests = 0,
 	init;
 
 	// ****************
@@ -150,9 +151,10 @@
 		return $(element);
 	}
 	
-	//Calculate window height - solves iOS Safari bug
+	// Get the window height using innerHeight when available to avoid an issue with iOS
+	// http://bugs.jquery.com/ticket/6724
 	function winheight() {
-		return window.innerHeight ? window.innerHeight:$(window).height();
+		return window.innerHeight ? window.innerHeight : $(window).height();
 	}
 
 	// Determine the next and previous members in a group.
@@ -830,7 +832,7 @@
 	};
 
 	publicMethod.load = function (launched) {
-		var href, setResize, prep = publicMethod.prep, $inline;
+		var href, setResize, prep = publicMethod.prep, $inline, request = ++requests;
 		
 		active = true;
 		
@@ -912,6 +914,10 @@
 			.one('load', function () {
 				var percent;
 
+				if (request !== requests) {
+					return;
+				}
+
 				if (settings.retinaImage && window.devicePixelRatio > 1) {
 					photo.height = photo.height / window.devicePixelRatio;
 					photo.width = photo.width / window.devicePixelRatio;
@@ -957,7 +963,9 @@
 			}, 1);
 		} else if (href) {
 			$loadingBay.load(href, settings.data, function (data, status) {
-				prep(status === 'error' ? $tag(div, 'Error').html(settings.xhrError) : $(this).contents());
+				if (request === requests) {
+					prep(status === 'error' ? $tag(div, 'Error').html(settings.xhrError) : $(this).contents());
+				}
 			});
 		}
 	};
