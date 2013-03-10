@@ -1,5 +1,5 @@
 /*!
-	jQuery ColorBox v1.4.3 - 2013-02-18
+	jQuery ColorBox v1.4.4 - 2013-03-10
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */

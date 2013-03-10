@@ -1,6 +1,6 @@
 {
 	"name": "jquery-colorbox",
-	"version": "1.4.3",
+	"version": "1.4.4",
 	"main": "./jquery.colorbox-min.js",
 	"dependencies": {
 		"jquery": ">=1.3.2"
