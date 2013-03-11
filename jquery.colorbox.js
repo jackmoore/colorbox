@@ -3,6 +3,15 @@
     (c) 2013 Jack Moore - jacklmoore.com/colorbox
     license: http://www.opensource.org/licenses/mit-license.php
 */
+
+/*
+	todo:
+	repositioning
+	track ajax
+	colorbox resizes on window resize / orientation change
+	consider overlay position: bottom right width:110% height:110% ?
+	ability to scale up photos
+ */
 (function ($, document, window) {
 
     // Don't do anything if ColorBox already exists.
@@ -63,6 +72,7 @@
         onCleanup: false,
         onClosed: false,
 
+        reposition: true, // allow repositioning to be turned on and off
         top: false,
         bottom: false,
         left: false,
