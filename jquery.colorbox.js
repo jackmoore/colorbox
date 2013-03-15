@@ -1,5 +1,5 @@
 /*!
-	jQuery ColorBox v1.4.4 - 2013-03-10
+	jQuery ColorBox v1.4.5 - 2013-03-15
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -325,12 +325,23 @@
 				}
 			}
 			
-            $overlay.css({
-                opacity: parseFloat(settings.opacity),
-                cursor: settings.overlayClose ? "pointer" : "auto",
-                visibility: 'visible'
-            }).show();
-            
+			$overlay.css({
+				opacity: parseFloat(settings.opacity),
+				cursor: settings.overlayClose ? "pointer" : "auto",
+				visibility: 'visible'
+			}).show();
+			
+
+			if (className) {
+				$box.add($overlay).removeClass(className);
+			}
+			if (settings.className) {
+				$box.add($overlay).addClass(settings.className);
+			}
+			className = settings.className;
+
+			$close.html(settings.close).show();
+
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
 				
@@ -362,31 +373,29 @@
 				trigger(event_open, settings.onOpen);
 				
 				$groupControls.add($title).hide();
+
+				$box.focus();
 				
-				$close.html(settings.close).show();
+				// Confine focus to the modal
+				// Uses event capturing that is not supported in IE8-
+				if (document.addEventListener) {
 
-                $box.focus();
-                
-                // Confine focus to the modal
-                // Uses event capturing that is not supported in IE8-
-                if (document.addEventListener) {
+					document.addEventListener('focus', trapFocus, true);
+					
+					$events.one(event_closed, function () {
+						document.removeEventListener('focus', trapFocus, true);
+					});
+				}
 
-                    document.addEventListener('focus', trapFocus, true);
-                    
-                    $events.one(event_closed, function () {
-                        document.removeEventListener('focus', trapFocus, true);
-                    });
-                }
-
-                // Return focus on closing
-                if (settings.returnFocus) {
-                    $events.one(event_closed, function () {
-                        $(element).focus();
-                    });
-                }
+				// Return focus on closing
+				if (settings.returnFocus) {
+					$events.one(event_closed, function () {
+						$(element).focus();
+					});
+				}
 			}
 			
-			publicMethod.load(true);
+			load();
 		}
 	}
 
@@ -398,21 +407,21 @@
 
 			$window = $(window);
 			$box = $tag(div).attr({
-                id: colorbox,
-                'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : '',
-                role: 'dialog',
-                tabindex: '-1'
-            }).hide();
+				id: colorbox,
+				'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : '',
+				role: 'dialog',
+				tabindex: '-1'
+			}).hide();
 			$overlay = $tag(div, "Overlay", isIE6 ? 'position:absolute' : '').hide();
 			$loadingOverlay = $tag(div, "LoadingOverlay").add($tag(div, "LoadingGraphic"));
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
-                $prev = $tag('button', "Previous"),
+				$prev = $tag('button', "Previous"),
 				$next = $tag('button', "Next"),
 				$slideshow = $tag('button', "Slideshow"),
-                $loadingOverlay,
+				$loadingOverlay,
 				$close = $tag('button', "Close")
 			);
 			
@@ -480,7 +489,7 @@
 						e.preventDefault();
 						publicMethod.close();
 					}
-                    if (open && settings.arrowKey && $related[1] && !e.altKey) {
+					if (open && settings.arrowKey && $related[1] && !e.altKey) {
 						if (key === 37) {
 							e.preventDefault();
 							$prev.click();
@@ -831,7 +840,7 @@
 		}
 	};
 
-	publicMethod.load = function (launched) {
+	function load () {
 		var href, setResize, prep = publicMethod.prep, $inline, request = ++requests;
 		
 		active = true;
@@ -840,17 +849,7 @@
 		
 		element = $related[index];
 		
-		if (!launched) {
-			makeSettings();
-		}
-
-		if (className) {
-			$box.add($overlay).removeClass(className);
-		}
-		if (settings.className) {
-			$box.add($overlay).addClass(settings.className);
-		}
-		className = settings.className;
+		makeSettings();
 		
 		trigger(event_purge);
 		
@@ -968,20 +967,20 @@
 				}
 			});
 		}
-	};
+	}
 		
 	// Navigates to the next page/image in a set.
 	publicMethod.next = function () {
 		if (!active && $related[1] && (settings.loop || $related[index + 1])) {
 			index = getIndex(1);
-			publicMethod.load();
+			launch($related[index]);
 		}
 	};
 	
 	publicMethod.prev = function () {
 		if (!active && $related[1] && (settings.loop || index)) {
 			index = getIndex(-1);
-			publicMethod.load();
+			launch($related[index]);
 		}
 	};
 

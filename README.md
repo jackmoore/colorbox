@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.5 - 2013/3/10
+
+* Minor change to apply the close and className properties sooner.
+
 ### Version 1.4.4 - 2013/3/10
 
 * Fixed an issue with percent-based heights in iOS
