@@ -4,14 +4,6 @@
     license: http://www.opensource.org/licenses/mit-license.php
 */
 
-/*
-	todo:
-	repositioning
-	track ajax
-	colorbox resizes on window resize / orientation change
-	consider overlay position: bottom right width:110% height:110% ?
-	ability to scale up photos
- */
 (function ($, document, window) {
 
     // Don't do anything if ColorBox already exists.
@@ -48,7 +40,6 @@
         group: false,
 
         // alternate image paths for high-res displays
-        retinaImage: false,
         retinaUrl: false,
         retinaSuffix: '@2x.$1',
 
@@ -72,7 +63,6 @@
         onCleanup: false,
         onClosed: false,
 
-        reposition: true, // allow repositioning to be turned on and off
         top: false,
         bottom: false,
         left: false,
@@ -99,6 +89,7 @@
             '.cbox-next': function(){ $.colorbox.next(); },
             '.cbox-close': function(){ $.colorbox.close(); },
             '.cbox-root': function(e){
+                console.log(e.target);
                 if (e.target === this) {
                     $.colorbox.close();
                 }
@@ -125,7 +116,6 @@
         }
     },
     
-
     // Events
     $events = $({}),
     event_open = 'cbox.open',
@@ -137,7 +127,6 @@
 
 
     // Cached jQuery Object Variables
-    $related,
     $window = $(window),
 
     $root,
@@ -162,7 +151,7 @@
     active,
     closing,
     loadingTimer,
-    publicMethod;
+    size; // computed size
 
     // ****************
     // HELPER FUNCTIONS
@@ -171,7 +160,7 @@
     // Determine the next and previous members in a group.
     function getIndex(increment) {
         var
-        max = $related.length,
+        max = $.colorbox.group.length,
         newIndex = (index + increment) % max;
         
         return (newIndex < 0) ? max + newIndex : newIndex;
@@ -244,9 +233,10 @@
                 $root.css({visibility:'visible'});
 
                 // Opens inital empty ColorBox prior to content being loaded.
-                settings.w = setSize(settings.initialWidth, 'x');
-                settings.h = setSize(settings.initialHeight, 'y');
-                publicMethod.position();
+                size = {};
+                size.width = setSize(settings.initialWidth, 'x');
+                size.height = setSize(settings.initialHeight, 'y');
+                $.colorbox.position();
                 
                 trigger(event_open, settings.onOpen);
 
@@ -256,17 +246,17 @@
                 $close.html(settings.close).show();
 
                 if (settings.group) {
-                    $related = $(settings.group);
+                    $.colorbox.group = $(settings.group);
 
-                    index = $related.index(element);
+                    index = $.colorbox.group.index(element);
 
                     if (index === -1) {
-                        $related = $related.add(element);
-                        index = $related.length - 1;
+                        $.colorbox.group = $.colorbox.group.add(element);
+                        index = $.colorbox.group.length - 1;
                     }
                 } else {
                     index = 0;
-                    $related = $(element);
+                    $.colorbox.group = $(element);
                 }
 
                 $body.focus();
@@ -288,7 +278,7 @@
                 }
             }
             
-            publicMethod.load();
+            load();
         }
     }
 
@@ -309,33 +299,19 @@
             
             $groupControls = $next.add($prev).add($current);
 
+
+            $.each(settings.clickActions, function(selector, handler){
+                $(document).on('click', selector, handler);
+            });
+
             $root
-                .on('click', '.cbox-prev', publicMethod.prev)
-                .on('click', '.cbox-next', publicMethod.next)
-                .on('click', '.cbox-close', publicMethod.close)
-                .on('click', function (e) {
-                    if (settings.overlayClose && e.target === this) {
-                        publicMethod.close();
-                    }
-                })
                 .css({visibility:'hidden'})
                 .appendTo(document.body);
 
             // Key Bindings
-            $(document).on('keydown.cbox', function (e) {
-                var key = e.keyCode;
-                if (open && settings.escKey && key === 27) {
-                    e.preventDefault();
-                    publicMethod.close();
-                }
-                if (open && settings.arrowKey && $related[1] && !e.altKey) {
-                    if (key === 37) {
-                        e.preventDefault();
-                        $prev.click();
-                    } else if (key === 39) {
-                        e.preventDefault();
-                        $next.click();
-                    }
+            $(document).on('keydown', function (e) {
+                if (settings.keyActions && typeof settings.keyActions[e.keyCode] === 'function') {
+                    settings.keyActions[e.keyCode](e);
                 }
             });
         }
@@ -348,7 +324,7 @@
     // Usage from within an iframe: parent.$.colorbox.close();
     // ****************
 
-    publicMethod = $.colorbox = function (selector, options) {
+    $.colorbox = function (selector, options) {
         if (!selector) { return; }
 
         var first = $(selector)[0];
@@ -370,7 +346,7 @@
     };
 
 
-    publicMethod.position = function (speed, loadedCallback) {
+    $.colorbox.position = function (speed, loadedCallback) {
         var
         css,
         top = 0,
@@ -380,34 +356,32 @@
 
         // keeps the top and left positions within the browser's viewport.
         if (settings.right !== false) {
-            left += Math.max($window.width() - settings.w - interfaceWidth - setSize(settings.right, 'x'), 0);
+            left += Math.max($window.width() - size.width - interfaceWidth - setSize(settings.right, 'x'), 0);
         } else if (settings.left !== false) {
             left += setSize(settings.left, 'x');
         } else {
-            left += Math.round(Math.max($window.width() - settings.w - interfaceWidth, 0) / 2);
+            left += Math.round(Math.max($window.width() - size.width - interfaceWidth, 0) / 2);
         }
         
         if (settings.bottom !== false) {
-            top += Math.max($window.height() - settings.h - interfaceHeight - setSize(settings.bottom, 'y'), 0);
+            top += Math.max($window.height() - size.height - interfaceHeight - setSize(settings.bottom, 'y'), 0);
         } else if (settings.top !== false) {
             top += setSize(settings.top, 'y');
         } else {
-            top += Math.round(Math.max($window.height() - settings.h - interfaceHeight, 0) / 2);
+            top += Math.round(Math.max($window.height() - size.height - interfaceHeight, 0) / 2);
         }
 
         // setting the speed to 0 to reduce the delay between same-sized content.
-        speed = ($body.width() === settings.w && $body.height() === settings.h) ? 0 : speed || 0;
+        speed = ($body.width() === size.width && $body.height() === size.height) ? 0 : speed || 0;
 
-        css = {width: settings.w + interfaceWidth, height: settings.h + interfaceHeight, top: top, left: left};
+        css = {width: size.width + interfaceWidth, height: size.height + interfaceHeight, top: top, left: left};
 
         $body.dequeue().animate(css, {
             duration: speed,
             complete: function () {
                 active = false;
                 if (settings.reposition) {
-                    setTimeout(function () {  // small delay before binding onresize due to an IE8 bug.
-                        // $window.on('resize.cbox', publicMethod.position);
-                    }, 1);
+                    $window.on('resize.cbox', $.colorbox.position);
                 }
 
                 if (loadedCallback) {
@@ -417,23 +391,61 @@
         });
     };
 
-    publicMethod.prep = function (object) {
+    function prep (object) {
         if (!open) {
             return;
         }
 
         var callback, speed = settings.transition === "none" ? 0 : settings.speed;
-                
+        
+        size = {
+            minWidth: 0,
+            minHeight: 0,
+            width: false,
+            height: false,
+            maxWidth: false,
+            maxHeight: false
+        };
+
+        if (settings.minWidth) {
+            size.minWidth = setSize(settings.minWidth, 'x') - interfaceWidth;
+        }
+
+        if (settings.minHeight) {
+            size.minHeight = setSize(settings.minHeight, 'y') - interfaceHeight;
+        }
+
+        size.maxHeight = size.height = settings.height ?
+                setSize(settings.height, 'y') - interfaceHeight :
+                settings.innerHeight && setSize(settings.innerHeight, 'y');
+        
+        size.maxWidth = size.width = settings.width ?
+                setSize(settings.width, 'x') - interfaceWidth :
+                settings.innerWidth && setSize(settings.innerWidth, 'x');
+        
+        // Re-evaluate the minimum width and height based on maxWidth and maxHeight values.
+        // If the width or height exceed the maxWidth or maxHeight, use the maximum values instead.
+        if (settings.maxWidth) {
+            size.maxWidth = setSize(settings.maxWidth, 'x') - interfaceWidth;
+            size.maxWidth = size.width && size.width < size.maxWidth ? size.width : size.maxWidth;
+        }
+
+        if (settings.maxHeight) {
+            size.maxHeight = setSize(settings.maxHeight, 'y') - interfaceHeight;
+            size.maxHeight = size.height && size.height < size.maxHeight ? size.height : size.maxHeight;
+        }
+
         function getWidth() {
-            settings.w = settings.w || $content.width();
-            settings.w = settings.mw && settings.mw < settings.w ? settings.mw : settings.w;
-            return settings.w;
+            size.width = size.width || $content.width();
+            size.width = size.maxWidth && size.maxWidth < size.width ? size.maxWidth : size.width;
+            return size.width;
         }
         function getHeight() {
-            settings.h = settings.h || $content.height();
-            settings.h = settings.mh && settings.mh < settings.h ? settings.mh : settings.h;
-            return settings.h;
+            size.height = size.height || $content.height();
+            size.height = size.maxHeight && size.maxHeight < size.height ? size.maxHeight : size.height;
+            return size.height;
         }
+
         $content
             //.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
             .empty()
@@ -445,9 +457,14 @@
             .css({visibility:''})
             .addClass('cbox-is-loading')
             .prependTo($body);
-        
+
+        $content.css({width: '100%', height: '100%'});
+
+        $('.cbox-photo').css({width:'', height:''});
+
+        console.log(size);
         callback = function () {
-            var total = $related.length,
+            var total = $.colorbox.group.length,
                 complete;
             
             if (!open) {
@@ -479,7 +496,7 @@
                     $.each([getIndex(-1), getIndex(1)], function(){
                         var src,
                             img,
-                            i = $related[this],
+                            i = $.colorbox.group[this],
                             data = $.data(i, 'colorbox');
 
                         if (data && data.href) {
@@ -539,18 +556,14 @@
             }
         };
 
-        publicMethod.position(speed, callback);
-    };
+        $.colorbox.position(speed, callback);
+    }
 
-    publicMethod.load = function () {
+    function load () {
         var href,
-            setResize,
-            prep = publicMethod.prep,
             $inline;
 
         active = true;
-
-// console.log(settings.group, $related, index);
 
         $events.trigger('removeClass');
         if (settings.className) {
@@ -564,29 +577,6 @@
         trigger(event_purge);
         
         trigger(event_load, settings.onLoad);
-        
-        settings.h = settings.height ?
-                setSize(settings.height, 'y') - interfaceHeight :
-                settings.innerHeight && setSize(settings.innerHeight, 'y');
-        
-        settings.w = settings.width ?
-                setSize(settings.width, 'x') - interfaceWidth :
-                settings.innerWidth && setSize(settings.innerWidth, 'x');
-        
-        // Sets the minimum dimensions for use in image scaling
-        settings.mw = settings.w;
-        settings.mh = settings.h;
-        
-        // Re-evaluate the minimum width and height based on maxWidth and maxHeight values.
-        // If the width or height exceed the maxWidth or maxHeight, use the maximum values instead.
-        if (settings.maxWidth) {
-            settings.mw = setSize(settings.maxWidth, 'x') - interfaceWidth;
-            settings.mw = settings.w && settings.w < settings.mw ? settings.w : settings.mw;
-        }
-        if (settings.maxHeight) {
-            settings.mh = setSize(settings.maxHeight, 'y') - interfaceHeight;
-            settings.mh = settings.h && settings.h < settings.mh ? settings.h : settings.mh;
-        }
         
         href = settings.href;
         
@@ -620,37 +610,16 @@
                 prep($('<div class="cbox-error"/>').html(settings.imgError));
             })
             .one('load', function () {
-                var percent;
-
-                if (settings.retinaImage && window.devicePixelRatio > 1) {
-                    photo.height = photo.height / window.devicePixelRatio;
-                    photo.width = photo.width / window.devicePixelRatio;
-                }
-
-                if (settings.scalePhotos) {
-                    setResize = function () {
-                        photo.height -= photo.height * percent;
-                        photo.width -= photo.width * percent;
-                    };
-                    if (settings.mw && photo.width > settings.mw) {
-                        percent = (photo.width - settings.mw) / photo.width;
-                        setResize();
-                    }
-                    if (settings.mh && photo.height > settings.mh) {
-                        percent = (photo.height - settings.mh) / photo.height;
-                        setResize();
-                    }
-                }
-                
-                photo.style.marginTop = -photo.height/2 + 'px';
-                photo.style.marginLeft = -photo.width/2 + 'px';
-                
-                if ($related[1] && (settings.loop || $related[index + 1])) {
+                if ($.colorbox.group[1] && (settings.loop || $.colorbox.group[index + 1])) {
                     photo.style.cursor = 'pointer';
-                    photo.onclick = publicMethod.next;
+                    photo.onclick = $.colorbox.next;
                 }
 
-                prep($('<div class="cbox-photo"/>').css({width:photo.width, height:photo.height}).append(photo));
+                prep($('<div class="cbox-photo"/>').css({
+                    width: photo.width,
+                    height: photo.height,
+                    backgroundImage:'url('+href+')'
+                }));
             });
 
             photo.src = retinaUrl(href);
@@ -658,25 +627,25 @@
         } else if (href) {
             prep(status === 'error' ? $('<div class="cbox-error"/>').html(settings.xhrError) : $(this).contents());
         }
-    };
+    }
         
     // Navigates to the next page/image in a set.
-    publicMethod.next = function () {
-        if (!active && $related[1] && (settings.loop || $related[index + 1])) {
+    $.colorbox.next = function () {
+        if (!active && $.colorbox.group[1] && (settings.loop || $.colorbox.group[index + 1])) {
             index = getIndex(1);
-            launch($related[index]);
+            launch($.colorbox.group[index]);
         }
     };
     
-    publicMethod.prev = function () {
-        if (!active && $related[1] && (settings.loop || index)) {
+    $.colorbox.prev = function () {
+        if (!active && $.colorbox.group[1] && (settings.loop || index)) {
             index = getIndex(-1);
-            launch($related[index]);
+            launch($.colorbox.group[index]);
         }
     };
 
     // Note: to use this within an iframe use the following format: parent.$.fn.colorbox.close();
-    publicMethod.close = function () {
+    $.colorbox.close = function () {
         if (open && !closing) {
             
             closing = true;
@@ -705,26 +674,25 @@
 
     // Removes changes ColorBox made to the document, but does not remove the plugin
     // from jQuery.
-    publicMethod.remove = function () {
+    $.colorbox.remove = function () {
 
     };
 
     // A method for fetching the current element ColorBox is referencing.
     // returns a jQuery object.
-    publicMethod.element = function () {
+    $.colorbox.element = function () {
         return $(element);
     };
 
-
-    publicMethod.on = function () {
+    $.colorbox.on = function () {
         $.fn.on.apply($events, arguments);
     };
 
 
-    publicMethod.off = function() {
+    $.colorbox.off = function() {
         $.fn.off.apply($events, arguments);
     };
 
-    publicMethod.settings = defaults;
+    $.colorbox.settings = defaults;
 
 }(jQuery, document, window));
