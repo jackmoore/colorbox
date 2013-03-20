@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.6 - 2013/3/19
+
+* Minor change to work around a jQuery 1.4.2 bug for legacy users.
+
 ### Version 1.4.5 - 2013/3/10
 
 * Minor change to apply the close and className properties sooner.

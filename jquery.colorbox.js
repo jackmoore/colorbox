@@ -1,5 +1,5 @@
 /*!
-	jQuery ColorBox v1.4.5 - 2013-03-15
+	jQuery ColorBox v1.4.6 - 2013-03-19
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -111,7 +111,7 @@
 	$prev,
 	$close,
 	$groupControls,
-	$events = $({}),
+	$events = $('<a/>'),
 	
 	// Variables for cached values or use across multiple functions
 	settings,
