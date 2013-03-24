@@ -9,8 +9,8 @@
 			h2{font-size:13px; margin:15px 0 0 0;}
 		</style>
 		<link rel="stylesheet" href="colorbox.css" />
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-		<script src="../colorbox/jquery.colorbox.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="../jquery.colorbox.js"></script>
 		<script>
 			$(document).ready(function(){
 				//Examples of how to assign the ColorBox event to elements
@@ -30,6 +30,9 @@
 					onCleanup:function(){ alert('onCleanup: colorbox has begun the close process'); },
 					onClosed:function(){ alert('onClosed: colorbox has completely closed'); }
 				});
+
+				$('.non-retina').colorbox({rel:'group5', transition:'none'})
+				$('.retina').colorbox({rel:'group5', transition:'none', retinaImage:true, retinaUrl:true});
 				
 				//Example of preserving a JavaScript event for inline calls.
 				$("#click").click(function(){ 
@@ -71,6 +74,11 @@
 		<h2>Demonstration of using callbacks</h2>
 		<p><a class='callbacks' href="../content/marylou.jpg" title="Marylou on Cumberland Island">Example with alerts</a>. Callbacks and event-hooks allow users to extend functionality without having to rewrite parts of the plugin.</p>
 		
+
+		<h2>Retina Images</h2>
+		<p><a class="retina" href="../content/daisy.jpg" title="Retina">Retina</a></p>
+		<p><a class="non-retina" href="../content/daisy.jpg" title="Non-Retina">Non-Retina</a></p>
+
 		<!-- This contains the hidden content for inline calls -->
 		<div style='display:none'>
 			<div id='inline_content' style='padding:10px; background:#fff;'>
@@ -80,7 +88,7 @@
 			
 			<p><strong>If you try to open a new ColorBox while it is already open, it will update itself with the new content.</strong></p>
 			<p>Updating Content Example:<br />
-			<a class="ajax" href="../content/flash.html">Click here to load new content</a></p>
+			<a class="ajax" href="../content/ajax.html">Click here to load new content</a></p>
 			</div>
 		</div>
 	</body>

@@ -1,7 +1,100 @@
 ## About ColorBox:
 A customizable lightbox plugin for jQuery.  See the [project page](http://jacklmoore.com/colorbox/) for documentation and a demonstration, and the [FAQ](http://jacklmoore.com/colorbox/faq/) for solutions and examples to common issues.  Released under the [MIT license](http://www.opensource.org/licenses/mit-license.php).
 
+## Translations Welcome
+Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as an example.
+
 ## Changelog:
+
+### Version 1.4.6 - 2013/3/19
+
+* Minor change to work around a jQuery 1.4.2 bug for legacy users.
+
+### Version 1.4.5 - 2013/3/10
+
+* Minor change to apply the close and className properties sooner.
+
+### Version 1.4.4 - 2013/3/10
+
+* Fixed an issue with percent-based heights in iOS
+* Fixed an issue with ajax requests being applied at the wrong time.
+
+### Version 1.4.3 - 2013/2/18
+
+* Made image preloading aware of retina settings.
+
+### Version 1.4.2 - 2013/2/18
+
+* Removed $.contains for compatibility with jQuery 1.3.x
+
+### Version 1.4.1 - 2013/2/14
+
+* Ignored left and right arrow keypresses if combined with the alt key.
+
+### Version 1.4.0 - 2013/2/12
+
+* Better accessibility:
+	* Replaced div controls with buttons
+	* Tabbed navigation confined to modal window
+	* Added aria role
+
+### Version 1.3.34 - 2013/2/4
+
+* Updated manifest for plugins.jquery.com
+
+### Version 1.3.33 - 2013/2/4
+
+* Added retina display properties: retinaImage, retinaUrl, retinaSuffix
+* Fixed iframe scrolling on iOS devices.
+
+### Version 1.3.32 - 2013/1/31
+
+* Improved internal event subscribing & fixed event bug introduced in v1.3.21
+
+### Version 1.3.31 - 2013/1/28
+
+* Fixed a size-calculation bug introduced in the previous commit.
+
+### Version 1.3.30 - 2013/1/25
+
+* Delayed border-width calculations until after opening, to avoid a bug in FF when using ColorBox in a hidden iframe.
+
+### Version 1.3.29 - 2013/1/24
+
+* Fixes bug with bubbling delegated events, introduced in the previous commit.
+
+### Version 1.3.28 - 2013/1/24
+
+* Fixed compatibility issue with old versions of jQuery (1.3.2-1.4.2)
+
+### Version 1.3.27 - 2013/1/23
+
+* Added className property.
+
+### Version 1.3.26 - 2013/1/23
+
+* Minor bugfix: clear the onload event handler after photo has loaded.
+
+### Version 1.3.25 - 2013/1/23
+
+* Removed grunt file & added Bower component.json.
+
+### Version 1.3.24 - 2013/1/22
+
+* Added generated files (jquery.colorbox.js / jquery.colorbox-min.js) back to the repository.
+
+### Version 1.3.23 - 2013/1/18
+
+* Minor bugfix for calling ColorBox on empty jQuery collections without a selector.
+
+### Version 1.3.22 - 2013/1/17
+
+* Recommit for plugins.jquery.com
+
+### Version 1.3.21 - 2013/1/15
+Files Changed: *.js
+
+* Fixed compatability issues with jQuery 1.9
 
 ### Version 1.3.20 - August 15 2012
 Files Changed:jquery.colorbox.js
