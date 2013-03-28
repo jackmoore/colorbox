@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Persian (Farsi)
 	translated by: Mahdi Jaberzadeh Ansari (MJZSoft)
 	site: www.mjzsoft.ir

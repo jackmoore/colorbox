@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Russian (ru)
 	translated by: Marfa
         site: themarfa.name

@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Polski (pl)
 	translated by: Tomasz Wasiński
 	site: 2bevisible.pl

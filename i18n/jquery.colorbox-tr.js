@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Turkish (tr)
 	translated by: Caner ÖNCEL
 	site: egonomik.com

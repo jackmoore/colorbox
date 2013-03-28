@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Brazilian Portuguese (pt-br)
 	translated by: ReinaldoMT
 */

@@ -1,5 +1,5 @@
 /*
-    ColorBox Core Style:
+    Colorbox Core Style:
     The following CSS is consistent between example themes and should not be altered.
 */
 #colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden;}
@@ -16,7 +16,7 @@
 
 /* 
     User Style:
-    Change the following styles to modify the appearance of ColorBox.  They are
+    Change the following styles to modify the appearance of Colorbox.  They are
     ordered & tabbed in a way that represents the nesting of the generated HTML.
 */
 #cboxOverlay{background:url(images/overlay.png) repeat 0 0;}

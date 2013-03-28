@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Latvian (lv)
 	translated by: Matiss Roberts Treinis
     site: x0.lv

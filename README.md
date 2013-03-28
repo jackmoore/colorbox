@@ -1,4 +1,4 @@
-## About ColorBox:
+## About Colorbox:
 A customizable lightbox plugin for jQuery.  See the [project page](http://jacklmoore.com/colorbox/) for documentation and a demonstration, and the [FAQ](http://jacklmoore.com/colorbox/faq/) for solutions and examples to common issues.  Released under the [MIT license](http://www.opensource.org/licenses/mit-license.php).
 
 ## Translations Welcome
@@ -57,7 +57,7 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ### Version 1.3.30 - 2013/1/25
 
-* Delayed border-width calculations until after opening, to avoid a bug in FF when using ColorBox in a hidden iframe.
+* Delayed border-width calculations until after opening, to avoid a bug in FF when using Colorbox in a hidden iframe.
 
 ### Version 1.3.29 - 2013/1/24
 
@@ -85,7 +85,7 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ### Version 1.3.23 - 2013/1/18
 
-* Minor bugfix for calling ColorBox on empty jQuery collections without a selector.
+* Minor bugfix for calling Colorbox on empty jQuery collections without a selector.
 
 ### Version 1.3.22 - 2013/1/17
 
@@ -113,8 +113,8 @@ Files Changed:jquery.colorbox.js, colorbox.css (all)
 ### Version 1.3.18 - October 07 2011
 Files Changed:jquery.colorbox.js/jquery.colorbox-min.js, colorbox.css (all) and example 1's controls.png
 
-* Fixed a regression where Flash content displayed in ColorBox would be reloaded if the browser window was resized.
-* Added safety check to make sure that ColorBox's markup is only added to the DOM a single time, even if $.colorbox.init() is called multiple times.  This will allow site owners to manually initialize ColorBox if they need it before the DOM has finished loading.
+* Fixed a regression where Flash content displayed in Colorbox would be reloaded if the browser window was resized.
+* Added safety check to make sure that Colorbox's markup is only added to the DOM a single time, even if $.colorbox.init() is called multiple times.  This will allow site owners to manually initialize Colorbox if they need it before the DOM has finished loading.
 * Updated the example index.html files to be HTML5 compliant.
 * Changed the slideshow behavior so that it immediately moves to the next slide when the slideshow is started.
 * Minor regex bugfix to allow automatic detection of image URLs that include fragments.
@@ -123,8 +123,8 @@ Files Changed:jquery.colorbox.js/jquery.colorbox-min.js, colorbox.css (all) and 
 Files Changed:jquery.colorbox.js/jquery.colorbox-min.js
 
 * Added properties "top", "bottom", "left" and "right" to specify a position relative to the viewport, rather than using the default centering.
-* Added property "data" to specify GET or POST data when using Ajax.  ColorBox's ajax functionality is handled by jQuery's .load() method, so the data property works the same way as it does with .load().
-* Added property "fixed" which can provide fixed positioning for ColorBox, rather than absolute positioning.  This will allow ColorBox to remain in a fixed position within the visitors viewport, despite scrolling.  IE6 support for this was not added, it will continue to use the default absolute positioning.
+* Added property "data" to specify GET or POST data when using Ajax.  Colorbox's ajax functionality is handled by jQuery's .load() method, so the data property works the same way as it does with .load().
+* Added property "fixed" which can provide fixed positioning for Colorbox, rather than absolute positioning.  This will allow Colorbox to remain in a fixed position within the visitors viewport, despite scrolling.  IE6 support for this was not added, it will continue to use the default absolute positioning.
 * Fixed ClearType problem with IE7.
 * Minor fixes.
 
@@ -150,7 +150,7 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 
 * Changed the index.html example files to use YouTube's new embedded link format.
-* By default, ColorBox returns focus to the element it was launched from once it closes.  This can now be disabled by setting the 'returnFocus' property to false.  Focus was causing problems for some users who had their anchor elements inside animated containers.
+* By default, Colorbox returns focus to the element it was launched from once it closes.  This can now be disabled by setting the 'returnFocus' property to false.  Focus was causing problems for some users who had their anchor elements inside animated containers.
 * Minor bug fix involved in using a combination of slideshow and non-slideshow content.
 
 ### Version 1.3.12 - October 20 2010
@@ -170,8 +170,8 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 * Fixed compatibility with jQuery 1.4.3
 * The 'open' property now accepts a function as a value, like all of the other properties.
 * Preloading now loads the correct href for images when using a dynamic (function) value for the href property.
-* Fixed bug in Safari 3 for Win where ColorBox centered on the document, rather than the visitor's viewport.
-* May have fixed an issue in Opera 10.6+ where ColorBox would rarely/randomly freeze up while switching between photos in a group.
+* Fixed bug in Safari 3 for Win where Colorbox centered on the document, rather than the visitor's viewport.
+* May have fixed an issue in Opera 10.6+ where Colorbox would rarely/randomly freeze up while switching between photos in a group.
 * Some functionality better encapsulated & minor performance improvements.
 
 ### Version 1.3.9 - July 7 2010
@@ -186,7 +186,7 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 
 * Fixed a bug in Chrome where it would sometimes render photos at 0 by 0 width and height (behavior introduced in recent update to Chrome).
 * Fixed a bug where the onClosed callback would fire twice (only affected 1.3.7).
-* Fixed a bug in IE7 that existed with some iframed websites that use JS to reposition the viewport caused ColorBox to move out of position.
+* Fixed a bug in IE7 that existed with some iframed websites that use JS to reposition the viewport caused Colorbox to move out of position.
 * Abstracted the identifiers (HTML ids & classes, and JS plugin name, method, and events) so that the plugin can be easily rebranded.
 * Small changes to improve either code readability or compression.
 
@@ -197,7 +197,7 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js/index.html
 * Resize now accepts 'width', 'innerWidth', 'height' and 'innerHeight'. Example: $.colorbox.resize({width:"100%"})
 * Added option (loop:false) to disable looping in a group.
 * Added options (escKey:false, arrowKey:false) to disable esc-key and arrow-key bindings.
-* Added method for removing ColorBox from a document: $.colorbox.remove();
+* Added method for removing Colorbox from a document: $.colorbox.remove();
 * Fixed a bug where iframed URLs would be truncated if they contained an unencoded apostrophe.
 * Now uses the exact href specified on an anchor, rather than the version returned by 'this.href'. This was causing "#example" to be normalized to "http://domain/#example" which interfered with how some users were setting up links to inline content.
 * Changed example documents over to HTML5.
@@ -205,7 +205,7 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js/index.html
 ### Version 1.3.6 - Jan 13 2010
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 
-* Small change to make ColorBox compatible with jQuery 1.4
+* Small change to make Colorbox compatible with jQuery 1.4
 
 ### Version 1.3.5 - December 15 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
@@ -217,27 +217,27 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 ### Version 1.3.4 - December 5 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 
-* Event delegation is now used for elements that ColorBox is assigned to, rather than individual click events.
-* Additional callbacks have been added to represent other stages of ColorBox's lifecycle. Available callbacks, in order of their execution: onOpen, onLoad, onComplete, onCleanup, onClosed These take place at the same time as the event hooks, but will be better suited than the hooks for targeting specific instances of ColorBox.
+* Event delegation is now used for elements that Colorbox is assigned to, rather than individual click events.
+* Additional callbacks have been added to represent other stages of Colorbox's lifecycle. Available callbacks, in order of their execution: onOpen, onLoad, onComplete, onCleanup, onClosed These take place at the same time as the event hooks, but will be better suited than the hooks for targeting specific instances of Colorbox.
 * Ajax content is now immediately added to the DOM to be more compatible if that content contains script tags.
 * Focus is now returned to the calling element on closing.
 * Fixed a bug where maxHeight and maxWidth did not work for non-photo content.
-* Direct calls no longer need 'open:true', it is assumed.  Example: `$.fn.colorbox({html:'<p>Hi</p>'});`
+* Direct calls no longer need 'open:true', it is assumed.  Example: `$.colorbox({html:'<p>Hi</p>'});`
 
 ### Version 1.3.3 - November 7 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 
-* Changed $.fn.colorbox.element() to return a jQuery object rather the DOM element.
+* Changed $.colorbox.element() to return a jQuery object rather the DOM element.
 * jQuery.colorbox-min.js is compressed with Google's Closure Compiler rather than YUI Compressor.
 
 ### Version 1.3.2 - October 27 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 
-* Added 'innerWidth' and 'innerHeight' options to allow people to easily set the size dimensions for ColorBox, without having to anticipate the size of the borders and buttons.
+* Added 'innerWidth' and 'innerHeight' options to allow people to easily set the size dimensions for Colorbox, without having to anticipate the size of the borders and buttons.
 * Renamed 'scrollbars' option to 'scrolling' to be in keeping with the existing HTML attribute. The option now also applies to iframes.
 * Bug fix: In Safari, positioning occassionally incorrect when using '100%' dimensions.
 * Bug fix: In IE6, the background overlay is briefly not full size when first viewing.
-* Bug fix: In Firefox, opening ColorBox causes a split second shift with a small minority of webpage layouts.
+* Bug fix: In Firefox, opening Colorbox causes a split second shift with a small minority of webpage layouts.
 * Simplified code in a few areas.
 
 ### Version 1.3.1 - September 16 2009
@@ -249,11 +249,11 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js/colorbox.css/colorbox-i
 ### Version 1.3.0 - September 15 2009
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js/colorbox.css
 
-* Added $.fn.colorbox.resize() method to allow ColorBox to resize it's height if it's contents change.
+* Added $.colorbox.resize() method to allow Colorbox to resize it's height if it's contents change.
 * Added 'scrollbars' option to allow users to turn off scrollbars when using the resize() method.
 * Renamed the 'resize' option to be less ambiguous.  It's now 'scalePhotos'.
 * Renamed the 'cbox_close' event to be less ambiguous.  It's now 'cbox_cleanup'.  It is the first thing to happen in the close method while the 'cbox_closed' event is the last to happen.
-* Fixed a bug with the slideshow mouseover graphics that appeared after ColorBox is opened a 2nd time.
+* Fixed a bug with the slideshow mouseover graphics that appeared after Colorbox is opened a 2nd time.
 * Fixed a bug where ClearType may not work in IE6&7 if using the fade transition.
 * Minor code optimizations to increase compression.
 
@@ -274,12 +274,12 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js, example stylesheets and background images (core styles have not changed and the updates will not affect existing user themes / old example themes)
 
 * Code cleanup and reduction, better organization and documentation in the full source.
-* Added ability to use functions in place of static values for ColorBox's options (thanks Ken!).
-* Added an option for straight HTML.  Example: `$.fn.colorbox({html:'<p>Howdy</p>', open:true})`
-* Added an event for the beginning of the closing process.  This is in addition to the event that already existed for when ColorBox had completely closed.  'cbox_close' and 'cbox_closed' respectively.
-* Fixed a minor bug in IE6 that would cause a brief content shift in the parent document when opening ColorBox.
-* Fixed a minor bug in IE6 that would reveal select elements that had a hidden visibility after closing ColorBox.
-* The 'esc' key is unbound now when ColorBox is not open, to avoid any potential conflicts.
+* Added ability to use functions in place of static values for Colorbox's options (thanks Ken!).
+* Added an option for straight HTML.  Example: `$.colorbox({html:'<p>Howdy</p>', open:true})`
+* Added an event for the beginning of the closing process.  This is in addition to the event that already existed for when Colorbox had completely closed.  'cbox_close' and 'cbox_closed' respectively.
+* Fixed a minor bug in IE6 that would cause a brief content shift in the parent document when opening Colorbox.
+* Fixed a minor bug in IE6 that would reveal select elements that had a hidden visibility after closing Colorbox.
+* The 'esc' key is unbound now when Colorbox is not open, to avoid any potential conflicts.
 * Used background sprites for examples 1 & 4.  Put IE-only (non-sprite) background images in a separate folder.
 * Example themes 1, 3, & 4 received slight visual tweaks.
 * Optimized pngs for smaller file size.
@@ -289,8 +289,8 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js, example stylesheets an
 Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 
 * Fixed a bug with fixed width/height images in Opera 9.64.
-* Fixed a bug with trying to set a value for rel during a direct call to ColorBox. Example: `$.fn.colorbox({rel:'foo', open:true});`
-* Changed how href/rel/title settings are determined to avoid users having to manually update ColorBox settings if they use JavaScript to update any of those attributes, after ColorBox has been defined.
+* Fixed a bug with trying to set a value for rel during a direct call to Colorbox. Example: `$.colorbox({rel:'foo', open:true});`
+* Changed how href/rel/title settings are determined to avoid users having to manually update Colorbox settings if they use JavaScript to update any of those attributes, after Colorbox has been defined.
 * Fixed a FF3 bug where the back button was disabled after closing an iframe.
 
 ### Version 1.2.5 - June 23 2009
@@ -302,13 +302,13 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 ### Version 1.2.4 - June 9 2009
 Files Changed: jquery.colorbox.js, jquery.colorbox-min.js
 
-* Fixed an issue where ColorBox may not close completely if it is closed during a transition animation.
+* Fixed an issue where Colorbox may not close completely if it is closed during a transition animation.
 * Minor code reduction.
 
 ### Version 1.2.3 - June 4 2009
 * Fixed a png transparency stacking issue in IE.
 * More accurate Ajax auto-sizing if the user was depending on the #cboxLoadedContent ID for CSS styling.
-* Added a public function for returning the current html element that ColorBox is associated with. Example use: var that = $.fn.colorbox.element();
+* Added a public function for returning the current html element that Colorbox is associated with. Example use: var that = $.colorbox.element();
 * Added bicubic scaling for resized images in the original IE7.
 * Removed the IE6 stylesheet and png files from Example 3.  It now uses the same png file for the controls that the rest of the browsers use (an alpha transparency PNG8).  This example now only has 2 graphics files and 1 stylesheet.
 
@@ -318,19 +318,19 @@ Files Changed: jquery.colorbox.js, jquery.colorbox-min.js
 ### Version 1.2.1 - May 28 2009
 * Note: If you are upgrading, update your jquery.colorbox.js and colorbox.css files.
 * Added photo resizing.
-* Added a maximum width and maximum height. Example: {height:800, maxHeight:'100%'}, would allow the box to be a maximum potential height of 800px, instead of a fixed height of 800px.  With maxHeight of 100% the height of ColorBox cannot exceed the height of the browser window.
-* Added 'rel' setting to add the ability to set an alternative rel for any ColorBox call.  This allows the user to group any combination of elements together for a gallery, or to override an existing rel. attribute so those element are not grouped together, without having to alter their rel in the HTML.
-* Added a 'photo' setting to force ColorBox to display a link as a photo.  Use this when automatic photo detection fails (such as using a url like 'photo.php' instead of 'photo.jpg', 'photo.jpg#1', or 'photo.jpg?pic=1')
-* Removed the need to ever create disposable elements to call colorbox on.  ColorBox can now be called directly, without being associated with any existing element, by using the following format:
-  `$.fn.colorbox({open:true, href:'yourLink.xxx'});`
-* ColorBox settings are now persistent and unique for each element.  This allows for extremely flexible options for individual elements.  You could use this to create a gallery in which each page in the gallery has different settings.  One could be a photo with a fade transition, next could be an inline element with an elastic transition with a set width and height, etc.
+* Added a maximum width and maximum height. Example: {height:800, maxHeight:'100%'}, would allow the box to be a maximum potential height of 800px, instead of a fixed height of 800px.  With maxHeight of 100% the height of Colorbox cannot exceed the height of the browser window.
+* Added 'rel' setting to add the ability to set an alternative rel for any Colorbox call.  This allows the user to group any combination of elements together for a gallery, or to override an existing rel. attribute so those element are not grouped together, without having to alter their rel in the HTML.
+* Added a 'photo' setting to force Colorbox to display a link as a photo.  Use this when automatic photo detection fails (such as using a url like 'photo.php' instead of 'photo.jpg', 'photo.jpg#1', or 'photo.jpg?pic=1')
+* Removed the need to ever create disposable elements to call colorbox on.  Colorbox can now be called directly, without being associated with any existing element, by using the following format:
+  `$.colorbox({open:true, href:'yourLink.xxx'});`
+* Colorbox settings are now persistent and unique for each element.  This allows for extremely flexible options for individual elements.  You could use this to create a gallery in which each page in the gallery has different settings.  One could be a photo with a fade transition, next could be an inline element with an elastic transition with a set width and height, etc.
 * For user callbacks, 'this' now refers to the element colorbox was opened from.
 * Fixed a minor grouping issue with IE6, when transition type is set to 'none'.
 * Added an Adobe Illustrator file that contains the borders and buttons used in the various examples.
 
 ### Version 1.2 - May 13 2009
 * Added a slideshow feature.
-* Added re-positioning on browser resize.  If the browser is resized, ColorBox will recenter itself onscreen.
+* Added re-positioning on browser resize.  If the browser is resized, Colorbox will recenter itself onscreen.
 * Added hooks for key events: cbox_open, cbox_load, cbox_complete, cbox_closed.
 * Fixed an IE transparency-stacking problem, where transparent PNGs would show through to the background overlay.
 * Fixed an IE iframe issue where the ifame might shift up and to the left under certain circumstances.
@@ -340,54 +340,54 @@ Files Changed: jquery.colorbox.js, jquery.colorbox-min.js
 * Changed how the JS is structured to be better organized and increase compression.  Increased documentation.
 * Changed CSS :hover states to a .hover class.  This sidesteps a minor IE8 bug with css hover states and allows easier access to hover state user styles from the JavaScript.
 * Changed: elements added to the DOM have new ID's.  The naming is more consistent and less likely to cause conflicts with existing website stylesheets.  All stylesheets have been updated.
-* Changed the behavior for prev/next links so that ColorBox does not get hung up on broken links.  A visitor can now skip through broken or long-loading links by clicking prev/next buttons.
+* Changed the behavior for prev/next links so that Colorbox does not get hung up on broken links.  A visitor can now skip through broken or long-loading links by clicking prev/next buttons.
 * Changed the naming of variables in the parameter map to be more concise and intuitive.
 * Removed colorbox.css.  Combined the colorbox.css styles with jquery.colorbox.js: the css file was not large enough to warrant being a separate file.
 
 ### Version 1.1.6 - April 28 2009
 * Prevented the default action of the next & previous anchors and the left and right keys for gallery mode.
-* Fixed a bug where the title element was being added back to the DOM when closing ColorBox while using inline content.
+* Fixed a bug where the title element was being added back to the DOM when closing Colorbox while using inline content.
 * Fixed a bug where IE7 would crash for example 2.
 * Smaller filesize: removed a small amount of unused code and rewrote the HTML injection with less syntax.
-* Added a public method for closing ColorBox: $.fn.colorbox.close().  This will allow iframe users to add an event to close ColorBox without having to create an additional function.
+* Added a public method for closing Colorbox: $.colorbox.close().  This will allow iframe users to add an event to close Colorbox without having to create an additional function.
 
 ### Version 1.1.5 - April 11 2009
-* Fixed minor issues with exiting ColorBox.
+* Fixed minor issues with exiting Colorbox.
  
 ### Version 1.1.4 - April 08 2009
-* Fixed a bug in the fade transition where ColorBox not close completely if instructed to close during the fade-in portion of the transition.
+* Fixed a bug in the fade transition where Colorbox not close completely if instructed to close during the fade-in portion of the transition.
 
 ### Version 1.1.3 - April 06 2009
-* Fixed an IE6&7 issue with using ColorBox to display animated GIFs.
+* Fixed an IE6&7 issue with using Colorbox to display animated GIFs.
 
 ### Version 1.1.2 - April 05 2009
-* Added ability to change content when ColorBox is already open.
+* Added ability to change content when Colorbox is already open.
 * Added vertical photo centering now works for all browsers (this feature previously excluded IE6&7).
 * Added namespacing to the esc-key keydown event for people who want to disable it: "keydown.colorClose"
-* Added 'title' setting to add the ability to set an alternative title for any ColorBox call.
+* Added 'title' setting to add the ability to set an alternative title for any Colorbox call.
 * Fixed rollover navigation issue with IE8. (Added JS-based rollover state due to a browser-bug.)
 * Fixed an overflow issue for when the fixed width/height is smaller than the size of a photo.
-* Fixed a bug in the fade transition where the border would still come up if ColorBox was closed mid-transition.
+* Fixed a bug in the fade transition where the border would still come up if Colorbox was closed mid-transition.
 * Switch from JSMin to Yui Compressor for minification.  Minified code now under 7KB.
 
 ### Version 1.1.1 - March 31 2009
 * More robust image detection regex.  Now detects image file types with url fragments and/or query strings.
 * Added 'nofollow' exception to rel grouping.
-* Changed how images are loaded into the DOM to prevent premature size calculation by ColorBox.
+* Changed how images are loaded into the DOM to prevent premature size calculation by Colorbox.
 * Added timestamp to iframe name to prevent caching - this was a problem in some browsers if the user had multiple iframes and the visitor left the page and came back, or if they refreshed the page.
 
 ### Version 1.1.0 - March 21 2009
 * Animation is now much smoother and less resource intensive.
 * Added support for % sizing.
 * Callback option added.
-* Inline content now preserves JavaScript events, and changes made while ColorBox is open are also preserved.
-* Added 'href' setting to add the ability to set an alternative href for any anchor, or to assign the ColorBox event to non-anchors. 
+* Inline content now preserves JavaScript events, and changes made while Colorbox is open are also preserved.
+* Added 'href' setting to add the ability to set an alternative href for any anchor, or to assign the Colorbox event to non-anchors. 
   Example: $('button').colorbox({'href':'process.php'})
   Example: $('a[href='http://msn.com']).colorbox({'href':'http://google.com', iframe:true});
 * Photos are now horizontally centered if they are smaller than the lightbox size.  Also vertically centered for browsers newer than IE7.
 * Buttons in the examples are now included in the 'protected zone'.  The lightbox will never expand it's borders or buttons beyond an accessible area of the screen.
 * Keypress events don't queue up by holding down the arrow keys.
-* Added option to close ColorBox by clicking on the background overlay.
+* Added option to close Colorbox by clicking on the background overlay.
 * Added 'none' transition setting.
 * Changed 'contentIframe' and 'contentInline' to 'inline' and 'iframe'.  Removed 'contentAjax' because it  is automatically assumed for non-image file types.
 * Changed 'contentWidth' and 'contentHeight' to 'fixedWidth' and 'fixedHeight'.  These sizes now reflect  the total size of the lightbox, not just the inner content.  This is so users can accurately anticipate  % sizes without fear of creating scrollbars.
