@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.6 - 2013-03-28
+	jQuery Colorbox v1.4.7 - 2013-04-01
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -1017,7 +1017,9 @@
 	// Removes changes Colorbox made to the document, but does not remove the plugin
 	// from jQuery.
 	publicMethod.remove = function () {
-		$([]).add($box).add($overlay).remove();
+		$box.stop().remove();
+		$overlay.remove();
+
 		$box = null;
 		$('.' + boxElement)
 			.removeData(colorbox)
