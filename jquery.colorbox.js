@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.7 - 2013-04-01
+	jQuery Colorbox v1.4.8 - 2013-04-02
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -86,9 +86,7 @@
 	event_purge = prefix + '_purge',
 	
 	// Special Handling for IE
-	isIE = !$.support.leadingWhitespace, // IE6 to IE8
-	isIE6 = isIE && !window.XMLHttpRequest, // IE6
-	event_ie6 = prefix + '_IE6',
+	isIE = !$.support.leadingWhitespace, // IE7 & IE8
 
 	// Cached jQuery Object Variables
 	$overlay,
@@ -351,8 +349,8 @@
 				$loaded = $tag(div, 'LoadedContent', 'width:0; height:0; overflow:hidden').appendTo($content);
 
 				// Cache values needed for size calculations
-				interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(true) - $content.height();//Subtraction needed for IE6
-				interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true) - $content.width();
+				interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(true);
+				interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true);
 				loadedHeight = $loaded.outerHeight(true);
 				loadedWidth = $loaded.outerWidth(true);
 				
@@ -362,12 +360,6 @@
 				settings.h = setSize(settings.initialHeight, 'y');
 				publicMethod.position();
 
-				if (isIE6) {
-					$window.bind('resize.' + event_ie6 + ' scroll.' + event_ie6, function () {
-						$overlay.css({width: $window.width(), height: winheight(), top: $window.scrollTop(), left: $window.scrollLeft()});
-					}).trigger('resize.' + event_ie6);
-				}
-				
 				slideshow();
 
 				trigger(event_open, settings.onOpen);
@@ -404,15 +396,14 @@
 	function appendHTML() {
 		if (!$box && document.body) {
 			init = false;
-
 			$window = $(window);
 			$box = $tag(div).attr({
 				id: colorbox,
-				'class': isIE ? prefix + (isIE6 ? 'IE6' : 'IE') : '',
+				'class': isIE ? prefix + 'IE' : '',
 				role: 'dialog',
 				tabindex: '-1'
 			}).hide();
-			$overlay = $tag(div, "Overlay", isIE6 ? 'position:absolute' : '').hide();
+			$overlay = $tag(div, "Overlay").hide();
 			$loadingOverlay = $tag(div, "LoadingOverlay").add($tag(div, "LoadingGraphic"));
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
@@ -578,7 +569,7 @@
 		scrollTop = $window.scrollTop();
 		scrollLeft = $window.scrollLeft();
 
-		if (settings.fixed && !isIE6) {
+		if (settings.fixed) {
 			offset.top -= scrollTop;
 			offset.left -= scrollLeft;
 			$box.css({position: 'fixed'});
@@ -994,7 +985,7 @@
 			
 			trigger(event_cleanup, settings.onCleanup);
 			
-			$window.unbind('.' + prefix + ' .' + event_ie6);
+			$window.unbind('.' + prefix);
 			
 			$overlay.fadeTo(200, 0);
 			
@@ -1014,12 +1005,15 @@
 		}
 	};
 
-	// Removes changes Colorbox made to the document, but does not remove the plugin
-	// from jQuery.
+	// Removes changes Colorbox made to the document, but does not remove the plugin.
 	publicMethod.remove = function () {
+		if (!$box) { return; }
+
+		$box.stop();
+		$.colorbox.close();
 		$box.stop().remove();
 		$overlay.remove();
-
+		closing = false;
 		$box = null;
 		$('.' + boxElement)
 			.removeData(colorbox)

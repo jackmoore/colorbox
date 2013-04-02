@@ -67,27 +67,3 @@
 .cboxIE #cboxMiddleRight {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00FFFFFF,endColorstr=#00FFFFFF);
 }
-
-/*
-  The following provides PNG transparency support for IE6
-  Feel free to remove this and the /ie6/ directory if you have dropped IE6 support.
-*/
-.cboxIE6 #cboxTopLeft{background:url(images/ie6/borderTopLeft.png);}
-.cboxIE6 #cboxTopCenter{background:url(images/ie6/borderTopCenter.png);}
-.cboxIE6 #cboxTopRight{background:url(images/ie6/borderTopRight.png);}
-.cboxIE6 #cboxBottomLeft{background:url(images/ie6/borderBottomLeft.png);}
-.cboxIE6 #cboxBottomCenter{background:url(images/ie6/borderBottomCenter.png);}
-.cboxIE6 #cboxBottomRight{background:url(images/ie6/borderBottomRight.png);}
-.cboxIE6 #cboxMiddleLeft{background:url(images/ie6/borderMiddleLeft.png);}
-.cboxIE6 #cboxMiddleRight{background:url(images/ie6/borderMiddleRight.png);}
-
-.cboxIE6 #cboxTopLeft,
-.cboxIE6 #cboxTopCenter,
-.cboxIE6 #cboxTopRight,
-.cboxIE6 #cboxBottomLeft,
-.cboxIE6 #cboxBottomCenter,
-.cboxIE6 #cboxBottomRight,
-.cboxIE6 #cboxMiddleLeft,
-.cboxIE6 #cboxMiddleRight {
-    _behavior: expression(this.src = this.src ? this.src : this.currentStyle.backgroundImage.split('"')[1], this.style.background = "none", this.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=" + this.src + ", sizingMethod='scale')");
-}

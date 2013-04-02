@@ -6,6 +6,11 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.8 - 2013/4/2
+
+* Dropped IE6 support.
+* Fixed other issues with $.colorbox.remove.
+
 ### Version 1.4.7 - 2013/4/1
 
 * Prevented an error if $.colorbox.remove is called during the transition.
