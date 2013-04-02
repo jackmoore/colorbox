@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.8 - 2013-04-02
+	jQuery Colorbox v1.4.9 - 2013-04-02
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -349,8 +349,8 @@
 				$loaded = $tag(div, 'LoadedContent', 'width:0; height:0; overflow:hidden').appendTo($content);
 
 				// Cache values needed for size calculations
-				interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(true);
-				interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true);
+				interfaceHeight = $topBorder.height() + $bottomBorder.height() + $content.outerHeight(true) - $content.height();
+				interfaceWidth = $leftBorder.width() + $rightBorder.width() + $content.outerWidth(true) - $content.width();
 				loadedHeight = $loaded.outerHeight(true);
 				loadedWidth = $loaded.outerWidth(true);
 				
