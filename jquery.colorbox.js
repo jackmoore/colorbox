@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.9 - 2013-04-02
+	jQuery Colorbox v1.4.10 - 2013-04-02
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -84,9 +84,6 @@
 	event_cleanup = prefix + '_cleanup',
 	event_closed = prefix + '_closed',
 	event_purge = prefix + '_purge',
-	
-	// Special Handling for IE
-	isIE = !$.support.leadingWhitespace, // IE7 & IE8
 
 	// Cached jQuery Object Variables
 	$overlay,
@@ -399,7 +396,7 @@
 			$window = $(window);
 			$box = $tag(div).attr({
 				id: colorbox,
-				'class': isIE ? prefix + 'IE' : '',
+				'class': $.support.opacity === false ? prefix + 'IE' : '', // class for optional IE8 & lower targeted CSS.
 				role: 'dialog',
 				tabindex: '-1'
 			}).hide();
@@ -716,8 +713,8 @@
 				return;
 			}
 			
-			function removeFilter() {
-				if (isIE) {
+			function removeFilter() { // Needed for IE7 & IE8 in versions of jQuery prior to 1.7.2
+				if ($.support.opacity === false) {
 					$box[0].style.removeAttribute('filter');
 				}
 			}
@@ -727,13 +724,7 @@
 				$loadingOverlay.hide();
 				trigger(event_complete, settings.onComplete);
 			};
-			
-			if (isIE) {
-				//This fadeIn helps the bicubic resampling to kick-in.
-				if (photo) {
-					$loaded.fadeIn(100);
-				}
-			}
+
 			
 			$title.html(settings.title).add($loaded).show();
 			
@@ -938,11 +929,7 @@
 						publicMethod.next();
 					};
 				}
-				
-				if (isIE) {
-					photo.style.msInterpolationMode = 'bicubic';
-				}
-				
+
 				setTimeout(function () { // A pause because Chrome will sometimes report a 0 by 0 size otherwise.
 					prep(photo);
 				}, 1);

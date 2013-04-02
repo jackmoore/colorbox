@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.10 - 2013/4/2
+
+* Better 'old IE' feature detection that fixes an error with jQuery 2.0.0pre.
+
 ### Version 1.4.9 - 2013/4/2
 
 * Fixes bug introduced in previous version.
