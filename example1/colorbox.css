@@ -3,15 +3,26 @@
     The following CSS is consistent between example themes and should not be altered.
 */
 
-[class|=cbox] {
+[class|=cbox-] {
     margin:0;
     padding:0;
     border:0;
     -webkit-box-sizing:border-box;
 }
 
-body.js-cbox {
+body.cbox_is_open {
     overflow: hidden;
+}
+
+.cbox_is_loading .cbox-content{
+    content: '';
+    position: absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    /*background:rgba(255,255,255,0.5);*/
+    z-index:1;
 }
 
 .cbox-root {
@@ -23,6 +34,7 @@ body.js-cbox {
     right: 0;
     bottom: 0;
     overflow: auto;
+    visibility: hidden;
 }
 
 .cbox-body {
@@ -58,17 +70,6 @@ body.js-cbox {
     left:50%;
     max-width:none;
     display:block;    
-}
-
-.cbox-is-loading:before {
-    content: '';
-    position: absolute;
-    top:0;
-    right:0;
-    bottom:0;
-    left:0;
-    /*background:rgba(255,255,255,0.5);*/
-    z-index:1;
 }
 
 /*
