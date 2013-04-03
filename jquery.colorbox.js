@@ -40,6 +40,7 @@
         group: false,
 
         // alternate image paths for high-res displays
+        retinaImage: false,
         retinaUrl: false,
         retinaSuffix: '@2x.$1',
 
@@ -53,7 +54,6 @@
 
         open: false,
         returnFocus: true,
-        reposition: true,
         loop: true,
         photoRegex: /\.(gif|png|jp(e|g|eg)|bmp|ico)((#|\?).*)?$/i,
 
@@ -74,44 +74,60 @@
         "<div class='cbox-root'>"+
             "<div class='cbox-body' role='dialog' tabindex='-1'>"+
                 "<div class='cbox-content'></div>"+
-                "<div class='cbox-controls'>"+
-                    "<button class='cbox-prev'></button>"+
-                    "<button class='cbox-next'></button>"+
-                    "<div class='cbox-current'></div>"+
-                    "<div class='cbox-title'></div>"+
-                    "<button class='cbox-close'></button>"+
-                "</div>"+
+                "<button class='cbox-prev'></button>"+
+                "<button class='cbox-next'></button>"+
+                "<div class='cbox-current'></div>"+
+                "<div class='cbox-title'></div>"+
+                "<button class='cbox-close'></button>"+
             "</div>"+
         "</div>",
 
-        clickActions: {
-            '.cbox-prev': function(){ $.colorbox.prev(); },
-            '.cbox-next': function(){ $.colorbox.next(); },
-            '.cbox-close': function(){ $.colorbox.close(); },
-            '.cbox-root': function(e){
-                console.log(e.target);
-                if (e.target === this) {
-                    $.colorbox.close();
-                }
-            }
-        },
 
-        keyActions: {
-            '27': function(e){
-                e.preventDefault();
-                $.colorbox.close();
+        events: {
+            closeButton: function(){
+                $(document).on('click.cbox', '.cbox-close', $.colorbox.close);
             },
-            '37': function(e){
-                if ($.colorbox.group.length) {
-                    e.preventDefault();
-                    $.colorbox.prev();
-                }
+            nextButton: function(){
+                $(document).on('click.cbox', '.cbox-next', $.colorbox.next);
             },
-            '39': function(e){
-                if ($.colorbox.group.length) {
-                    e.preventDefault();
-                    $.colorbox.next();
-                }
+            prevButton: function(){
+                $(document).on('click.cbox', '.cbox-prev', $.colorbox.prev);
+            },
+            overlay: function(){
+                $(document).on('click.cbox', '.cbox-root', function(e){
+                    if (e.target === this) {
+                        $.colorbox.close();
+                    }
+                });
+            },
+            esc: function(){
+                $(window).on('keydown.cbox', function (e) {
+                    if (e.keyCode === 27) {
+                        e.preventDefault();
+                        $.colorbox.close();
+                    }
+                });
+            },
+            leftArrow: function(){
+                $(window).on('keydown.cbox', function (e) {
+                    if (e.keyCode === 37 && $.colorbox.group.length) {
+                        e.preventDefault();
+                        $.colorbox.prev();
+                    }
+                });
+            },
+            rightArrow: function(){
+                $(window).on('keydown.cbox', function (e) {
+                    if (e.keyCode === 39 && $.colorbox.group.length) {
+                        e.preventDefault();
+                        $.colorbox.next();
+                    }
+                });
+            },
+            resize: function(){
+                $(window).on('resize.cbox', function(){
+                    $.colorbox.position();
+                });
             }
         }
     },
@@ -137,7 +153,6 @@
     $next,
     $prev,
     $close,
-    $groupControls,
     
 
     // Variables for cached values or use across multiple functions
@@ -146,7 +161,6 @@
     interfaceHeight,
     interfaceWidth,
     element,
-    index,
     open,
     active,
     closing,
@@ -161,7 +175,7 @@
     function getIndex(increment) {
         var
         max = $.colorbox.group.length,
-        newIndex = (index + increment) % max;
+        newIndex = ($.colorbox.index + increment) % max;
         
         return (newIndex < 0) ? max + newIndex : newIndex;
     }
@@ -225,6 +239,8 @@
             if (!open) {
                 open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
                 
+                $(document.body).addClass('js-cbox');
+
                 appendHTML();
                 // Cache values needed for size calculations
                 interfaceHeight = $body.outerHeight(true);
@@ -240,7 +256,6 @@
                 
                 trigger(event_open, settings.onOpen);
 
-                $groupControls.hide();
                 $title.hide();
                 
                 $close.html(settings.close).show();
@@ -248,14 +263,14 @@
                 if (settings.group) {
                     $.colorbox.group = $(settings.group);
 
-                    index = $.colorbox.group.index(element);
+                    $.colorbox.index = $.colorbox.group.index(element);
 
-                    if (index === -1) {
+                    if ($.colorbox.index === -1) {
                         $.colorbox.group = $.colorbox.group.add(element);
-                        index = $.colorbox.group.length - 1;
+                        $.colorbox.index = $.colorbox.group.length - 1;
                     }
                 } else {
-                    index = 0;
+                    $.colorbox.index = 0;
                     $.colorbox.group = $(element);
                 }
 
@@ -297,21 +312,13 @@
             $title = $('.cbox-title', $root);
             $close = $('.cbox-close', $root);
             
-            $groupControls = $next.add($prev).add($current);
-
-
-            $.each(settings.clickActions, function(selector, handler){
-                $(document).on('click', selector, handler);
-            });
-
             $root
                 .css({visibility:'hidden'})
                 .appendTo(document.body);
 
-            // Key Bindings
-            $(document).on('keydown', function (e) {
-                if (settings.keyActions && typeof settings.keyActions[e.keyCode] === 'function') {
-                    settings.keyActions[e.keyCode](e);
+            $.each(settings.events, function(){
+                if ($.isFunction(this)) {
+                    this();
                 }
             });
         }
@@ -351,8 +358,6 @@
         css,
         top = 0,
         left = 0;
-        
-        // $window.off('resize.cbox');
 
         // keeps the top and left positions within the browser's viewport.
         if (settings.right !== false) {
@@ -380,9 +385,6 @@
             duration: speed,
             complete: function () {
                 active = false;
-                if (settings.reposition) {
-                    $window.on('resize.cbox', $.colorbox.position);
-                }
 
                 if (loadedCallback) {
                     loadedCallback();
@@ -462,7 +464,6 @@
 
         $('.cbox-photo').css({width:'', height:''});
 
-        console.log(size);
         callback = function () {
             var total = $.colorbox.group.length,
                 complete;
@@ -485,11 +486,11 @@
             
             if (total > 1) { // handle grouping
                 if (typeof settings.current === "string") {
-                    $current.html(settings.current.replace('{current}', index + 1).replace('{total}', total)).show();
+                    $current.html(settings.current.replace('{current}', $.colorbox.index + 1).replace('{total}', total)).show();
                 }
-                
-                $next[(settings.loop || index < total - 1) ? "show" : "hide"]().html(settings.next);
-                $prev[(settings.loop || index) ? "show" : "hide"]().html(settings.previous);
+
+                $next[(settings.loop || $.colorbox.index < total - 1) ? "show" : "hide"]().html(settings.next);
+                $prev[(settings.loop || $.colorbox.index) ? "show" : "hide"]().html(settings.previous);
                 
                 // Preloads images within a rel group
                 if (settings.preloading) {
@@ -515,7 +516,8 @@
                     });
                 }
             } else {
-                $groupControls.hide();
+                $next.hide();
+                $prev.hide();
             }
             
             if (settings.iframe) {
@@ -602,7 +604,8 @@
         } else if (settings.html) {
             prep(settings.html);
         } else if (isImage(href)) {
-            var photo = new Image();
+            var photo = new Image(),
+                setResize;
 
             $(photo)
             .on('error',function () {
@@ -610,16 +613,36 @@
                 prep($('<div class="cbox-error"/>').html(settings.imgError));
             })
             .one('load', function () {
-                if ($.colorbox.group[1] && (settings.loop || $.colorbox.group[index + 1])) {
+                var percent;
+
+                if (settings.retinaImage && window.devicePixelRatio > 1) {
+                    photo.height = photo.height / window.devicePixelRatio;
+                    photo.width = photo.width / window.devicePixelRatio;
+                }
+
+                if (settings.scalePhotos) {
+                    setResize = function () {
+                        photo.height -= photo.height * percent;
+                        photo.width -= photo.width * percent;
+                    };
+                    if (settings.mw && photo.width > settings.mw) {
+                        percent = (photo.width - settings.mw) / photo.width;
+                        setResize();
+                    }
+                    if (settings.mh && photo.height > settings.mh) {
+                        percent = (photo.height - settings.mh) / photo.height;
+                        setResize();
+                    }
+                }
+                
+                photo.style.marginTop = -photo.height/2 + 'px';
+                photo.style.marginLeft = -photo.width/2 + 'px';
+                if ($.colorbox.group[1] && (settings.loop || $.colorbox.group[$.colorbox.index + 1])) {
                     photo.style.cursor = 'pointer';
                     photo.onclick = $.colorbox.next;
                 }
 
-                prep($('<div class="cbox-photo"/>').css({
-                    width: photo.width,
-                    height: photo.height,
-                    backgroundImage:'url('+href+')'
-                }));
+                prep($('<div class="cbox-photo"/>').css({width:photo.width, height:photo.height}).append(photo));
             });
 
             photo.src = retinaUrl(href);
@@ -628,19 +651,23 @@
             prep(status === 'error' ? $('<div class="cbox-error"/>').html(settings.xhrError) : $(this).contents());
         }
     }
-        
+    
+    $.colorbox.index = null;
+
+    $.colorbox.group = null;
+
     // Navigates to the next page/image in a set.
     $.colorbox.next = function () {
-        if (!active && $.colorbox.group[1] && (settings.loop || $.colorbox.group[index + 1])) {
-            index = getIndex(1);
-            launch($.colorbox.group[index]);
+        if (!active && $.colorbox.group[1] && (settings.loop || $.colorbox.group[$.colorbox.index + 1])) {
+            $.colorbox.index = getIndex(1);
+            launch($.colorbox.group[$.colorbox.index]);
         }
     };
     
     $.colorbox.prev = function () {
-        if (!active && $.colorbox.group[1] && (settings.loop || index)) {
-            index = getIndex(-1);
-            launch($.colorbox.group[index]);
+        if (!active && $.colorbox.group[1] && (settings.loop || $.colorbox.index)) {
+            $.colorbox.index = getIndex(-1);
+            launch($.colorbox.group[$.colorbox.index]);
         }
     };
 
@@ -652,6 +679,9 @@
             
             open = false;
             
+            $(document).unbind('.cbox');
+            $(window).unbind('.cbox');
+
             trigger(event_cleanup, settings.onCleanup);
                         
             $root.fadeTo(200, 0);
@@ -659,6 +689,8 @@
             $body.stop().fadeTo(300, 0, function () {
             
                 $body.add($root).css({'opacity': 1, cursor: 'auto'}).hide();
+
+                $(document.body).removeClass('js-cbox');
                 
                 trigger(event_purge);
                 
