@@ -128,23 +128,34 @@
                 $(window).on('resize.cbox', function(){
                     $.colorbox.position();
                 });
+            },
+            focus: function(){
+                function trapFocus(e) {
+                    var $body = $('.cbox-body');
+
+                    if (!$.contains($body[0], e.target) && $body[0] !== e.target) {
+                        e.stopPropagation();
+                        $body.focus();
+                    }
+                }
+                
+                // Confine focus to the modal
+                // Uses event capturing, therefor is unsupported in IE8.
+                if (document.addEventListener) {
+                    document.addEventListener('focus', trapFocus, true);
+
+                    // cleanup
+                    $(document).one('cbox.closed', function () {
+                        document.removeEventListener('focus', trapFocus, true);
+                    });
+                }
             }
         }
     },
-    
-    // Events
-    $events = $({}),
-    event_open = 'cbox.open',
-    event_load = 'cbox.load',
-    event_complete = 'cbox.complete',
-    event_cleanup = 'cbox.cleanup',
-    event_closed = 'cbox.closed',
-    event_purge = 'cbox.purge',
-
 
     // Cached jQuery Object Variables
+    $events = $({}),
     $window = $(window),
-
     $root,
     $body,
     $content,
@@ -153,7 +164,6 @@
     $next,
     $prev,
     $close,
-    
 
     // Variables for cached values or use across multiple functions
     settings,
@@ -206,13 +216,6 @@
         });
     }
 
-    function trapFocus(e) {
-        if (!$.contains($body[0], e.target) && $body[0] !== e.target) {
-            e.stopPropagation();
-            $body.focus();
-        }
-    }
-
     function trigger(event, callback) {
         // for external use
         $(document).trigger(event);
@@ -248,13 +251,13 @@
                 
                 $root.css({visibility:'visible'});
 
-                // Opens inital empty ColorBox prior to content being loaded.
+                // Opens indexital empty ColorBox prior to content being loaded.
                 size = {};
                 size.width = setSize(settings.initialWidth, 'x');
                 size.height = setSize(settings.initialHeight, 'y');
                 $.colorbox.position();
                 
-                trigger(event_open, settings.onOpen);
+                trigger('cbox.open', settings.onOpen);
 
                 $title.hide();
                 
@@ -275,19 +278,10 @@
                 }
 
                 $body.focus();
-                
-                // Confine focus to the modal
-                // Uses event capturing, therefor is unsupported in IE8.
-                if (document.addEventListener) {
-                    document.addEventListener('focus', trapFocus, true);
-                    $events.one(event_closed, function () {
-                        document.removeEventListener('focus', trapFocus, true);
-                    });
-                }
 
                 // Return focus on closing
                 if (settings.returnFocus) {
-                    $events.one(event_closed, function () {
+                    $events.one('cbox.closed', function () {
                         $(element).focus();
                     });
                 }
@@ -478,7 +472,7 @@
 
                 $content.removeClass('cbox-is-loading');
 
-                trigger(event_complete, settings.onComplete);
+                trigger('cbox.complete', settings.onComplete);
             };
             
             $title.html(settings.title).show();
@@ -546,7 +540,7 @@
                     .one('load', complete)
                     .appendTo($content);
                 
-                $events.one(event_purge, function () {
+                $events.one('cbox.purge', function () {
                     iframe.src = "//about:blank";
                 });
 
@@ -576,9 +570,9 @@
             });
         }
         
-        trigger(event_purge);
+        trigger('cbox.purge');
         
-        trigger(event_load, settings.onLoad);
+        trigger('cbox.load', settings.onLoad);
         
         href = settings.href;
         
@@ -592,7 +586,7 @@
             // An event is bound to put inline content back when ColorBox closes or loads new content.
             $inline = $('<div/>').hide().insertBefore($(href)[0]);
 
-            $events.one(event_purge, function () {
+            $events.one('cbox.purge', function () {
                 $inline.replaceWith($content.children());
             });
 
@@ -680,26 +674,22 @@
             open = false;
             
             $(document).unbind('.cbox');
+
             $(window).unbind('.cbox');
 
-            trigger(event_cleanup, settings.onCleanup);
+            trigger('cbox.cleanup', settings.onCleanup);
                         
-            $root.fadeTo(200, 0);
+            $root.stop().fadeTo(300, 0, function () {
             
-            $body.stop().fadeTo(300, 0, function () {
-            
-                $body.add($root).css({'opacity': 1, cursor: 'auto'}).hide();
+                $root.remove();
 
                 $(document.body).removeClass('js-cbox');
                 
-                trigger(event_purge);
-                
-                $content.empty();
-                
-                setTimeout(function () {
-                    closing = false;
-                    trigger(event_closed, settings.onClosed);
-                }, 1);
+                trigger('cbox.purge');
+
+                closing = false;
+
+                trigger('cbox.closed', settings.onClosed);
             });
         }
     };
