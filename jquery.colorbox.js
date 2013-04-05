@@ -27,6 +27,7 @@
 		photo: false,
 		href: false,
 		title: false,
+		desc: false,
 		rel: false,
 		opacity: 0.9,
 		preloading: true,
@@ -100,6 +101,7 @@
 	$loadingBay,
 	$loadingOverlay,
 	$title,
+	$desc,
 	$current,
 	$slideshow,
 	$next,
@@ -205,7 +207,8 @@
 		
 		settings.rel = settings.rel || element.rel || $(element).data('rel') || 'nofollow';
 		settings.href = settings.href || $(element).attr('href');
-		settings.title = settings.title || element.title;
+		settings.title = settings.title || $(element).data('title') || element.title;
+		settings.desc = settings.desc || $(element).data('desc');
 		
 		if (typeof settings.href === "string") {
 			settings.href = $.trim(settings.href);
@@ -362,6 +365,7 @@
 				trigger(event_open, settings.onOpen);
 				
 				$groupControls.add($title).hide();
+				$groupControls.add($desc).hide();
 
 				$box.focus();
 				
@@ -405,6 +409,7 @@
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),
+				$desc = $tag(div, "Description"),
 				$current = $tag(div, "Current"),
 				$prev = $tag('button', "Previous"),
 				$next = $tag('button', "Next"),
@@ -727,6 +732,7 @@
 
 			
 			$title.html(settings.title).add($loaded).show();
+			$desc.html(settings.desc).add($loaded).show();
 			
 			if (total > 1) { // handle grouping
 				if (typeof settings.current === "string") {
@@ -890,6 +896,7 @@
 			.addClass(prefix + 'Photo')
 			.bind('error',function () {
 				settings.title = false;
+				settings.desc = false;
 				prep($tag(div, 'Error').html(settings.imgError));
 			})
 			.one('load', function () {
