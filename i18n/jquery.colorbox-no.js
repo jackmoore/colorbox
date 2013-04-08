@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Norwegian (no)
 	translated by: lars-erik
 	site: markedspartner.no
