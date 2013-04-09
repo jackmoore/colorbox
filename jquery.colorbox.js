@@ -202,11 +202,11 @@
 		"<div class='cbox-root'>"+
 			"<div class='cbox-body' role='dialog' tabindex='-1'>"+
 				"<div class='cbox-content'></div>"+
-				"<button class='cbox-prev'></button>"+
-				"<button class='cbox-next'></button>"+
+				"<button class='cbox-prev' type='button'></button>"+
+				"<button class='cbox-next' type='button'></button>"+
 				"<div class='cbox-current'></div>"+
 				"<div class='cbox-title'></div>"+
-				"<button class='cbox-close'></button>"+
+				"<button class='cbox-close' type='button'></button>"+
 			"</div>"+
 		"</div>"
 	};
