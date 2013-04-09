@@ -354,7 +354,7 @@
 					photo.style.marginLeft = -photo.width/2 + 'px';
 
 					// Accessibility
-					photo.alt = $($.colorbox.element).attr('alt');
+					photo.alt = $($.colorbox.element).attr('alt') || $($.colorbox.element).attr('data-alt') || '';
 					photo.longdesc = $($.colorbox.element).attr('longdesc');
 
 					prep($('<div/>').css({width:photo.width, height:photo.height}).append(photo));
