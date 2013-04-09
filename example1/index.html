@@ -15,15 +15,55 @@
 			$(document).ready(function(){
 
 				$.colorbox('.group1', {
-					group: '.group1',
-					open: true
+					group: '.group1'
 				});
 
+				$.colorbox('.group2', {
+					group: '.group2',
+					transition: 'fade'
+				});
 
 				$.colorbox('.group3', {
 					group: '.group3',
 					width: '90%',
-					height: '90%',
+					height: '90%'
+				});
+
+				$.colorbox('.ajax');
+
+				$.colorbox('.youtube', {
+					type: 'iframe',
+					width: '75%',
+					height: '75%'
+				});
+
+				$.colorbox('.iframe', {
+					type: 'iframe',
+					width: '75%',
+					height: '75%'
+				});
+
+				$.colorbox('.inline', {
+					type: 'inline',
+					open: true
+				});
+
+				$.colorbox('.callbacks', {
+					onOpen: function() { alert('open'); },
+					onLoad: function() { alert('loading'); },
+					onComplete: function() { alert('complete'); },
+					onUnload: function() { alert('unloading'); },
+					onClosed: function() { alert('closed'); }
+				});
+
+				$.colorbox('.non-retina', {
+					group: 'retina'
+				});
+
+				$.colorbox('.retina', {
+					group: 'retina',
+					retinaImage: true,
+					retinaUrl: true
 				});
 			});
 		</script>

@@ -1,28 +1,10 @@
-/*
-    ColorBox Core Style:
-    The following CSS is consistent between example themes and should not be altered.
-*/
+/* Colorbox */
 
 [class|=cbox-] {
     margin:0;
     padding:0;
     border:0;
     -webkit-box-sizing:border-box;
-}
-
-body.cbox_is_open {
-    overflow: hidden;
-}
-
-.cbox_is_loading .cbox-content{
-    content: '';
-    position: absolute;
-    top:0;
-    right:0;
-    bottom:0;
-    left:0;
-    /*background:rgba(255,255,255,0.5);*/
-    z-index:1;
 }
 
 .cbox-root {
@@ -61,10 +43,6 @@ body.cbox_is_open {
 }
 
 .cbox-photo {
-    overflow:hidden;
-}
-
-.cbox-photo img {
     position: absolute;
     top:50%;
     left:50%;
@@ -72,12 +50,20 @@ body.cbox_is_open {
     display:block;    
 }
 
-/*
-    Custom Styles
- */
+.cbox-next, .cbox-prev, .cbox-current {
+    display: none;
+}
 
-.cbox-next, .cbox-prev, .cbox-close, .cbox-current, .cbox-title {
-    position: fixed;
+.cbox-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.cbox-current {
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 
 /* these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles */
@@ -91,6 +77,7 @@ body.cbox_is_open {
     height:22px;
     text-indent:-999px;
     overflow:hidden;
+    position: fixed;
 }
 /* avoid outlines on :active (mouseclick), but preserve outlines on :focus (tabbed navigating) */
 .cbox-next:active, .cbox-prev:active, .cbox-close:active {
@@ -124,4 +111,37 @@ body.cbox_is_open {
 }
 .cbox-error {
 
+}
+
+/* State */
+.cbox_disabled { display: none; }
+
+body.cbox_open {
+    overflow: hidden;
+}
+
+body.cbox_open .cbox-root {
+    cursor: pointer;
+}
+
+body.cbox_grouped .cbox-next,
+body.cbox_grouped .cbox-prev,
+body.cbox_grouped .cbox-current
+{
+    display: block;
+}
+
+body.cbox_grouped .cbox-photo {
+    cursor: pointer;
+}
+
+body.cbox_loading .cbox-content{
+    content: '';
+    position: absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    /*background:rgba(255,255,255,0.5);*/
+    z-index:1;
 }
