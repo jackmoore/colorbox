@@ -6,6 +6,11 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.11 - 2013/4/9
+
+* Added `type='button'` to buttons to prevent accidental form submission
+* Added alt and longdesc attributes to photo content if they are present on the calling element.
+
 ### Version 1.4.10 - 2013/4/2
 
 * Better 'old IE' feature detection that fixes an error with jQuery 2.0.0pre.

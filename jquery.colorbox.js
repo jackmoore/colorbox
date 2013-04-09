@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.10 - 2013-04-02
+	jQuery Colorbox v1.4.11 - 2013-04-09
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -406,11 +406,11 @@
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
-				$prev = $tag('button', "Previous"),
-				$next = $tag('button', "Next"),
+				$prev = $('<button/>').attr({id:prefix+'Previous', type:'button'}),
+				$next = $('<button/>').attr({id:prefix+'Next', type:'button'}),
 				$slideshow = $tag('button', "Slideshow"),
 				$loadingOverlay,
-				$close = $tag('button', "Close")
+				$close = $('<button/>').attr({id:prefix+'Close', type:'button'})
 			);
 			
 			$wrap.append( // The 3x3 Grid that makes up Colorbox
@@ -898,6 +898,9 @@
 				if (request !== requests) {
 					return;
 				}
+
+				photo.alt = $(element).attr('alt') || $(element).attr('data-alt') || '';
+				photo.longdesc = $(element).attr('longdesc');
 
 				if (settings.retinaImage && window.devicePixelRatio > 1) {
 					photo.height = photo.height / window.devicePixelRatio;
