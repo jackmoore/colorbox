@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.11 - 2013-04-09
+	jQuery Colorbox v1.4.12 - 2013-04-09
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -932,6 +932,9 @@
 						publicMethod.next();
 					};
 				}
+
+				photo.style.width = photo.width + 'px';
+				photo.style.height = photo.height + 'px';
 
 				setTimeout(function () { // A pause because Chrome will sometimes report a 0 by 0 size otherwise.
 					prep(photo);

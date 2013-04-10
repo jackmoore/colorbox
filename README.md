@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.12 - 2013/4/9
+
+* Fixed a potential conflict with Twitter Bootstrap default img styles.
+
 ### Version 1.4.11 - 2013/4/9
 
 * Added `type='button'` to buttons to prevent accidental form submission
