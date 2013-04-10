@@ -15,7 +15,8 @@
 			$(document).ready(function(){
 
 				$.colorbox('.group1', {
-					group: '.group1'
+					group: '.group1',
+					open: true
 				});
 
 				$.colorbox('.group2', {
@@ -44,8 +45,7 @@
 				});
 
 				$.colorbox('.inline', {
-					type: 'inline',
-					open: true
+					type: 'inline'
 				});
 
 				$.colorbox('.callbacks', {
@@ -57,11 +57,11 @@
 				});
 
 				$.colorbox('.non-retina', {
-					group: 'retina'
+					group: '.retina-group'
 				});
 
 				$.colorbox('.retina', {
-					group: 'retina',
+					group: '.retina-group',
 					retinaImage: true,
 					retinaUrl: true
 				});
@@ -102,8 +102,8 @@
 		
 
 		<h2>Retina Images</h2>
-		<p><a class="retina" href="../content/daisy.jpg" title="Retina">Retina</a></p>
-		<p><a class="non-retina" href="../content/daisy.jpg" title="Non-Retina">Non-Retina</a></p>
+		<p><a class="retina retina-group" href="../content/daisy.jpg" title="Retina">Retina</a></p>
+		<p><a class="non-retina retina-group" href="../content/daisy.jpg" title="Non-Retina">Non-Retina</a></p>
 
 		<!-- This contains the hidden content for inline calls -->
 		<div style='display:none'>

@@ -17,6 +17,7 @@
 
 	// variables used across multiple functions
 	cache = {},
+	settings = {},
 	interfaceHeight,
 	interfaceWidth,
 	open,
@@ -37,6 +38,13 @@
 	function launch(target) {
 		if (!closing && document.body) {
 			
+			settings = {};
+			$.each(cache, function(selector){
+				if ($(target).is(selector)) {
+					$.extend(settings, cache[selector]);
+				}
+			});
+
 			$.colorbox.element = target;
 
 			if (!open) {
@@ -61,9 +69,6 @@
 				size.height = setSize($.colorbox.getSetting('initialHeight'), 'y');
 				$.colorbox.position();
 				
-				$(document).trigger('cbox.open');
-				$.colorbox.getSetting('onOpen');
-				
 				$('cbox-close').html($.colorbox.getSetting('close'));
 
 				if ($.colorbox.getSetting('group')) {
@@ -80,18 +85,34 @@
 					$.colorbox.group = $($.colorbox.element);
 				}
 
+				// Load modules
+				$.each($.colorbox.modules, function(){
+					if ($.isFunction(this)) {
+						this();
+					}
+				});
+
 				$body.focus();
 
 				// Return focus on closing
 				if ($.colorbox.getSetting('returnFocus')) {
 					$(document).one('cbox.closed', function () {
-						$($.colorbox.element).focus();
-						console.log('return focus');
+						$(target).trigger('focus');
 					});
 				}
+
+				$(document).trigger('cbox.open');
+				$.colorbox.getSetting('onOpen');
+
+			} else {
+				$(document).trigger('cbox.unload');
+				$.colorbox.getSetting('onUnload');
 			}
 			
-			load();
+			$(document).trigger('cbox.load');
+			$.colorbox.getSetting('onLoad');
+
+			active = true;
 		}
 	}
 
@@ -112,13 +133,11 @@
 			// See: http://jacklmoore.com/notes/click-events/
 			if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey)) {
 				e.preventDefault();
-				$.colorbox.selector = selector;
 				launch(this);
 			}
 		});
 
 		if (options && options.open && $(selector)[0]) {
-			$.colorbox.selector = selector;
 			launch($(selector)[0]);
 		}
 	};
@@ -127,8 +146,8 @@
 	$.colorbox.getSetting = function (prop) {
 		var setting;
 
-		if (cache[$.colorbox.selector] && cache[$.colorbox.selector][prop] !== undefined) {
-			setting = cache[$.colorbox.selector][prop];
+		if (settings[prop] !== undefined) {
+			setting = settings[prop];
 		} else {
 			setting = $.colorbox.settings[prop];
 		}
@@ -262,11 +281,10 @@
 		},
 		trapFocus: function(){
 			function trapFocus(e) {
-				var $body = $('.cbox-body');
-
-				if (!$.contains($body[0], e.target) && $body[0] !== e.target) {
+				var node = $('.cbox-body')[0];
+				if (node && !node.contains(e.target)) {
 					e.stopPropagation();
-					$body.focus();
+					$(node).trigger('focus');
 				}
 			}
 			
@@ -322,11 +340,6 @@
 				$(document.body).removeClass('cbox_loading');
 			});
 		},
-		aria: function() {
-			$(document).on('cbox.load', function(){
-				$body.attr('aria-describedby', $($.colorbox.element).attr('aria-describedby'));
-			});
-		},
 		photo: function() {
 			$(document).on('cbox.load', function(){
 				if ($.colorbox.getSetting('type') !== 'photo') { return; }
@@ -350,8 +363,12 @@
 						photo.width = photo.width / window.devicePixelRatio;
 					}
 
-					photo.style.marginTop = -photo.height/2 + 'px';
-					photo.style.marginLeft = -photo.width/2 + 'px';
+					$(photo).css({
+						marginTop: -photo.height/2 + 'px',
+						marginLeft: -photo.width/2 + 'px',
+						width: photo.width + 'px',
+						height: photo.height + 'px'
+					});
 
 					// Accessibility
 					photo.alt = $($.colorbox.element).attr('alt') || $($.colorbox.element).attr('data-alt') || '';
@@ -600,26 +617,6 @@
 		$.colorbox.position(speed, callback);
 	}
 
-	function load () {
-		active = true;
-
-		$(document).trigger('cbox.unload');
-		
-		$.each($.colorbox.modules, function(){
-			if ($.isFunction(this)) {
-				this();
-			}
-		});
-
-		$(document).on('cbox.unload', function(){
-			$(document).off('.cbox');
-			$(document).off('cbox');
-		});
-
-		$(document).trigger('cbox.load');
-		$.colorbox.getSetting('onLoad');
-	}
-
 	// Navigates to the next page/image in a set.
 	$.colorbox.next = function () {
 		if (!active && $.colorbox.group.length && ($.colorbox.getSetting('loop') || $.colorbox.group[$.colorbox.index + 1])) {
@@ -642,7 +639,7 @@
 			closing = true;
 			
 			open = false;
-	
+
 			$root.stop().fadeTo(300, 0, function () {
 			
 				$(document).trigger('cbox.unload');
@@ -658,6 +655,8 @@
 				$(document).trigger('cbox.closed');
 
 				$.colorbox.getSetting('onClosed');
+
+				$(document).off('.cbox').off('cbox');
 			});
 		}
 	};
@@ -673,7 +672,5 @@
 	$.colorbox.group = null;
 
 	$.colorbox.element = null;
-
-	$.colorbox.selector = null;
 
 }(jQuery, document, window));

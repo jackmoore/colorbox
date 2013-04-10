@@ -17,6 +17,15 @@ Internally, Colorbox 2.x is drastically different from 1.x.  However, the API is
 
 Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as an example.
 
+## Notable changes:
+
+* 'href' proprety is now called 'source' to better reflect it's multi-purpose role.
+* 'rel' is now 'group' to reflect moving away from the rel property.  'group' value is a query selector, rather than an arbitrary string.
+* 'photo', 'ajax', 'inline', 'iframe', 'html' properties have been replaced with a 'type' property.
+* onCleanup has been removed
+* onUnload has been added
+* events have been renamed 'cbox_eventName' to 'cbox.eventName' for easier global unbinding with jQuery.
+
 ## Changelog:
 
 Still in alpha, still much to do.
