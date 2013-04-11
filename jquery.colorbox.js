@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.12 - 2013-04-09
+	jQuery Colorbox v1.4.13 - 2013-04-11
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -406,11 +406,11 @@
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
-				$prev = $('<button/>').attr({id:prefix+'Previous', type:'button'}),
-				$next = $('<button/>').attr({id:prefix+'Next', type:'button'}),
+				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
+				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
 				$slideshow = $tag('button', "Slideshow"),
 				$loadingOverlay,
-				$close = $('<button/>').attr({id:prefix+'Close', type:'button'})
+				$close = $('<button type="button"/>').attr({id:prefix+'Close'})
 			);
 			
 			$wrap.append( // The 3x3 Grid that makes up Colorbox
