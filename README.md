@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.13 - 2013/4/11
+
+* Fixed an error involving IE7/IE8 and legacy versions of jQuery
+
 ### Version 1.4.12 - 2013/4/9
 
 * Fixed a potential conflict with Twitter Bootstrap default img styles.
