@@ -402,23 +402,15 @@
 			var iframe = $('<iframe class="cbox-iframe"/>')[0];
 
 			$(document).on('cbox.load', function(){
-				if ('frameBorder' in iframe) {
-					iframe.frameBorder = 0;
-				}
-				
-				if ('allowTransparency' in iframe) {
-					iframe.allowTransparency = "true";
-				}
-
-				if (!$.colorbox.getSetting('scrolling')) {
-					iframe.scrolling = "no";
-				}
 
 				$(iframe).attr({
 					name: (new Date()).getTime(), // give the iframe a unique name to prevent caching
 					allowFullScreen : true, // allow HTML5 video to go fullscreen
 					webkitAllowFullScreen : true,
-					mozallowfullscreen : true
+					mozallowfullscreen : true,
+					allowTransparency: true,
+					frameBorder: 0,
+					scrolling: $.colorbox.getSetting('scrolling') ? "yes" : "no"
 				});
 
 				prep(iframe);
