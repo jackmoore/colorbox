@@ -980,9 +980,9 @@
 			
 			$window.unbind('.' + prefix);
 			
-			$overlay.fadeTo(200, 0);
+			$overlay.fadeTo(settings.transition === "none" ? 0 : 200, 0);
 			
-			$box.stop().fadeTo(300, 0, function () {
+			$box.stop().fadeTo(settings.transition === "none" ? 0 : 300, 0, function () {
 			
 				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
 				
