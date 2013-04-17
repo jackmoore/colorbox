@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.13 - 2013-04-11
+	jQuery Colorbox v1.4.14 - 2013-04-16
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -10,6 +10,7 @@
 	defaults = {
 		transition: "elastic",
 		speed: 300,
+		fadeOut: 300,
 		width: false,
 		initialWidth: "600",
 		innerWidth: false,
@@ -900,7 +901,6 @@
 				}
 
 				photo.alt = $(element).attr('alt') || $(element).attr('data-alt') || '';
-				photo.longdesc = $(element).attr('longdesc');
 
 				if (settings.retinaImage && window.devicePixelRatio > 1) {
 					photo.height = photo.height / window.devicePixelRatio;
@@ -980,9 +980,9 @@
 			
 			$window.unbind('.' + prefix);
 			
-			$overlay.fadeTo(200, 0);
+			$overlay.fadeTo(settings.fadeOut || 0, 0);
 			
-			$box.stop().fadeTo(300, 0, function () {
+			$box.stop().fadeTo(settings.fadeOut || 0, 0, function () {
 			
 				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
 				

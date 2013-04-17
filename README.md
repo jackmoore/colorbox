@@ -6,6 +6,11 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.14 - 2013/4/16
+
+* Added fadeOut property to control the closing fadeOut speed.
+* Removed longdesc attribute for now.
+
 ### Version 1.4.13 - 2013/4/11
 
 * Fixed an error involving IE7/IE8 and legacy versions of jQuery
