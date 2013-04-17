@@ -37,7 +37,7 @@
 
 	function launch(target) {
 		if (!closing && document.body) {
-			
+
 			settings = {};
 			$.each(cache, function(selector){
 				if ($(target).is(selector)) {
@@ -60,7 +60,7 @@
 				// Cache values needed for size calculations
 				interfaceHeight = $body.outerHeight(true);
 				interfaceWidth = $body.outerWidth(true);
-				
+
 				$root.css({visibility:'visible'});
 
 				// Opens empty ColorBox prior to content being loaded.
@@ -68,7 +68,7 @@
 				size.width = setSize($.colorbox.getSetting('initialWidth'), 'x');
 				size.height = setSize($.colorbox.getSetting('initialHeight'), 'y');
 				$.colorbox.position();
-				
+
 				$('cbox-close').html($.colorbox.getSetting('close'));
 
 				if ($.colorbox.getSetting('group')) {
@@ -108,7 +108,7 @@
 				$(document).trigger('cbox.unload');
 				$.colorbox.getSetting('onUnload');
 			}
-			
+
 			$(document).trigger('cbox.load');
 			$.colorbox.getSetting('onLoad');
 
@@ -128,7 +128,7 @@
 
 		cache[selector] = options || {};
 
-		$(document).on('click', selector, function(e){
+		$(document).on('click.colorbox', selector, function(e){
 			// ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
 			// See: http://jacklmoore.com/notes/click-events/
 			if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey)) {
@@ -161,6 +161,7 @@
 	$.colorbox.settings = {
 		transition: "elastic",
 		speed: 300,
+		fadeOut: 300,
 		width: false,
 		initialWidth: "600",
 		innerWidth: false,
@@ -287,7 +288,7 @@
 					$(node).trigger('focus');
 				}
 			}
-			
+
 			// Confine focus to the modal
 			// Uses event capturing, therefor is unsupported in IE8.
 			if (document.addEventListener) {
@@ -497,7 +498,7 @@
 		} else {
 			left += Math.round(Math.max($(window).width() - size.width - interfaceWidth, 0) / 2);
 		}
-		
+
 		if ($.colorbox.getSetting('bottom') !== false) {
 			top += Math.max($(window).height() - size.height - interfaceHeight - setSize($.colorbox.getSetting('bottom'), 'y'), 0);
 		} else if ($.colorbox.getSetting('top') !== false) {
@@ -529,7 +530,7 @@
 		}
 
 		var callback, speed = $.colorbox.getSetting('transition') === "none" ? 0 : $.colorbox.getSetting('speed');
-		
+
 		size = {
 			minWidth: 0,
 			minHeight: 0,
@@ -550,11 +551,11 @@
 		size.maxHeight = size.height = $.colorbox.getSetting('height') ?
 				setSize($.colorbox.getSetting('height'), 'y') - interfaceHeight :
 				$.colorbox.getSetting('innerHeight') && setSize($.colorbox.getSetting('innerHeight'), 'y');
-		
+
 		size.maxWidth = size.width = $.colorbox.getSetting('width') ?
 				setSize($.colorbox.getSetting('width'), 'x') - interfaceWidth :
 				$.colorbox.getSetting('innerWidth') && setSize($.colorbox.getSetting('innerWidth'), 'x');
-		
+
 		// Re-evaluate the minimum width and height based on maxWidth and maxHeight values.
 		// If the width or height exceed the maxWidth or maxHeight, use the maximum values instead.
 		if ($.colorbox.getSetting('maxWidth')) {
@@ -588,7 +589,7 @@
 			.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
 			.css({visibility:''})
 			.prependTo($body);
-			
+
 		$content.css({width: '100%', height: '100%'});
 
 		//$('.cbox-photo').parent().css({width:'', height:''});
@@ -597,11 +598,11 @@
 			if (!open) {
 				return;
 			}
-			
+
 			$('.cbox-title').html($.colorbox.getSetting('title'));
 
 			$content.show();
-			
+
 			$(document).trigger('cbox.complete');
 			$.colorbox.getSetting('onComplete');
 		};
@@ -616,7 +617,7 @@
 			launch($.colorbox.group[$.colorbox.index]);
 		}
 	};
-	
+
 	$.colorbox.prev = function () {
 		if (!active && $.colorbox.group.length && ($.colorbox.getSetting('loop') || $.colorbox.index)) {
 			$.colorbox.index = $.colorbox.index - 1 < 0 ? $.colorbox.group.length - 1 : $.colorbox.index - 1;
@@ -627,13 +628,13 @@
 	// Note: to use this within an iframe use the following format: parent.$.colorbox.close();
 	$.colorbox.close = function () {
 		if (open && !closing) {
-			
+
 			closing = true;
-			
+
 			open = false;
 
-			$root.stop().fadeTo(300, 0, function () {
-			
+			$root.stop().fadeTo($.colorbox.getSetting('fadeOut') || 0, 0, function () {
+
 				$(document).trigger('cbox.unload');
 
 				$.colorbox.getSetting('onUnload');
@@ -641,24 +642,30 @@
 				$root.remove();
 
 				$(document.body).removeClass('cbox_open');
-				
-				closing = false;
 
 				$(document).trigger('cbox.closed');
 
 				$.colorbox.getSetting('onClosed');
 
 				$(document).off('.cbox').off('cbox');
+
+				closing = false;
+				settings = {};
+				$.colorbox.index = null;
+				$.colorbox.group = null;
+				$.colorbox.element = null;
 			});
 		}
 	};
 
-	// Removes changes ColorBox made to the document, but does not remove the plugin
-	// from jQuery.
+	// Removes changes ColorBox made to the document, but does not remove the plugin from jQuery.
 	$.colorbox.remove = function () {
-
+		cache = {};
+		settings.fadeOut = 0;
+		$(document).off('click.colorbox');
+		$.colorbox.close();
 	};
-	
+
 	$.colorbox.index = null;
 
 	$.colorbox.group = null;
