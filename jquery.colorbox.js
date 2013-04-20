@@ -482,7 +482,6 @@
 						return;
 					}
 					
-					console.log('index ',index);
 					publicMethod.paginate(index);
 					return false;
 				});
@@ -750,12 +749,14 @@
 					$current.html(settings.current.replace('{current}', index + 1).replace('{total}', total)).show();
 				}
 				
+				$pagination.children().remove();
 				if (typeof settings.pagination != "undefined" && settings.pagination == true){
 					var $ol = $('<ol></ol>');
+					var className = '';
 					for(var i=0; i<total; i++){
-						$ol.append('<li><a href="#">'+(i+1)+'</a></li>');
+						className = index == i ? 'current' : 'inactive';
+						$ol.append('<li class="'+className+'"><a href="#">'+(i+1)+'</a></li>');
 					}
-					$pagination.children().remove();
 					$pagination.append($ol);
 				}
 				
