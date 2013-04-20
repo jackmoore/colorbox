@@ -47,3 +47,9 @@
         .cboxSlideshow_on #cboxSlideshow:hover{background-position:-100px -25px;}
         .cboxSlideshow_off #cboxSlideshow{background-position:-100px 0px; right:44px;}
         .cboxSlideshow_off #cboxSlideshow:hover{background-position:-75px -25px;}
+        
+        #cboxPagination{position:absolute;top:0px;right:0px;margin:0;padding:0;}
+        #cboxPagination li{display:inline-block;list-style:none;margin:0;padding:0;}
+        #cboxPagination a{display:inline-block;background:black;background:rgba(0,0,0,.5);border:2px solid white;border-color:rgba(255,255,255,.5);border-radius:25px;overflow:hidden;height:0;padding-top:10px;width:10px;margin-right:5px;}
+        #cboxPagination a:hover, #cboxPagination a:focus{background-color:#888;}
+        #cboxPagination .current a{background-color:#aaa;}
