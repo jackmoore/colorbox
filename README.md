@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.15 - 2013/4/22
+
+* Added .webp to list of recognized image extensions
+
 ### Version 1.4.14 - 2013/4/16
 
 * Added fadeOut property to control the closing fadeOut speed.
