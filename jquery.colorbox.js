@@ -32,6 +32,7 @@
 		opacity: 0.9,
 		preloading: true,
 		className: false,
+                onClickNext: true,
 
 		// alternate image paths for high-res displays
 		retinaImage: false,
@@ -928,9 +929,11 @@
 				
 				if ($related[1] && (settings.loop || $related[index + 1])) {
 					photo.style.cursor = 'pointer';
-					photo.onclick = function () {
-						publicMethod.next();
-					};
+                                        if(settings.onClickNext){
+					    photo.onclick = function () {
+					        publicMethod.next();
+					    };
+                                        }
 				}
 
 				photo.style.width = photo.width + 'px';
