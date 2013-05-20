@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.15 - 2013-04-22
+	jQuery Colorbox v1.4.16 - 2013-05-20
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -48,6 +48,7 @@
 
 		open: false,
 		returnFocus: true,
+		trapFocus: true,
 		reposition: true,
 		loop: true,
 		slideshow: false,
@@ -366,15 +367,18 @@
 
 				$box.focus();
 				
-				// Confine focus to the modal
-				// Uses event capturing that is not supported in IE8-
-				if (document.addEventListener) {
 
-					document.addEventListener('focus', trapFocus, true);
-					
-					$events.one(event_closed, function () {
-						document.removeEventListener('focus', trapFocus, true);
-					});
+				if (settings.trapFocus) {
+					// Confine focus to the modal
+					// Uses event capturing that is not supported in IE8-
+					if (document.addEventListener) {
+
+						document.addEventListener('focus', trapFocus, true);
+						
+						$events.one(event_closed, function () {
+							document.removeEventListener('focus', trapFocus, true);
+						});
+					}
 				}
 
 				// Return focus on closing
