@@ -891,8 +891,10 @@
 
 			href = retinaUrl(settings, href);
 
-			$(photo = new Image())
-			.addClass(prefix + 'Photo')
+			photoJq = $('<img>');
+			photo = photoJq.get(0);
+
+			photoJq.addClass(prefix + 'Photo')
 			.bind('error',function () {
 				settings.title = false;
 				prep($tag(div, 'Error').html(settings.imgError));
