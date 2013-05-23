@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.16 - 2013-05-20
+	jQuery Colorbox v1.4.17 - 2013-05-23
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -891,10 +891,10 @@
 
 			href = retinaUrl(settings, href);
 
-			photoJq = $('<img>');
-			photo = photoJq.get(0);
+			photo = document.createElement('img');
 
-			photoJq.addClass(prefix + 'Photo')
+			$(photo)
+			.addClass(prefix + 'Photo')
 			.bind('error',function () {
 				settings.title = false;
 				prep($tag(div, 'Error').html(settings.imgError));
