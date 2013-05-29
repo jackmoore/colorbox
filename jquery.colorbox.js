@@ -664,10 +664,12 @@
 				settings.h = setSize(options.innerHeight, 'y');
 			}
 			if (!options.innerHeight && !options.height) {
+				st = $loaded.scrollTop();
 				$loaded.css({height: "auto"});
 				settings.h = $loaded.height();
 			}
 			$loaded.css({height: settings.h});
+			if(st) $loaded.scrollTop(st);
 			
 			publicMethod.position(settings.transition === "none" ? 0 : settings.speed);
 		}
