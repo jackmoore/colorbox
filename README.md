@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.18 - 2013/5/30
+
+* Fixed a scroll position issue when using $.colorbox.resize()
+
 ### Version 1.4.17 - 2013/5/23
 
 * Possible fix for a Chrome 27 issue (https://github.com/jackmoore/colorbox/pull/438#issuecomment-18334804)
