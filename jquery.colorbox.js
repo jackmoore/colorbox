@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.18 - 2013-05-30
+	jQuery Colorbox v1.4.19 - 2013-06-03
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -449,7 +449,7 @@
 		function clickHandler(e) {
 			// ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
 			// See: http://jacklmoore.com/notes/click-events/
-			if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey || e.control)) {
+			if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey || e.ctrl)) {
 				e.preventDefault();
 				launch(this);
 			}

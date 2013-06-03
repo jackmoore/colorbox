@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.19 - 2013/6/3
+
+* Fixed bug where Colorbox was capturing ctrl+click on assigned links on windows browsers with jQuery 1.7+, rather than ignoring.
+
 ### Version 1.4.18 - 2013/5/30
 
 * Fixed a scroll position issue when using $.colorbox.resize()
