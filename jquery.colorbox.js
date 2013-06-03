@@ -131,7 +131,7 @@
 		$(document).on('click.colorbox', selector, function(e){
 			// ignore non-left-mouse-clicks and clicks modified with ctrl / command, shift, or alt.
 			// See: http://jacklmoore.com/notes/click-events/
-			if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey)) {
+			if (!(e.which > 1 || e.shiftKey || e.altKey || e.metaKey || e.ctrlKey)) {
 				e.preventDefault();
 				launch(this);
 			}
