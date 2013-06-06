@@ -322,7 +322,7 @@
 					}
 
 					if (src && ($.colorbox.getSetting('photo') || $.colorbox.getSetting('photoRegex').test(src))) {
-						img = new Image();
+						img = document.createElement('img');
 						img.src = src;
 					}
 				});
@@ -346,7 +346,7 @@
 				if ($.colorbox.getSetting('type') !== 'photo') { return; }
 
 				var href = $.colorbox.getSetting('source'),
-					photo = new Image();
+					photo = document.createElement('img');
 
 				if ($.colorbox.getSetting('retinaUrl') && window.devicePixelRatio > 1) {
 					href = href.replace($.colorbox.getSetting('photoRegex'), $.colorbox.getSetting('retinaSuffix'));
