@@ -1,5 +1,5 @@
 /*!
-	jQuery Colorbox v1.4.20 - 2013-06-05
+	jQuery Colorbox v1.4.21 - 2013-06-06
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
@@ -776,7 +776,7 @@
 
 						if (src && isImage(data, src)) {
 							src = retinaUrl(data, src);
-							img = new Image();
+							img = document.createElement('img');
 							img.src = src;
 						}
 					});

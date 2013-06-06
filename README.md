@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.21 - 2013/6/6
+
+* Replaced new Image() with document.createElement('img') to avoid a potential bug in Chrome 27.
+
 ### Version 1.4.20 - 2013/6/5
 
 * Fixing bug/typo from last update.
