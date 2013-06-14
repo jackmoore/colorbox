@@ -422,7 +422,7 @@
 			});
 
 			$(document).one('cbox.unload', function() {
-				iframe.src = "//about:blank";
+				iframe.src = '';
 			});
 		},
 		ajax: function() {
