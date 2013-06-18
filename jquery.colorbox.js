@@ -32,6 +32,7 @@
 		opacity: 0.9,
 		preloading: true,
 		className: false,
+		queryParam: false,
 
 		// alternate image paths for high-res displays
 		retinaImage: false,
@@ -211,6 +212,10 @@
 		
 		if (typeof settings.href === "string") {
 			settings.href = $.trim(settings.href);
+		}
+
+		if (false !== settings.queryParam) {
+			settings.href += (settings.href.indexOf('?') !== -1 ?  '&' : '?') + settings.queryParam + '=1';
 		}
 	}
 
