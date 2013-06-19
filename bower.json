@@ -1,6 +1,6 @@
 {
   "name": "jquery-colorbox",
-  "version": "1.4.21",
+  "version": "1.4.22",
   "description": "A lightweight customizable lightbox plugin",
   "main": "jquery.colorbox.js",
   "dependencies": {
