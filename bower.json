@@ -1,0 +1,14 @@
+{
+  "name": "jquery-colorbox",
+  "version": "1.4.22",
+  "description": "A lightweight customizable lightbox plugin",
+  "main": "jquery.colorbox.js",
+  "dependencies": {
+    "jquery": ">=1.3.2"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
