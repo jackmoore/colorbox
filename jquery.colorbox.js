@@ -1,6 +1,7 @@
 /*!
-	jQuery Colorbox v1.4.21 - 2013-06-06
-	(c) 2013 Jack Moore - jacklmoore.com/colorbox
+	Colorbox v1.4.22 - 2013-06-19
+	jQuery lightbox and modal window plugin
+	(c) 2013 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
 */
 (function ($, document, window) {
