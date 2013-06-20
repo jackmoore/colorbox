@@ -32,7 +32,7 @@
 		rel: false,
 		opacity: 0.9,
 		preloading: true,
-        modal: false,
+		modal: false,
 		className: false,
 
 		// alternate image paths for high-res displays
@@ -124,7 +124,7 @@
 	open,
 	active,
 	closing,
-    modal,
+	modal,
 	loadingTimer,
 	publicMethod,
 	div = "div",
@@ -475,9 +475,9 @@
 					publicMethod.prev();
 				});
 				$close.click(function () {
-                    if (!settings.modal) {
-                        publicMethod.close();
-                    }
+					if (!settings.modal) {
+							publicMethod.close();
+					}
 				});
 				$overlay.click(function () {
 					if (!settings.modal && settings.overlayClose) {
