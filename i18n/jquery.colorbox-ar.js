@@ -1,5 +1,5 @@
 /*
-  jQuery ColorBox language configuration
+  jQuery Colorbox language configuration
   language: Arabic (ar)
   translated by: A.Rhman Sayes
 */

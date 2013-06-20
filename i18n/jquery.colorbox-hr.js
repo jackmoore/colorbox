@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Croatian (hr)
 	translated by: Mladen Bicanic (base.hr)
 */

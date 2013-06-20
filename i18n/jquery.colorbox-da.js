@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Danish (da)
 	translated by: danieljuhl
 	site: danieljuhl.dk

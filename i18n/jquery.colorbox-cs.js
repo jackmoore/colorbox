@@ -1,5 +1,5 @@
 /*
-	jQuery ColorBox language configuration
+	jQuery Colorbox language configuration
 	language: Czech (cs)
 	translated by: Filip Novak
 	site: mame.napilno.cz/filip-novak
