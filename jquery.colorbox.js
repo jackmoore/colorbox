@@ -65,6 +65,7 @@
 		onCleanup: false,
 		onClosed: false,
 		overlayClose: true,
+		closeDelay:1,
 		escKey: true,
 		arrowKey: true,
 		top: false,
@@ -998,22 +999,27 @@
 			trigger(event_cleanup, settings.onCleanup);
 			
 			$window.unbind('.' + prefix);
-			
-			$overlay.fadeTo(settings.fadeOut || 0, 0);
-			
-			$box.stop().fadeTo(settings.fadeOut || 0, 0, function () {
-			
-				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
-				
-				trigger(event_purge);
-				
-				$loaded.empty().remove(); // Using empty first may prevent some IE7 issues.
-				
-				setTimeout(function () {
-					closing = false;
-					trigger(event_closed, settings.onClosed);
-				}, 1);
-			});
+
+			setTimeout(function () {
+
+				$overlay.fadeTo(settings.fadeOut || 0, 0);
+
+				$box.stop().fadeTo(settings.fadeOut || 0, 0, function () {
+
+					$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
+
+					trigger(event_purge);
+
+					$loaded.empty().remove(); // Using empty first may prevent some IE7 issues.
+
+					setTimeout(function () {
+						closing = false;
+						trigger(event_closed, settings.onClosed);
+					}, 1);
+
+				});
+
+			}, settings.closeDelay);
 		}
 	};
 
