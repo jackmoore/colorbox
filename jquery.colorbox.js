@@ -32,6 +32,7 @@
 		rel: false,
 		opacity: 0.9,
 		preloading: true,
+		modal: false,
 		className: false,
 
 		// alternate image paths for high-res displays
@@ -123,6 +124,7 @@
 	open,
 	active,
 	closing,
+	modal,
 	loadingTimer,
 	publicMethod,
 	div = "div",
@@ -325,7 +327,7 @@
 			
 			$overlay.css({
 				opacity: parseFloat(settings.opacity),
-				cursor: settings.overlayClose ? "pointer" : "auto",
+				cursor: (!settings.modal && settings.overlayClose) ? "pointer" : "auto",
 				visibility: 'visible'
 			}).show();
 			
@@ -338,7 +340,12 @@
 			}
 			className = settings.className;
 
-			$close.html(settings.close).show();
+			if (!settings.modal) {
+				$close.html(settings.close).show();
+			}
+			else {
+				$close.remove();
+			}
 
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
@@ -468,10 +475,12 @@
 					publicMethod.prev();
 				});
 				$close.click(function () {
-					publicMethod.close();
+					if (!settings.modal) {
+							publicMethod.close();
+					}
 				});
 				$overlay.click(function () {
-					if (settings.overlayClose) {
+					if (!settings.modal && settings.overlayClose) {
 						publicMethod.close();
 					}
 				});
@@ -479,7 +488,7 @@
 				// Key Bindings
 				$(document).bind('keydown.' + prefix, function (e) {
 					var key = e.keyCode;
-					if (open && settings.escKey && key === 27) {
+					if (open && !settings.modal && settings.escKey && key === 27) {
 						e.preventDefault();
 						publicMethod.close();
 					}
