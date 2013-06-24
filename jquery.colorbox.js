@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.4.22 - 2013-06-19
+	Colorbox v1.4.23 - 2013-06-23
 	jQuery lightbox and modal window plugin
 	(c) 2013 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -407,7 +407,7 @@
 				tabindex: '-1'
 			}).hide();
 			$overlay = $tag(div, "Overlay").hide();
-			$loadingOverlay = $([$tag('div', "LoadingOverlay")[0],$tag('div', "LoadingGraphic")[0]]);
+			$loadingOverlay = $([$tag(div, "LoadingOverlay")[0],$tag(div, "LoadingGraphic")[0]]);
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),

@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.23 - 2013/6/23
+
+* Bugfix loading overlay/graphic append order
+
 ### Version 1.4.22 - 2013/6/19
 
 * Updated manifest files for the jQuery plugin repository and Bower (no changes to plugin)
