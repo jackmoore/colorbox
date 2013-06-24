@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.24 - 2013/6/24
+
+* Added closeButton option.  Set to false to remove the close button.
+
 ### Version 1.4.23 - 2013/6/23
 
 * Bugfix loading overlay/graphic append order

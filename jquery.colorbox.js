@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.4.23 - 2013-06-23
+	Colorbox v1.4.24 - 2013-06-24
 	jQuery lightbox and modal window plugin
 	(c) 2013 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -64,6 +64,7 @@
 		onComplete: false,
 		onCleanup: false,
 		onClosed: false,
+
 		overlayClose: true,
 		escKey: true,
 		arrowKey: true,
@@ -72,7 +73,8 @@
 		left: false,
 		right: false,
 		fixed: false,
-		data: undefined
+		data: undefined,
+		closeButton: true
 	},
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
@@ -338,7 +340,11 @@
 			}
 			className = settings.className;
 
-			$close.html(settings.close).show();
+			if (settings.closeButton) {
+				$close.html(settings.close).appendTo($content);
+			} else {
+				$close.appendTo('<div/>');
+			}
 
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
@@ -415,9 +421,10 @@
 				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
 				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
 				$slideshow = $tag('button', "Slideshow"),
-				$loadingOverlay,
-				$close = $('<button type="button"/>').attr({id:prefix+'Close'})
+				$loadingOverlay
 			);
+
+			$close = $('<button type="button"/>').attr({id:prefix+'Close'});
 			
 			$wrap.append( // The 3x3 Grid that makes up Colorbox
 				$tag(div).append(
