@@ -1,5 +1,5 @@
 {
-	"name": "colorbox",
+	"name": "jquery-colorbox",
 	"description": "jQuery lightbox and modal window plugin",
 	"version": "1.4.22",
 	"dependencies": {
