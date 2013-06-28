@@ -6,6 +6,11 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.25 - 2013/6/28
+
+* Use an animation speed of zero between same-sized content (fixed).
+* Removed temporary fix for jQuery UI 1.8
+
 ### Version 1.4.24 - 2013/6/24
 
 * Added closeButton option.  Set to false to remove the close button.

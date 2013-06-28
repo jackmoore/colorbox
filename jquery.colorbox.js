@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.4.24 - 2013-06-24
+	Colorbox v1.4.25 - 2013-06-28
 	jQuery lightbox and modal window plugin
 	(c) 2013 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -130,6 +130,7 @@
 	div = "div",
 	className,
 	requests = 0,
+	previousCSS = {},
 	init;
 
 	// ****************
@@ -607,9 +608,6 @@
 		}
 
 		$box.css({top: offset.top, left: offset.left, visibility:'visible'});
-
-		// setting the speed to 0 to reduce the delay between same-sized content.
-		speed = ($box.width() === settings.w + loadedWidth && $box.height() === settings.h + loadedHeight) ? 0 : speed || 0;
 		
 		// this gives the wrapper plenty of breathing room so it's floated contents can move around smoothly,
 		// but it has to be shrank down around the size of div#colorbox when it's done.  If not,
@@ -623,11 +621,22 @@
 
 		css = {width: settings.w + loadedWidth + interfaceWidth, height: settings.h + loadedHeight + interfaceHeight, top: top, left: left};
 
-		if(speed===0){ // temporary workaround to side-step jQuery-UI 1.8 bug (http://bugs.jquery.com/ticket/12273)
-			$box.css(css);
+		// setting the speed to 0 if the content hasn't changed size or position
+		if (speed) {
+			var tempSpeed = 0;
+			$.each(css, function(i){
+				if (css[i] !== previousCSS[i]) {
+					tempSpeed = speed;
+					return;
+				}
+			});
+			speed = tempSpeed;
 		}
+
+		previousCSS = css;
+
 		$box.dequeue().animate(css, {
-			duration: speed,
+			duration: speed || 0,
 			complete: function () {
 				modalDimensions(this);
 				
