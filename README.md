@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.26 - 2013/6/30
+
+* Fixed a regression in IE7 and IE8 that was causing an error.
+
 ### Version 1.4.25 - 2013/6/28
 
 * Use an animation speed of zero between same-sized content (fixed).

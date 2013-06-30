@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.4.25 - 2013-06-28
+	Colorbox v1.4.26 - 2013-06-30
 	jQuery lightbox and modal window plugin
 	(c) 2013 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -614,9 +614,9 @@
 		// it can invoke an obscure IE bug when using iframes.
 		$wrap[0].style.width = $wrap[0].style.height = "9999px";
 		
-		function modalDimensions(that) {
-			$topBorder[0].style.width = $bottomBorder[0].style.width = $content[0].style.width = (parseInt(that.style.width,10) - interfaceWidth)+'px';
-			$content[0].style.height = $leftBorder[0].style.height = $rightBorder[0].style.height = (parseInt(that.style.height,10) - interfaceHeight)+'px';
+		function modalDimensions() {
+			$topBorder[0].style.width = $bottomBorder[0].style.width = $content[0].style.width = (parseInt($box[0].style.width,10) - interfaceWidth)+'px';
+			$content[0].style.height = $leftBorder[0].style.height = $rightBorder[0].style.height = (parseInt($box[0].style.height,10) - interfaceHeight)+'px';
 		}
 
 		css = {width: settings.w + loadedWidth + interfaceWidth, height: settings.h + loadedHeight + interfaceHeight, top: top, left: left};
@@ -635,10 +635,14 @@
 
 		previousCSS = css;
 
+		if (!speed) {
+			$box.css(css);
+		}
+
 		$box.dequeue().animate(css, {
 			duration: speed || 0,
 			complete: function () {
-				modalDimensions(this);
+				modalDimensions();
 				
 				active = false;
 				
@@ -656,9 +660,7 @@
 					loadedCallback();
 				}
 			},
-			step: function () {
-				modalDimensions(this);
-			}
+			step: modalDimensions
 		});
 	};
 
