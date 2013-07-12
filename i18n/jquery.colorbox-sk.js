@@ -9,5 +9,7 @@ jQuery.extend(jQuery.colorbox.settings, {
 	next: "Následujúci",
 	close: "Zatvoriť",
 	xhrError: "Obsah sa nepodarilo načítať.",
-	imgError: "Obrázok sa nepodarilo načítať."
+	imgError: "Obrázok sa nepodarilo načítať.",
+	slideshowStart: "Spustiť slideshow",
+	slideshowStop: "zastaviť slideshow"
 });
