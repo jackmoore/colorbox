@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.27 - 2013/7/16
+
+* Fixed a width calculation issue relating to using margin:auto on #cboxLoadedContent.
+
 ### Version 1.4.26 - 2013/6/30
 
 * Fixed a regression in IE7 and IE8 that was causing an error.
