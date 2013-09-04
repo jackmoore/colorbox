@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.4.27 - 2013-07-16
+	Colorbox v1.4.28 - 2013-09-04
 	jQuery lightbox and modal window plugin
 	(c) 2013 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -231,69 +231,85 @@
 	}
 
 	// Slideshow functionality
-	function slideshow() {
+	var slideshow = (function(){
 		var
-		timeOut,
 		className = prefix + "Slideshow_",
 		click = "click." + prefix,
-		clear,
-		set,
-		start,
-		stop;
-		
-		if (settings.slideshow && $related[1]) {
-			clear = function () {
-				clearTimeout(timeOut);
-			};
+		ssActive = false,
+		timeOut;
 
-			set = function () {
-				if (settings.loop || $related[index + 1]) {
-					timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
-				}
-			};
-
-			start = function () {
-				$slideshow
-					.html(settings.slideshowStop)
-					.unbind(click)
-					.one(click, stop);
-
-				$events
-					.bind(event_complete, set)
-					.bind(event_load, clear)
-					.bind(event_cleanup, stop);
-
-				$box.removeClass(className + "off").addClass(className + "on");
-			};
-			
-			stop = function () {
-				clear();
-				
-				$events
-					.unbind(event_complete, set)
-					.unbind(event_load, clear)
-					.unbind(event_cleanup, stop);
-				
-				$slideshow
-					.html(settings.slideshowStart)
-					.unbind(click)
-					.one(click, function () {
-						publicMethod.next();
-						start();
-					});
-
-				$box.removeClass(className + "on").addClass(className + "off");
-			};
-			
-			if (settings.slideshowAuto) {
-				start();
-			} else {
-				stop();
-			}
-		} else {
-			$box.removeClass(className + "off " + className + "on");
+		function clear () {
+			clearTimeout(timeOut);
 		}
-	}
+
+		function set() {
+			if (settings.loop || $related[index + 1]) {
+				clear();
+				timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
+			}
+		}
+
+		function start() {
+			$slideshow
+				.html(settings.slideshowStop)
+				.unbind(click)
+				.one(click, stop);
+
+			$events
+				.bind(event_complete, set)
+				.bind(event_load, clear)
+				.bind(event_cleanup, stop);
+
+			$box.removeClass(className + "off").addClass(className + "on");
+		}
+		
+		function stop() {
+			clear();
+			
+			$events
+				.unbind(event_complete, set)
+				.unbind(event_load, clear)
+				.unbind(event_cleanup, stop);
+			
+			$slideshow
+				.html(settings.slideshowStart)
+				.unbind(click)
+				.one(click, function () {
+					publicMethod.next();
+					start();
+				});
+
+			$box.removeClass(className + "on").addClass(className + "off");
+		}
+
+		return function() {
+			if (ssActive) {
+				if (settings.slideshow) {
+					return;
+				} else {
+					ssActive = false;
+					$slideshow.hide();
+					clear();
+					$events
+						.unbind(event_complete, set)
+						.unbind(event_load, clear)
+						.unbind(event_cleanup, stop);
+					$box.removeClass(className + "off " + className + "on");
+				}
+			} else if (settings.slideshow && $related[1]) {
+				ssActive = true;
+
+				if (settings.slideshowAuto) {
+					start();
+				} else {
+					stop();
+				}
+
+				$slideshow.show();
+			}
+		};
+	}());
+
 
 	function launch(target) {
 		if (!closing) {
@@ -367,15 +383,12 @@
 				settings.h = setSize(settings.initialHeight, 'y');
 				publicMethod.position();
 
-				slideshow();
-
 				trigger(event_open, settings.onOpen);
 				
 				$groupControls.add($title).hide();
 
 				$box.focus();
 				
-
 				if (settings.trapFocus) {
 					// Confine focus to the modal
 					// Uses event capturing that is not supported in IE8-
@@ -772,9 +785,7 @@
 				$next[(settings.loop || index < total - 1) ? "show" : "hide"]().html(settings.next);
 				$prev[(settings.loop || index) ? "show" : "hide"]().html(settings.previous);
 				
-				if (settings.slideshow) {
-					$slideshow.show();
-				}
+				slideshow();
 				
 				// Preloads images within a rel group
 				if (settings.preloading) {

@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.27 - 2013/9/4
+
+* Fixed a potential issue with using the open property with mixed slideshow and non-slideshow groups
+
 ### Version 1.4.27 - 2013/7/16
 
 * Fixed a width calculation issue relating to using margin:auto on #cboxLoadedContent.
