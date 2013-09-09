@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.4.28 - 2013-09-04
+	Colorbox v1.4.27 - 2013-07-16
 	jQuery lightbox and modal window plugin
 	(c) 2013 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -43,6 +43,9 @@
 		current: "image {current} of {total}",
 		previous: "previous",
 		next: "next",
+                rotateLeft: "rotate left",
+                rotateRight: "rotate right",
+                zoom: "zoom",
 		close: "close",
 		xhrError: "This content failed to load.",
 		imgError: "This image failed to load.",
@@ -109,7 +112,11 @@
 	$slideshow,
 	$next,
 	$prev,
+        $rotateLeft,
+        $rotateRight,
+        $zoom,
 	$close,
+        $rotation,
 	$groupControls,
 	$events = $('<a/>'),
 	
@@ -122,6 +129,7 @@
 	element,
 	index,
 	photo,
+        zoom = {zoom:'Out'},
 	open,
 	active,
 	closing,
@@ -231,85 +239,69 @@
 	}
 
 	// Slideshow functionality
-	var slideshow = (function(){
+	function slideshow() {
 		var
+		timeOut,
 		className = prefix + "Slideshow_",
 		click = "click." + prefix,
-		ssActive = false,
-		timeOut;
-
-		function clear () {
-			clearTimeout(timeOut);
-		}
-
-		function set() {
-			if (settings.loop || $related[index + 1]) {
-				clear();
-				timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
-			}
-		}
-
-		function start() {
-			$slideshow
-				.html(settings.slideshowStop)
-				.unbind(click)
-				.one(click, stop);
-
-			$events
-				.bind(event_complete, set)
-				.bind(event_load, clear)
-				.bind(event_cleanup, stop);
-
-			$box.removeClass(className + "off").addClass(className + "on");
-		}
+		clear,
+		set,
+		start,
+		stop;
 		
-		function stop() {
-			clear();
-			
-			$events
-				.unbind(event_complete, set)
-				.unbind(event_load, clear)
-				.unbind(event_cleanup, stop);
-			
-			$slideshow
-				.html(settings.slideshowStart)
-				.unbind(click)
-				.one(click, function () {
-					publicMethod.next();
-					start();
-				});
+		if (settings.slideshow && $related[1]) {
+			clear = function () {
+				clearTimeout(timeOut);
+			};
 
-			$box.removeClass(className + "on").addClass(className + "off");
-		}
-
-		return function() {
-			if (ssActive) {
-				if (settings.slideshow) {
-					return;
-				} else {
-					ssActive = false;
-					$slideshow.hide();
-					clear();
-					$events
-						.unbind(event_complete, set)
-						.unbind(event_load, clear)
-						.unbind(event_cleanup, stop);
-					$box.removeClass(className + "off " + className + "on");
+			set = function () {
+				if (settings.loop || $related[index + 1]) {
+					timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
 				}
-			} else if (settings.slideshow && $related[1]) {
-				ssActive = true;
+			};
 
-				if (settings.slideshowAuto) {
-					start();
-				} else {
-					stop();
-				}
+			start = function () {
+				$slideshow
+					.html(settings.slideshowStop)
+					.unbind(click)
+					.one(click, stop);
 
-				$slideshow.show();
+				$events
+					.bind(event_complete, set)
+					.bind(event_load, clear)
+					.bind(event_cleanup, stop);
+
+				$box.removeClass(className + "off").addClass(className + "on");
+			};
+			
+			stop = function () {
+				clear();
+				
+				$events
+					.unbind(event_complete, set)
+					.unbind(event_load, clear)
+					.unbind(event_cleanup, stop);
+				
+				$slideshow
+					.html(settings.slideshowStart)
+					.unbind(click)
+					.one(click, function () {
+						publicMethod.next();
+						start();
+					});
+
+				$box.removeClass(className + "on").addClass(className + "off");
+			};
+			
+			if (settings.slideshowAuto) {
+				start();
+			} else {
+				stop();
 			}
-		};
-	}());
-
+		} else {
+			$box.removeClass(className + "off " + className + "on");
+		}
+	}
 
 	function launch(target) {
 		if (!closing) {
@@ -383,12 +375,15 @@
 				settings.h = setSize(settings.initialHeight, 'y');
 				publicMethod.position();
 
+				slideshow();
+
 				trigger(event_open, settings.onOpen);
 				
 				$groupControls.add($title).hide();
 
 				$box.focus();
 				
+
 				if (settings.trapFocus) {
 					// Confine focus to the modal
 					// Uses event capturing that is not supported in IE8-
@@ -434,6 +429,9 @@
 				$current = $tag(div, "Current"),
 				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
 				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
+                                $rotateLeft = $('<button type="button"/>').attr({id:prefix+'RotateLeft'}),
+                                $rotateRight = $('<button type="button"/>').attr({id:prefix+'RotateRight'}),
+                                $zoom = $('<button type="button"/>').attr({id:prefix+'Zoom'+zoom.zoom}),
 				$slideshow = $tag('button', "Slideshow"),
 				$loadingOverlay
 			);
@@ -459,7 +457,8 @@
 			).find('div div').css({'float': 'left'});
 			
 			$loadingBay = $tag(div, false, 'position:absolute; width:9999px; visibility:hidden; display:none');
-			
+
+                        $rotation = $rotateLeft.add($rotateRight);
 			$groupControls = $next.add($prev).add($current).add($slideshow);
 
 			$(document.body).append($overlay, $box.append($wrap, $loadingBay));
@@ -488,9 +487,20 @@
 				$prev.click(function () {
 					publicMethod.prev();
 				});
+                                $rotateLeft.click(function () {
+                                        publicMethod.rotateLeft();
+                                });
+                                $rotateRight.click(function () {
+                                        publicMethod.rotateRight();
+                                });
+                                $zoom.click(function () {
+                                        publicMethod.zoom();
+                                });
 				$close.click(function () {
 					publicMethod.close();
 				});
+
+
 				$overlay.click(function () {
 					if (settings.overlayClose) {
 						publicMethod.close();
@@ -530,12 +540,148 @@
 		return false;
 	}
 
+	function load () {
+		var href, setResize, prep = publicMethod.prep, $inline, request = ++requests;
+
+		active = true;
+
+		photo = false;
+
+		element = $related[index];
+
+		makeSettings();
+
+		trigger(event_purge);
+
+		trigger(event_load, settings.onLoad);
+
+		settings.h = settings.height ?
+				setSize(settings.height, 'y') - loadedHeight - interfaceHeight :
+				settings.innerHeight && setSize(settings.innerHeight, 'y');
+
+		settings.w = settings.width ?
+				setSize(settings.width, 'x') - loadedWidth - interfaceWidth :
+				settings.innerWidth && setSize(settings.innerWidth, 'x');
+
+		// Sets the minimum dimensions for use in image scaling
+		settings.mw = settings.w;
+		settings.mh = settings.h;
+
+		// Re-evaluate the minimum width and height based on maxWidth and maxHeight values.
+		// If the width or height exceed the maxWidth or maxHeight, use the maximum values instead.
+		if (settings.maxWidth) {
+			settings.mw = setSize(settings.maxWidth, 'x') - loadedWidth - interfaceWidth;
+			settings.mw = settings.w && settings.w < settings.mw ? settings.w : settings.mw;
+		}
+		if (settings.maxHeight) {
+			settings.mh = setSize(settings.maxHeight, 'y') - loadedHeight - interfaceHeight;
+			settings.mh = settings.h && settings.h < settings.mh ? settings.h : settings.mh;
+		}
+
+		href = settings.href;
+
+		loadingTimer = setTimeout(function () {
+			$loadingOverlay.show();
+		}, 100);
+
+		if (settings.inline) {
+			// Inserts an empty placeholder where inline content is being pulled from.
+			// An event is bound to put inline content back when Colorbox closes or loads new content.
+			$inline = $tag(div).hide().insertBefore($(href)[0]);
+
+			$events.one(event_purge, function () {
+				$inline.replaceWith($loaded.children());
+			});
+
+			prep($(href));
+		} else if (settings.iframe) {
+			// IFrame element won't be added to the DOM until it is ready to be displayed,
+			// to avoid problems with DOM-ready JS that might be trying to run in that iframe.
+			prep(" ");
+		} else if (settings.html) {
+			prep(settings.html);
+		} else if (isImage(settings, href)) {
+
+			href = retinaUrl(settings, href);
+
+			photo = document.createElement('img');
+
+			$(photo)
+			.addClass(prefix + 'Photo')
+			.bind('error',function () {
+				settings.title = false;
+				prep($tag(div, 'Error').html(settings.imgError));
+			})
+			.one('load', function () {
+				var percent;
+
+				if (request !== requests) {
+					return;
+				}
+
+				photo.alt = $(element).attr('alt') || $(element).attr('data-alt') || '';
+
+				if (settings.retinaImage && window.devicePixelRatio > 1) {
+					photo.height = photo.height / window.devicePixelRatio;
+					photo.width = photo.width / window.devicePixelRatio;
+				}
+
+				if (settings.scalePhotos) {
+					setResize = function () {
+						photo.height -= photo.height * percent;
+						photo.width -= photo.width * percent;
+					};
+					if (settings.mw && photo.width > settings.mw) {
+						percent = (photo.width - settings.mw) / photo.width;
+						setResize();
+					}
+					if (settings.mh && photo.height > settings.mh) {
+						percent = (photo.height - settings.mh) / photo.height;
+						setResize();
+					}
+				}
+
+				if (settings.h) {
+					photo.style.marginTop = Math.max(settings.mh - photo.height, 0) / 2 + 'px';
+				}
+
+				if ($related[1] && (settings.loop || $related[index + 1])) {
+					photo.style.cursor = 'pointer';
+					photo.onclick = function () {
+						publicMethod.next();
+					};
+				}
+
+				//photo.style.width = photo.width + 'px';
+				//photo.style.height = photo.height + 'px';
+
+				setTimeout(function () { // A pause because Chrome will sometimes report a 0 by 0 size otherwise.
+					prep(photo);
+				}, 1);
+			});
+
+			setTimeout(function () { // A pause because Opera 10.6+ will sometimes not run the onload function otherwise.
+				photo.src = href;
+			}, 1);
+		} else if (href) {
+			$loadingBay.load(href, settings.data, function (data, status) {
+				if (request === requests) {
+					prep(status === 'error' ? $tag(div, 'Error').html(settings.xhrError) : $(this).contents());
+				}
+			});
+		}
+	}
+
 	// Don't do anything if Colorbox already exists.
 	if ($.colorbox) {
 		return;
 	}
-
-	// Append the HTML when the DOM loads
+        
+	// Load the jquery.rotate library (if not already loaded)
+        if ( typeof(jQuery.fn.rotate) === 'undefined' ) {
+            $.getScript('http://jquery-rotate.googlecode.com/svn/trunk/jquery.rotate.js', function() {});
+        }
+        // Append the HTML when the DOM loads
 	$(appendHTML);
 
 
@@ -691,6 +837,10 @@
 				settings.w = setSize(options.innerWidth, 'x');
 			}
 
+			if (!options.innerWidth && !options.width) {
+				settings.w = setSize($loaded.children(':first').width(), 'x');
+			}
+
 			$loaded.css({width: settings.w});
 			
 			if (options.height) {
@@ -712,8 +862,9 @@
 			if(scrolltop) {
 				$loaded.scrollTop(scrolltop);
 			}
-			
-			publicMethod.position(settings.transition === "none" ? 0 : settings.speed);
+
+                        var speed = (options.speed === 0) ? 0 : options.speed || settings.speed;
+			publicMethod.position(settings.transition === "none" ? 0 : speed);
 		}
 	};
 
@@ -772,10 +923,23 @@
 				clearTimeout(loadingTimer);
 				$loadingOverlay.hide();
 				trigger(event_complete, settings.onComplete);
+                                // reset current zoom for the loaded object
+                                zoom = {zoom:'Out', x:$loaded.width(), y:$loaded.height()};
 			};
 
 			
 			$title.html(settings.title).add($loaded).show();
+
+                        if (isImage(settings, settings.href)) {
+                            $rotateLeft.attr({title:defaults.rotateLeft}).html(settings.rotateLeft);
+                            $rotateRight.attr({title:defaults.rotateRight}).html(settings.rotateRight);
+
+                            $zoom.attr({title:defaults.zoom}).html(settings.zoom);
+                        }
+                        else {
+                            $rotation.hide();
+                            $zoom.hide();
+                        }
 			
 			if (total > 1) { // handle grouping
 				if (typeof settings.current === "string") {
@@ -784,8 +948,12 @@
 				
 				$next[(settings.loop || index < total - 1) ? "show" : "hide"]().html(settings.next);
 				$prev[(settings.loop || index) ? "show" : "hide"]().html(settings.previous);
-				
-				slideshow();
+                                $next.attr({title:defaults.next});
+                                $prev.attr({title:defaults.previous});
+
+				if (settings.slideshow) {
+					$slideshow.show();
+				}
 				
 				// Preloads images within a rel group
 				if (settings.preloading) {
@@ -869,138 +1037,6 @@
 		}
 	};
 
-	function load () {
-		var href, setResize, prep = publicMethod.prep, $inline, request = ++requests;
-		
-		active = true;
-		
-		photo = false;
-		
-		element = $related[index];
-		
-		makeSettings();
-		
-		trigger(event_purge);
-		
-		trigger(event_load, settings.onLoad);
-		
-		settings.h = settings.height ?
-				setSize(settings.height, 'y') - loadedHeight - interfaceHeight :
-				settings.innerHeight && setSize(settings.innerHeight, 'y');
-		
-		settings.w = settings.width ?
-				setSize(settings.width, 'x') - loadedWidth - interfaceWidth :
-				settings.innerWidth && setSize(settings.innerWidth, 'x');
-		
-		// Sets the minimum dimensions for use in image scaling
-		settings.mw = settings.w;
-		settings.mh = settings.h;
-		
-		// Re-evaluate the minimum width and height based on maxWidth and maxHeight values.
-		// If the width or height exceed the maxWidth or maxHeight, use the maximum values instead.
-		if (settings.maxWidth) {
-			settings.mw = setSize(settings.maxWidth, 'x') - loadedWidth - interfaceWidth;
-			settings.mw = settings.w && settings.w < settings.mw ? settings.w : settings.mw;
-		}
-		if (settings.maxHeight) {
-			settings.mh = setSize(settings.maxHeight, 'y') - loadedHeight - interfaceHeight;
-			settings.mh = settings.h && settings.h < settings.mh ? settings.h : settings.mh;
-		}
-		
-		href = settings.href;
-		
-		loadingTimer = setTimeout(function () {
-			$loadingOverlay.show();
-		}, 100);
-		
-		if (settings.inline) {
-			// Inserts an empty placeholder where inline content is being pulled from.
-			// An event is bound to put inline content back when Colorbox closes or loads new content.
-			$inline = $tag(div).hide().insertBefore($(href)[0]);
-
-			$events.one(event_purge, function () {
-				$inline.replaceWith($loaded.children());
-			});
-
-			prep($(href));
-		} else if (settings.iframe) {
-			// IFrame element won't be added to the DOM until it is ready to be displayed,
-			// to avoid problems with DOM-ready JS that might be trying to run in that iframe.
-			prep(" ");
-		} else if (settings.html) {
-			prep(settings.html);
-		} else if (isImage(settings, href)) {
-
-			href = retinaUrl(settings, href);
-
-			photo = document.createElement('img');
-
-			$(photo)
-			.addClass(prefix + 'Photo')
-			.bind('error',function () {
-				settings.title = false;
-				prep($tag(div, 'Error').html(settings.imgError));
-			})
-			.one('load', function () {
-				var percent;
-
-				if (request !== requests) {
-					return;
-				}
-
-				photo.alt = $(element).attr('alt') || $(element).attr('data-alt') || '';
-
-				if (settings.retinaImage && window.devicePixelRatio > 1) {
-					photo.height = photo.height / window.devicePixelRatio;
-					photo.width = photo.width / window.devicePixelRatio;
-				}
-
-				if (settings.scalePhotos) {
-					setResize = function () {
-						photo.height -= photo.height * percent;
-						photo.width -= photo.width * percent;
-					};
-					if (settings.mw && photo.width > settings.mw) {
-						percent = (photo.width - settings.mw) / photo.width;
-						setResize();
-					}
-					if (settings.mh && photo.height > settings.mh) {
-						percent = (photo.height - settings.mh) / photo.height;
-						setResize();
-					}
-				}
-				
-				if (settings.h) {
-					photo.style.marginTop = Math.max(settings.mh - photo.height, 0) / 2 + 'px';
-				}
-				
-				if ($related[1] && (settings.loop || $related[index + 1])) {
-					photo.style.cursor = 'pointer';
-					photo.onclick = function () {
-						publicMethod.next();
-					};
-				}
-
-				photo.style.width = photo.width + 'px';
-				photo.style.height = photo.height + 'px';
-
-				setTimeout(function () { // A pause because Chrome will sometimes report a 0 by 0 size otherwise.
-					prep(photo);
-				}, 1);
-			});
-			
-			setTimeout(function () { // A pause because Opera 10.6+ will sometimes not run the onload function otherwise.
-				photo.src = href;
-			}, 1);
-		} else if (href) {
-			$loadingBay.load(href, settings.data, function (data, status) {
-				if (request === requests) {
-					prep(status === 'error' ? $tag(div, 'Error').html(settings.xhrError) : $(this).contents());
-				}
-			});
-		}
-	}
-		
 	// Navigates to the next page/image in a set.
 	publicMethod.next = function () {
 		if (!active && $related[1] && (settings.loop || $related[index + 1])) {
@@ -1015,6 +1051,62 @@
 			launch($related[index]);
 		}
 	};
+
+	publicMethod.rotateLeft = function () {
+            if (!isImage(settings, settings.href)) {return;}
+
+            // in case multiple button presses child will be a canvas
+            $loaded.children(":first").rotateLeft();
+            $loaded.children(":first").addClass(prefix+'Photo');
+            publicMethod.resize({speed:0});
+
+            //zoom = {zoom:'Out', x:$loaded.width(), y:$loaded.height()};
+            if (zoom.zoom == 'In'){
+                zoom.zoom = 'Out';
+                publicMethod.zoom();
+            }
+	};
+
+        publicMethod.rotateRight = function () {
+            if (!isImage(settings, settings.href)) {return;}
+            
+            // in case multiple button presses child will be a canvas
+            $loaded.children(":first").rotateRight();
+            $loaded.children(":first").addClass(prefix+'Photo');
+            publicMethod.resize({speed:0});
+
+            //zoom = {zoom:'Out', x:$loaded.width(), y:$loaded.height()};
+            if (zoom.zoom == 'In'){
+                zoom.zoom = 'Out';
+                publicMethod.zoom();
+            }
+        };
+
+        publicMethod.zoom = function () {
+            if (!isImage(settings, settings.href)) {return;}
+            
+            var img = $loaded.children(":first"); // may be canvas
+            var zmh = setSize('98%', 'y') * ($loaded.height() / $box.height());
+            
+            if (zoom.zoom == 'Out') {
+                zoom.x = $loaded.width();
+                zoom.y = $loaded.height();
+                zoom.zoom = 'In';
+
+                if (zmh > $box.height()) {
+                    img.height(zmh);
+                    img.css('width', 'auto');
+                }
+            }
+            else { // zoom == 'In'
+                zoom.zoom = 'Out';
+                img.width(zoom.x);
+                img.height(zoom.y);    
+            }
+            
+            publicMethod.resize();
+            $zoom.attr({id:prefix+'Zoom'+zoom.zoom});
+        }
 
 	// Note: to use this within an iframe use the following format: parent.jQuery.colorbox.close();
 	publicMethod.close = function () {
@@ -1048,7 +1140,7 @@
 
 	// Removes changes Colorbox made to the document, but does not remove the plugin.
 	publicMethod.remove = function () {
-		if (!$box) { return; }
+		if (!$box) {return;}
 
 		$box.stop();
 		$.colorbox.close();
