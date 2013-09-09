@@ -239,28 +239,25 @@
 	}
 
 	// Slideshow functionality
-	function slideshow() {
+	var slideshow = (function(){
 		var
-		timeOut,
 		className = prefix + "Slideshow_",
 		click = "click." + prefix,
-		clear,
-		set,
-		start,
-		stop;
+		ssActive = false,
+		timeOut;
 		
-		if (settings.slideshow && $related[1]) {
-			clear = function () {
+		function clear () {
 				clearTimeout(timeOut);
-			};
+		}
 
-			set = function () {
+		function set() {
 				if (settings.loop || $related[index + 1]) {
+				clear();
 					timeOut = setTimeout(publicMethod.next, settings.slideshowSpeed);
 				}
-			};
+		}
 
-			start = function () {
+		function start() {
 				$slideshow
 					.html(settings.slideshowStop)
 					.unbind(click)
@@ -272,9 +269,9 @@
 					.bind(event_cleanup, stop);
 
 				$box.removeClass(className + "off").addClass(className + "on");
-			};
+		}
 			
-			stop = function () {
+		function stop() {
 				clear();
 				
 				$events
@@ -291,17 +288,36 @@
 					});
 
 				$box.removeClass(className + "on").addClass(className + "off");
-			};
+		}
 			
+		return function() {
+			if (ssActive) {
+				if (settings.slideshow) {
+					return;
+				} else {
+					ssActive = false;
+					$slideshow.hide();
+					clear();
+					$events
+						.unbind(event_complete, set)
+						.unbind(event_load, clear)
+						.unbind(event_cleanup, stop);
+					$box.removeClass(className + "off " + className + "on");
+				}
+			} else if (settings.slideshow && $related[1]) {
+				ssActive = true;
+
 			if (settings.slideshowAuto) {
 				start();
 			} else {
 				stop();
 			}
-		} else {
-			$box.removeClass(className + "off " + className + "on");
+
+				$slideshow.show();
 		}
-	}
+		};
+	}());
+
 
 	function launch(target) {
 		if (!closing) {
@@ -375,15 +391,12 @@
 				settings.h = setSize(settings.initialHeight, 'y');
 				publicMethod.position();
 
-				slideshow();
-
 				trigger(event_open, settings.onOpen);
 				
 				$groupControls.add($title).hide();
 
 				$box.focus();
 				
-
 				if (settings.trapFocus) {
 					// Confine focus to the modal
 					// Uses event capturing that is not supported in IE8-
@@ -499,8 +512,6 @@
 				$close.click(function () {
 					publicMethod.close();
 				});
-
-
 				$overlay.click(function () {
 					if (settings.overlayClose) {
 						publicMethod.close();
@@ -951,9 +962,7 @@
                                 $next.attr({title:defaults.next});
                                 $prev.attr({title:defaults.previous});
 
-				if (settings.slideshow) {
-					$slideshow.show();
-				}
+				slideshow();
 				
 				// Preloads images within a rel group
 				if (settings.preloading) {
