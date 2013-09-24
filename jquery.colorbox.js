@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.4.29 - 2013-09-10
+	Colorbox v1.4.30 - 2013-09-24
 	jQuery lightbox and modal window plugin
 	(c) 2013 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -9,6 +9,13 @@
 	// Default settings object.
 	// See http://jacklmoore.com/colorbox for details.
 	defaults = {
+		// data sources
+		html: false,
+		photo: false,
+		iframe: false,
+		inline: false,
+
+		// behavior and appearance
 		transition: "elastic",
 		speed: 300,
 		fadeOut: 300,
@@ -22,17 +29,32 @@
 		maxHeight: false,
 		scalePhotos: true,
 		scrolling: true,
-		inline: false,
-		html: false,
-		iframe: false,
-		fastIframe: true,
-		photo: false,
 		href: false,
 		title: false,
 		rel: false,
 		opacity: 0.9,
 		preloading: true,
 		className: false,
+		overlayClose: true,
+		escKey: true,
+		arrowKey: true,
+		top: false,
+		bottom: false,
+		left: false,
+		right: false,
+		fixed: false,
+		data: undefined,
+		closeButton: true,
+		fastIframe: true,
+		open: false,
+		reposition: true,
+		loop: true,
+		slideshow: false,
+		slideshowAuto: true,
+		slideshowSpeed: 2500,
+		slideshowStart: "start slideshow",
+		slideshowStop: "stop slideshow",
+		photoRegex: /\.(gif|png|jp(e|g|eg)|bmp|ico|webp)((#|\?).*)?$/i,
 
 		// alternate image paths for high-res displays
 		retinaImage: false,
@@ -47,34 +69,16 @@
 		xhrError: "This content failed to load.",
 		imgError: "This image failed to load.",
 
-		open: false,
+		// accessbility
 		returnFocus: true,
 		trapFocus: true,
-		reposition: true,
-		loop: true,
-		slideshow: false,
-		slideshowAuto: true,
-		slideshowSpeed: 2500,
-		slideshowStart: "start slideshow",
-		slideshowStop: "stop slideshow",
-		photoRegex: /\.(gif|png|jp(e|g|eg)|bmp|ico|webp)((#|\?).*)?$/i,
 
+		// callbacks
 		onOpen: false,
 		onLoad: false,
 		onComplete: false,
 		onCleanup: false,
-		onClosed: false,
-
-		overlayClose: true,
-		escKey: true,
-		arrowKey: true,
-		top: false,
-		bottom: false,
-		left: false,
-		right: false,
-		fixed: false,
-		data: undefined,
-		closeButton: true
+		onClosed: false
 	},
 	
 	// Abstracting the HTML and event identifiers for easy rebranding
@@ -949,7 +953,9 @@
 					return;
 				}
 
-				photo.alt = $(element).attr('alt') || $(element).attr('data-alt') || '';
+				$.each(['alt', 'longdesc', 'aria-describedby'], function(i,val){
+					photo[val] = $(element).attr(val) || $(element).attr('data-'+val) || '';
+				});
 
 				if (settings.retinaImage && window.devicePixelRatio > 1) {
 					photo.height = photo.height / window.devicePixelRatio;

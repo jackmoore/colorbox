@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.30 - 2013/9/24
+
+* Added longdesc and aria-describedby attributes to photos.  Fixes #508
+
 ### Version 1.4.29 - 2013/9/10
 
 * Fixed a slideshow regression from 1.4.27
