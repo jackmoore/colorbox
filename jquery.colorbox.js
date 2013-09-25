@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.4.30 - 2013-09-24
+	Colorbox v1.4.31 - 2013-09-25
 	jQuery lightbox and modal window plugin
 	(c) 2013 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -954,7 +954,10 @@
 				}
 
 				$.each(['alt', 'longdesc', 'aria-describedby'], function(i,val){
-					photo[val] = $(element).attr(val) || $(element).attr('data-'+val) || '';
+					var attr = $(element).attr(val) || $(element).attr('data-'+val);
+					if (attr) {
+						photo.setAttribute(val, attr);
+					}
 				});
 
 				if (settings.retinaImage && window.devicePixelRatio > 1) {

@@ -6,6 +6,10 @@ Send me your language configuration files.  See /i18n/jquery.colorbox-de.js as a
 
 ## Changelog:
 
+### Version 1.4.31 - 2013/9/25
+
+* Used setAttribute to set londesc, so that the value is accessible via DOM Node longDesc property #508
+
 ### Version 1.4.30 - 2013/9/24
 
 * Added longdesc and aria-describedby attributes to photos.  Fixes #508
