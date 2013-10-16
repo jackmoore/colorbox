@@ -45,6 +45,7 @@
 		fixed: false,
 		data: undefined,
 		closeButton: true,
+		closeButtonClass: "",
 		fastIframe: true,
 		open: false,
 		reposition: true,
@@ -364,6 +365,10 @@
 
 			if (settings.closeButton) {
 				$close.html(settings.close).appendTo($content);
+				
+				if (settings.closeButtonClass) {
+					$close.addClass(settings.closeButtonClass);
+				}
 			} else {
 				$close.appendTo('<div/>');
 			}
