@@ -204,7 +204,7 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 ### Version 1.3.21 - 2013/1/15
 Files Changed: *.js
 
-* Fixed compatability issues with jQuery 1.9
+* Fixed compatibility issues with jQuery 1.9
 
 ### Version 1.3.20 - August 15 2012
 Files Changed:jquery.colorbox.js
