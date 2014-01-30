@@ -27,5 +27,13 @@
 		}
 	],
 	"homepage": "http://www.jacklmoore.com/colorbox",
-	"main": "jquery.colorbox.js"
+	"main": "jquery.colorbox.js",
+	"ignore": [
+		"Gruntfile.js",
+		"package.json",
+		"README.md",
+		"colorbox.jquery.json",
+		".gitignore",
+		"colorbox"
+		]
 }
