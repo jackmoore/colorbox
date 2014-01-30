@@ -29,11 +29,18 @@
 	"homepage": "http://www.jacklmoore.com/colorbox",
 	"main": "jquery.colorbox.js",
 	"ignore": [
-		"Gruntfile.js",
-		"package.json",
-		"README.md",
 		"colorbox.jquery.json",
-		".gitignore",
-		"colorbox"
-		]
+		"colorbox.ai",
+		"content",
+		"example1/images",
+		"example1/index.html",
+		"example2/images",
+		"example2/index.html",
+		"example3/images",
+		"example3/index.html",
+		"example4/images",
+		"example4/index.html",
+		"example5/images",
+		"example5/index.html"
+	]
 }
