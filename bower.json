@@ -1,7 +1,7 @@
 {
 	"name": "jquery-colorbox",
 	"description": "jQuery lightbox and modal window plugin",
-	"version": "1.4.35",
+	"version": "1.4.36",
 	"dependencies": {
 		"jquery": ">=1.3.2"
 	},
@@ -32,15 +32,10 @@
 		"colorbox.jquery.json",
 		"colorbox.ai",
 		"content",
-		"example1/images",
 		"example1/index.html",
-		"example2/images",
 		"example2/index.html",
-		"example3/images",
 		"example3/index.html",
-		"example4/images",
 		"example4/index.html",
-		"example5/images",
 		"example5/index.html"
 	]
 }
