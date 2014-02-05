@@ -114,6 +114,7 @@
 	$next,
 	$prev,
 	$close,
+	$pagination,
 	$groupControls,
 	$events = $('<a/>'), // $([]) would be prefered, but there is an issue with jQuery 1.4.2
 	
@@ -439,6 +440,7 @@
 				$current = $tag(div, "Current"),
 				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
 				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
+				$pagination = $('<div></div>').attr({id:prefix+'Pagination'}),
 				$slideshow = $tag('button', "Slideshow"),
 				$loadingOverlay
 			);
@@ -500,6 +502,19 @@
 					if (settings.overlayClose) {
 						publicMethod.close();
 					}
+				});
+				$pagination.click(function (e) {
+					if(! $(e.target).is('a') ) {
+						return;
+					}
+					var index = $(e.target).text() - 1;
+					
+					if(isNaN(index)){
+						return;
+					}
+					
+					publicMethod.paginate(index);
+					return false;
 				});
 				
 				// Key Bindings
@@ -787,6 +802,17 @@
 					$current.html(settings.current.replace('{current}', index + 1).replace('{total}', total)).show();
 				}
 				
+				$pagination.children().remove();
+				if (typeof settings.pagination != "undefined" && settings.pagination == true){
+					var $ol = $('<ol></ol>');
+					var className = '';
+					for(var i=0; i<total; i++){
+						className = index == i ? 'current' : 'inactive';
+						$ol.append('<li class="'+className+'"><a href="#">'+(i+1)+'</a></li>');
+					}
+					$pagination.append($ol);
+				}
+				
 				$next[(settings.loop || index < total - 1) ? "show" : "hide"]().html(settings.next);
 				$prev[(settings.loop || index) ? "show" : "hide"]().html(settings.previous);
 				
@@ -1022,6 +1048,12 @@
 	publicMethod.prev = function () {
 		if (!active && $related[1] && (settings.loop || index)) {
 			index = getIndex(-1);
+			launch($related[index]);
+		}
+	};
+	// Navigates to the clicked item.
+	publicMethod.paginate = function (index) {
+		if (!active && $related[1] && (settings.loop || index)) {
 			launch($related[index]);
 		}
 	};
