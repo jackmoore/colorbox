@@ -31,6 +31,7 @@
 		scrolling: true,
 		href: false,
 		title: false,
+        titleBar: true,
 		rel: false,
 		opacity: 0.9,
 		preloading: true,
@@ -362,11 +363,27 @@
 			}
 			className = settings.className;
 
-			if (settings.closeButton) {
+			if (settings.closeButton && settings.titleBar) {
 				$close.html(settings.close).appendTo($content);
 			} else {
 				$close.appendTo('<div/>');
 			}
+            
+            if (settings.titleBar) {
+                $content.append(
+                    $title,
+                    $current,
+                    $prev,
+                    $next,
+                    $slideshow
+                );
+            } else {
+                $title.appendTo('<div/>');
+                $current.appendTo('<div/>');
+                $prev.appendTo('<div/>');
+                $next.appendTo('<div/>');
+                $slideshow.appendTo('<div/>');
+            }
 
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
@@ -374,7 +391,7 @@
 				// Show colorbox so the sizes can be calculated in older versions of jQuery
 				$box.css({visibility:'hidden', display:'block'});
 				
-				$loaded = $tag(div, 'LoadedContent', 'width:0; height:0; overflow:hidden');
+				$loaded = $tag(div, 'LoadedContent', 'width:0; height:0; overflow:hidden' + (settings.titleBar ? '' : '; margin-bottom: 0'));
 				$content.css({width:'', height:''}).append($loaded);
 
 				// Cache values needed for size calculations
@@ -434,15 +451,17 @@
 			$overlay = $tag(div, "Overlay").hide();
 			$loadingOverlay = $([$tag(div, "LoadingOverlay")[0],$tag(div, "LoadingGraphic")[0]]);
 			$wrap = $tag(div, "Wrapper");
+            
+            $title = $tag(div, "Title");
+            $current = $tag(div, "Current");
+            $prev = $('<button type="button"/>').attr({id:prefix+'Previous'});
+            $next = $('<button type="button"/>').attr({id:prefix+'Next'});
+            $slideshow = $tag('button', "Slideshow");
+            
 			$content = $tag(div, "Content").append(
-				$title = $tag(div, "Title"),
-				$current = $tag(div, "Current"),
-				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
-				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
-				$slideshow = $tag('button', "Slideshow"),
 				$loadingOverlay
 			);
-
+            
 			$close = $('<button type="button"/>').attr({id:prefix+'Close'});
 			
 			$wrap.append( // The 3x3 Grid that makes up Colorbox
