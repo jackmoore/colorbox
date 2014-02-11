@@ -3,6 +3,11 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.4.37 - 2014/2/11
+
+* Fixed potential error when resizing.  Fixes #254
+* Added Microsoft's JPEG XR to photo detection regex.
+
 ### Version 1.4.33 - 2013/10/31
 
 * Fixed an issue where private events propagated to the document in versions of jQuery prior to 1.7.  Fixes #525, Fixes #526
