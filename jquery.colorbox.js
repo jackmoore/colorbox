@@ -86,6 +86,12 @@
 		},
 		title: function() {
 			return this.title;
+		},
+		flag: function() {
+			return $(this).find("img.flag").parent().html();
+		},
+		copyright: function() {
+			return $(this).parent().find('.copyright').html();
 		}
 	},
 
@@ -118,6 +124,8 @@
 	$loadingBay,
 	$loadingOverlay,
 	$title,
+	$flag,
+	$copyright,
 	$current,
 	$slideshow,
 	$next,
@@ -392,6 +400,8 @@
 				settings.get('onOpen');
 
 				$groupControls.add($title).hide();
+                $groupControls.add($flag).hide();
+                $groupControls.add($copyright).hide();
 
 				$box.focus();
 				
@@ -449,6 +459,8 @@
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),
+				$flag = $tag(div, "Flag"),
+				$copyright = $tag(div, "Copyright"),
 				$current = $tag(div, "Current"),
 				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
 				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
@@ -472,7 +484,8 @@
 				$tag(div, false, 'clear:left').append(
 					$tag(div, "BottomLeft"),
 					$bottomBorder = $tag(div, "BottomCenter"),
-					$tag(div, "BottomRight")
+					$tag(div, "BottomRight"),
+					$copyright = $tag(div, "Copyright")
 				)
 			).find('div div').css({'float': 'left'});
 			
@@ -805,6 +818,8 @@
 
 			
 			$title.html(settings.get('title')).show();
+            $flag.html(settings.get('flag')).show();
+            $copyright.html(settings.get('copyright')).show();
 			$loaded.show();
 			
 			if (total > 1) { // handle grouping
