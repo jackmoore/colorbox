@@ -579,7 +579,8 @@
 			}
 
 			$obj.each(function () {
-				$.data(this, colorbox, options);
+				var old = $.data(this, colorbox) || {};
+				$.data(this, colorbox, $.extend(old, options));
 			}).addClass(boxElement);
 
 			settings = new Settings($obj[0], options);
