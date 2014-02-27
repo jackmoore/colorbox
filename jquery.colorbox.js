@@ -366,7 +366,7 @@
 				// Show colorbox so the sizes can be calculated in older versions of jQuery
 				$box.css({visibility:'hidden', display:'block'});
 				
-				$loaded = $tag(div, 'LoadedContent', 'width:0; height:0; overflow:hidden');
+				$loaded = $tag(div, 'LoadedContent', 'width:0; height:0; overflow:hidden; visibility:hidden');
 				$content.css({width:'', height:''}).append($loaded);
 
 				// Cache values needed for size calculations
