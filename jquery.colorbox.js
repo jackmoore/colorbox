@@ -773,8 +773,6 @@
 		callback = function () {
 			var total = $related.length,
 				iframe,
-				frameBorder = 'frameBorder',
-				allowTransparency = 'allowTransparency',
 				complete;
 			
 			if (!open) {
@@ -828,14 +826,14 @@
 			}
 			
 			if (settings.get('iframe')) {
-				iframe = $tag('iframe')[0];
+				iframe = document.createElement('iframe');
 				
-				if (frameBorder in iframe) {
-					iframe[frameBorder] = 0;
+				if ('frameBorder' in iframe) {
+					iframe.frameBorder = 0;
 				}
 				
-				if (allowTransparency in iframe) {
-					iframe[allowTransparency] = "true";
+				if ('allowTransparency' in iframe) {
+					iframe.allowTransparency = "true";
 				}
 
 				if (!settings.get('scrolling')) {
@@ -848,8 +846,6 @@
 						name: (new Date()).getTime(), // give the iframe a unique name to prevent caching
 						'class': prefix + 'Iframe',
 						allowFullScreen : true, // allow HTML5 video to go fullscreen
-						webkitAllowFullScreen : true,
-						mozallowfullscreen : true
 					})
 					.one('load', complete)
 					.appendTo($loaded);
