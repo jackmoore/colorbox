@@ -139,7 +139,6 @@
 	loadingTimer,
 	publicMethod,
 	div = "div",
-	className,
 	requests = 0,
 	previousCSS = {},
 	init;
@@ -227,6 +226,13 @@
 		if ('contains' in $box[0] && !$box[0].contains(e.target)) {
 			e.stopPropagation();
 			$box.focus();
+		}
+	}
+
+	function setClass(str) {
+		if (setClass.str !== str) {
+			$box.add($overlay).removeClass(setClass.str).addClass(str);
+			setClass.str = str;
 		}
 	}
 
@@ -351,29 +357,11 @@
 			rel = settings.get('rel');
 			
 			getRelated();
-			
-			$overlay.css({
-				opacity: parseFloat(settings.get('opacity')),
-				cursor: settings.get('overlayClose') ? "pointer" : "auto",
-				visibility: 'visible'
-			}).show();
-			
-			if (className) {
-				$box.add($overlay).removeClass(className);
-			}
-			if (settings.get('className')) {
-				$box.add($overlay).addClass(settings.get('className'));
-			}
-			className = settings.get('className');
-
-			if (settings.get('closeButton')) {
-				$close.html(settings.get('close')).appendTo($content);
-			} else {
-				$close.appendTo('<div/>');
-			}
 
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
+
+				setClass(settings.get('className'));
 				
 				// Show colorbox so the sizes can be calculated in older versions of jQuery
 				$box.css({visibility:'hidden', display:'block'});
@@ -394,10 +382,8 @@
 				publicMethod.position();
 
 				trigger(event_open);
-
 				settings.get('onOpen');
 
-				
 				$groupControls.add($title).hide();
 
 				$box.focus();
@@ -422,6 +408,19 @@
 					});
 				}
 			}
+
+			$overlay.css({
+				opacity: parseFloat(settings.get('opacity')),
+				cursor: settings.get('overlayClose') ? "pointer" : "auto",
+				visibility: 'visible'
+			}).show();
+			
+			if (settings.get('closeButton')) {
+				$close.html(settings.get('close')).appendTo($content);
+			} else {
+				$close.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
+			}
+
 			load();
 		}
 	}
@@ -767,6 +766,8 @@
 		// floating the IMG removes the bottom line-height and fixed a problem where IE miscalculates the width of the parent element as 100% of the document width.
 		
 		$(photo).css({'float': 'none'});
+
+		setClass(settings.get('className'));
 
 		callback = function () {
 			var total = $related.length,
