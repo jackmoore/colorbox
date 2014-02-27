@@ -81,7 +81,8 @@
 			return this.rel;
 		},
 		href: function() {
-			return this.href;
+			// Using .attr() so that the href can also be used to provide a selector for inline content
+			return $(this).attr('href');
 		},
 		title: function() {
 			return this.title;
