@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.1 - 2014/2/27
+
+* Fixed regression that broke direct calls to Colorbox, ie. $.colorbox(…)
+
 ### Version 1.5.0 - 2014/2/27
 
 * Changed when the className is applied: immediately on open, but only updated immediately prior to transition.  Fixes #565

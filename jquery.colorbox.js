@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.5.0 - 2014-02-27
+	Colorbox v1.5.1 - 2014-02-27
 	jQuery lightbox and modal window plugin
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -561,6 +561,16 @@
 		var settings;
 		var $obj = this;
 
+		options = options || {};
+
+		if ($.isFunction($obj)) { // assume a call to $.colorbox
+			$obj = $('<a/>');
+			options.open = true;
+		} else if (!$obj[0]) { // colorbox being applied to empty collection
+			return $obj;
+		}
+
+
 		if (!$obj[0]) { // colorbox being applied to empty collection
 			return $obj;
 		}
@@ -568,14 +578,9 @@
 		appendHTML();
 
 		if (addBindings()) {
-			options = options || {};
 
 			if (callback) {
 				options.onComplete = callback;
-			}
-
-			if ($.isFunction($obj)) { // assume a call to $.colorbox
-				options.open = true;
 			}
 
 			$obj.each(function () {
