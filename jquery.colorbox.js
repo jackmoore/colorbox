@@ -740,7 +740,7 @@
 		
 		var callback, speed = settings.get('transition') === "none" ? 0 : settings.get('speed');
 
-		$loaded.empty().remove(); // Using empty first may prevent some IE7 issues.
+		$loaded.remove();
 
 		$loaded = $tag(div, 'LoadedContent').append(object);
 		
@@ -780,7 +780,7 @@
 				return;
 			}
 			
-			function removeFilter() { // Needed for IE7 & IE8 in versions of jQuery prior to 1.7.2
+			function removeFilter() { // Needed for IE8 in versions of jQuery prior to 1.7.2
 				if ($.support.opacity === false) {
 					$box[0].style.removeAttribute('filter');
 				}
@@ -794,7 +794,8 @@
 			};
 
 			
-			$title.html(settings.get('title')).add($loaded).show();
+			$title.html(settings.get('title')).show();
+			$loaded.show();
 			
 			if (total > 1) { // handle grouping
 				if (typeof settings.get('current') === "string") {
@@ -1047,7 +1048,7 @@
 				
 				trigger(event_purge);
 				
-				$loaded.empty().remove(); // Using empty first may prevent some IE7 issues.
+				$loaded.remove();
 				
 				setTimeout(function () {
 					closing = false;
