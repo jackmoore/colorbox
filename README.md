@@ -3,6 +3,12 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.0 - 2014/2/27
+
+* Changed when the className is applied: immediately on open, but only updated immediately prior to transition.  Fixes #565
+* Fixed potential style flash if #cboxLoadedContent is given a background.  Fixes #567
+* Misc. code cleanup
+
 ### Version 1.4.37 - 2014/2/11
 
 * Fixed potential error when resizing.  Fixes #254

@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.4.37 - 2014-02-11
+	Colorbox v1.5.0 - 2014-02-27
 	jQuery lightbox and modal window plugin
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -845,7 +845,7 @@
 						src: settings.get('href'),
 						name: (new Date()).getTime(), // give the iframe a unique name to prevent caching
 						'class': prefix + 'Iframe',
-						allowFullScreen : true, // allow HTML5 video to go fullscreen
+						allowFullScreen : true // allow HTML5 video to go fullscreen
 					})
 					.one('load', complete)
 					.appendTo($loaded);
