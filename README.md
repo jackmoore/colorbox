@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.2 - 2014/2/28
+
+* Added svg to image types regex.
+
 ### Version 1.5.1 - 2014/2/27
 
 * Fixed regression that broke direct calls to Colorbox, ie. $.colorbox(…)
