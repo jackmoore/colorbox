@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.5.2 - 2014-02-28
+	Colorbox v1.5.3 - 2014-03-04
 	jQuery lightbox and modal window plugin
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -176,26 +176,28 @@
 
 		this.cache = {};
 		this.el = element;
-		this.get = function(key) {
-			var dataAttr;
-			var value;
 
-			if (this.cache[key] !== undefined) {
-				value = this.cache[key];
-			} else {
+		this.value = function(key) {
+			var dataAttr;
+
+			if (this.cache[key] === undefined) {
 				dataAttr = $(this.el).attr('data-cbox-'+key);
 
 				if (dataAttr !== undefined) {
-					value = dataAttr;
+					this.cache[key] = dataAttr;
 				} else if (options[key] !== undefined) {
-					value = options[key];
+					this.cache[key] = options[key];
 				} else if (defaults[key] !== undefined) {
-					value = defaults[key];
+					this.cache[key] = defaults[key];
 				}
-				this.cache[key] = value;
 			}
 
-			return $.isFunction(value) ? value.call(this.el) : value;
+			return this.cache[key];
+		};
+
+		this.get = function(key) {
+			var value = this.value(key);
+			return $.isFunction(value) ? value.call(this.el, this) : value;
 		};
 	}
 

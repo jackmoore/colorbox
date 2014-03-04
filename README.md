@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.3 - 2014/3/4
+
+* Added access to settings object in callbacks.
+
 ### Version 1.5.2 - 2014/2/28
 
 * Added svg to image types regex.
