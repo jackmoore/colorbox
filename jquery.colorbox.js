@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.5.3 - 2014-03-04
+	Colorbox v1.5.4 - 2014-03-07
 	jQuery lightbox and modal window plugin
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -226,7 +226,7 @@
 	}
 
 	function trapFocus(e) {
-		if ('contains' in $box[0] && !$box[0].contains(e.target)) {
+		if ('contains' in $box[0] && !$box[0].contains(e.target) && e.target !== $overlay[0]) {
 			e.stopPropagation();
 			$box.focus();
 		}

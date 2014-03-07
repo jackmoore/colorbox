@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.4 - 2014/3/7
+
+* Fixed potential issue where IE9+ wouldn't close the modal when clicking on the overlay.  Fixes #576
+
 ### Version 1.5.3 - 2014/3/4
 
 * Added access to settings object in callbacks.
