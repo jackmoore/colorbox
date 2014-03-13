@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.5 - 2014/3/13
+
+* Allow setting the overlay opacity through CSS, rather than having to use Colorbox's opacity property.  Fixes #580
+
 ### Version 1.5.4 - 2014/3/7
 
 * Fixed potential issue where IE9+ wouldn't close the modal when clicking on the overlay.  Fixes #576

@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.5.4 - 2014-03-07
+	Colorbox v1.5.5 - 2014-03-13
 	jQuery lightbox and modal window plugin
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -367,7 +367,7 @@
 				setClass(settings.get('className'));
 				
 				// Show colorbox so the sizes can be calculated in older versions of jQuery
-				$box.css({visibility:'hidden', display:'block'});
+				$box.css({visibility:'hidden', display:'block', opacity:''});
 				
 				$loaded = $tag(div, 'LoadedContent', 'width:0; height:0; overflow:hidden; visibility:hidden');
 				$content.css({width:'', height:''}).append($loaded);
@@ -413,8 +413,8 @@
 			}
 
 			$overlay.css({
-				opacity: parseFloat(settings.get('opacity')),
-				cursor: settings.get('overlayClose') ? "pointer" : "auto",
+				opacity: parseFloat(settings.get('opacity')) || '',
+				cursor: settings.get('overlayClose') ? 'pointer' : '',
 				visibility: 'visible'
 			}).show();
 			
@@ -1036,22 +1036,16 @@
 		if (open && !closing) {
 			
 			closing = true;
-			
 			open = false;
-			
 			trigger(event_cleanup);
 			settings.get('onCleanup');
-			
 			$window.unbind('.' + prefix);
-			
 			$overlay.fadeTo(settings.get('fadeOut') || 0, 0);
 			
 			$box.stop().fadeTo(settings.get('fadeOut') || 0, 0, function () {
-			
-				$box.add($overlay).css({'opacity': 1, cursor: 'auto'}).hide();
-				
+				$box.hide();
+				$overlay.hide();
 				trigger(event_purge);
-				
 				$loaded.remove();
 				
 				setTimeout(function () {
