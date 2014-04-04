@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.6 - 2014/4/4
+
+* Applied maxWidth and maxHeight to the initialWidth and initialHeight.  Fixes #391
+
 ### Version 1.5.5 - 2014/3/13
 
 * Allow setting the overlay opacity through CSS, rather than having to use Colorbox's opacity property.  Fixes #580

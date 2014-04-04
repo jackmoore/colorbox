@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.5.5 - 2014-03-13
+	Colorbox v1.5.6 - 2014-04-04
 	jQuery lightbox and modal window plugin
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -379,8 +379,14 @@
 				loadedWidth = $loaded.outerWidth(true);
 
 				// Opens inital empty Colorbox prior to content being loaded.
-				settings.w = setSize(settings.get('initialWidth'), 'x');
-				settings.h = setSize(settings.get('initialHeight'), 'y');
+				var initialWidth = setSize(settings.get('initialWidth'), 'x');
+				var initialHeight = setSize(settings.get('initialHeight'), 'y');
+				var maxWidth = settings.get('maxWidth');
+				var maxHeight = settings.get('maxHeight');
+
+				settings.w = (maxWidth !== false ? Math.min(initialWidth, setSize(maxWidth, 'x')) : initialWidth) - loadedWidth - interfaceWidth;
+				settings.h = (maxHeight !== false ? Math.min(initialHeight, setSize(maxHeight, 'y')) : initialHeight) - loadedHeight - interfaceHeight;
+
 				$loaded.css({width:'', height:settings.h});
 				publicMethod.position();
 
