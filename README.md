@@ -3,6 +3,11 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.7 - 2014/4/15
+
+* Fix potential error when calling Colorbox directly. References #591
+* Potentially worked around browser limitation of reporting that an image height and width is 0 immediately after onload.  Fixes #535
+
 ### Version 1.5.6 - 2014/4/4
 
 * Applied maxWidth and maxHeight to the initialWidth and initialHeight.  Fixes #391

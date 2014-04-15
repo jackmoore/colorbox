@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.5.6 - 2014-04-04
+	Colorbox v1.5.7 - 2014-04-15
 	jQuery lightbox and modal window plugin
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -78,14 +78,14 @@
 		onClosed: false,
 
 		rel: function() {
-			return this.rel;
+			return this && this.rel ? this.rel : null;
 		},
 		href: function() {
-			// Using .attr() so that the href can also be used to provide a selector for inline content
-			return $(this).attr('href');
+			// Using .attr() so and href like '#container' can be used as a selector for inline content
+			return this && this.href ? $(this).attr('href') : null;
 		},
 		title: function() {
-			return this.title;
+			return this && this.title ? this.title : null;
 		}
 	},
 
@@ -242,7 +242,7 @@
 	function getRelated() {
 		index = 0;
 		
-		if (rel && rel !== 'nofollow') {
+		if (rel && rel !== false) {
 			$related = $('.' + boxElement).filter(function () {
 				var options = $.data(this, colorbox);
 				var settings = new Settings(this, options);
@@ -950,7 +950,7 @@
 
 			href = retinaUrl(settings, href);
 
-			photo = document.createElement('img');
+			photo = new Image();
 
 			$(photo)
 			.addClass(prefix + 'Photo')
@@ -958,61 +958,61 @@
 				prep($tag(div, 'Error').html(settings.get('imgError')));
 			})
 			.one('load', function () {
-				var percent;
-
 				if (request !== requests) {
 					return;
 				}
 
-				$.each(['alt', 'longdesc', 'aria-describedby'], function(i,val){
-					var attr = $(settings.el).attr(val) || $(settings.el).attr('data-'+val);
-					if (attr) {
-						photo.setAttribute(val, attr);
+				// A small pause because some browsers will occassionaly report a 
+				// img.width and img.height of zero immediately after the img.onload fires
+				setTimeout(function(){
+					var percent;
+
+					$.each(['alt', 'longdesc', 'aria-describedby'], function(i,val){
+						var attr = $(settings.el).attr(val) || $(settings.el).attr('data-'+val);
+						if (attr) {
+							photo.setAttribute(val, attr);
+						}
+					});
+
+					if (settings.get('retinaImage') && window.devicePixelRatio > 1) {
+						photo.height = photo.height / window.devicePixelRatio;
+						photo.width = photo.width / window.devicePixelRatio;
 					}
-				});
 
-				if (settings.get('retinaImage') && window.devicePixelRatio > 1) {
-					photo.height = photo.height / window.devicePixelRatio;
-					photo.width = photo.width / window.devicePixelRatio;
-				}
-
-				if (settings.get('scalePhotos')) {
-					setResize = function () {
-						photo.height -= photo.height * percent;
-						photo.width -= photo.width * percent;
-					};
-					if (settings.mw && photo.width > settings.mw) {
-						percent = (photo.width - settings.mw) / photo.width;
-						setResize();
+					if (settings.get('scalePhotos')) {
+						setResize = function () {
+							photo.height -= photo.height * percent;
+							photo.width -= photo.width * percent;
+						};
+						if (settings.mw && photo.width > settings.mw) {
+							percent = (photo.width - settings.mw) / photo.width;
+							setResize();
+						}
+						if (settings.mh && photo.height > settings.mh) {
+							percent = (photo.height - settings.mh) / photo.height;
+							setResize();
+						}
 					}
-					if (settings.mh && photo.height > settings.mh) {
-						percent = (photo.height - settings.mh) / photo.height;
-						setResize();
+					
+					if (settings.h) {
+						photo.style.marginTop = Math.max(settings.mh - photo.height, 0) / 2 + 'px';
 					}
-				}
-				
-				if (settings.h) {
-					photo.style.marginTop = Math.max(settings.mh - photo.height, 0) / 2 + 'px';
-				}
-				
-				if ($related[1] && (settings.get('loop') || $related[index + 1])) {
-					photo.style.cursor = 'pointer';
-					photo.onclick = function () {
-						publicMethod.next();
-					};
-				}
+					
+					if ($related[1] && (settings.get('loop') || $related[index + 1])) {
+						photo.style.cursor = 'pointer';
+						photo.onclick = function () {
+							publicMethod.next();
+						};
+					}
 
-				photo.style.width = photo.width + 'px';
-				photo.style.height = photo.height + 'px';
-
-				setTimeout(function () { // A pause because Chrome will sometimes report a 0 by 0 size otherwise.
+					photo.style.width = photo.width + 'px';
+					photo.style.height = photo.height + 'px';
 					prep(photo);
 				}, 1);
 			});
 			
-			setTimeout(function () { // A pause because Opera 10.6+ will sometimes not run the onload function otherwise.
-				photo.src = href;
-			}, 1);
+			photo.src = href;
+
 		} else if (href) {
 			$loadingBay.load(href, settings.get('data'), function (data, status) {
 				if (request === requests) {
