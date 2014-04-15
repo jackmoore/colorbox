@@ -3,6 +3,11 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.8 - 2014/4/15
+
+* Fixed accidental leak of global variable.  References #591
+* Enabled strict mode. Fixes #597
+
 ### Version 1.5.7 - 2014/4/15
 
 * Fix potential error when calling Colorbox directly. References #591

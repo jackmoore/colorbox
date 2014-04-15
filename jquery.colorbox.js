@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.5.7 - 2014-04-15
+	Colorbox v1.5.8 - 2014-04-15
 	jQuery lightbox and modal window plugin
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -78,14 +78,14 @@
 		onClosed: false,
 
 		rel: function() {
-			return this && this.rel ? this.rel : null;
+			return this.rel;
 		},
 		href: function() {
-			// Using .attr() so and href like '#container' can be used as a selector for inline content
-			return this && this.href ? $(this).attr('href') : null;
+			// using this.href would give the absolute url, when the href may have been inteded as a selector (e.g. '#container')
+			return $(this).attr('href');
 		},
 		title: function() {
-			return this && this.title ? this.title : null;
+			return this.title;
 		}
 	},
 
@@ -239,7 +239,7 @@
 		}
 	}
 
-	function getRelated() {
+	function getRelated(rel) {
 		index = 0;
 		
 		if (rel && rel !== false) {
@@ -356,10 +356,8 @@
 			options = $(element).data('colorbox');
 
 			settings = new Settings(element, options);
-
-			rel = settings.get('rel');
 			
-			getRelated();
+			getRelated(settings.get('rel'));
 
 			if (!open) {
 				open = active = true; // Prevents the page-change action from queuing up if the visitor holds down the left or right keys.
