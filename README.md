@@ -5,7 +5,7 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ### Version 1.5.9 - 2014/4/25
 
-* Fixed inline content bug when using child selectors.  Fixes #600
+* Fixed inline content bug when using child selectors.  Fixes #599
 
 ### Version 1.5.8 - 2014/4/15
 
