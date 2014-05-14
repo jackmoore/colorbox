@@ -226,7 +226,7 @@
 	}
 
 	function trapFocus(e) {
-		if ($box != null && $box instanceof Array && $box.length > 0 && 'contains' in $box[0] && !$box[0].contains(e.target) && e.target !== $overlay[0]) {
+		if ($box instanceof Array && $box.length > 0 && 'contains' in $box[0] && !$box[0].contains(e.target) && e.target !== $overlay[0]) {
 			e.stopPropagation();
 			$box.focus();
 		}
