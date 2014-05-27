@@ -242,7 +242,7 @@
 	function getRelated(rel) {
 		index = 0;
 		
-		if (rel && rel !== false) {
+		if (rel && rel !== false && rel !== 'nofollow') {
 			$related = $('.' + boxElement).filter(function () {
 				var options = $.data(this, colorbox);
 				var settings = new Settings(this, options);
