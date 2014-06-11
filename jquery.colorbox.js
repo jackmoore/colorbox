@@ -1068,7 +1068,7 @@
 
 		$box.stop();
 		$.colorbox.close();
-		$box.stop().remove();
+		$box.stop(false, true).remove();
 		$overlay.remove();
 		closing = false;
 		$box = null;
