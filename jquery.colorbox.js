@@ -549,7 +549,7 @@
 	}
 
 	// Don't do anything if Colorbox already exists.
-	if ($.colorbox) {
+	if ($['colorbox']) {
 		return;
 	}
 
