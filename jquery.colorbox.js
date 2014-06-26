@@ -353,7 +353,7 @@
 
 		if (!closing) {
 
-			options = $(element).data('colorbox');
+			options = $(element).data(colorbox);
 
 			settings = new Settings(element, options);
 			
