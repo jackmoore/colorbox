@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.10 - 2014/6/26
+
+* Minor misc. tweaks (merging pull requests #611, #612, #615, #619, #620).
+
 ### Version 1.5.9 - 2014/4/25
 
 * Fixed inline content bug when using child selectors.  Fixes #599
