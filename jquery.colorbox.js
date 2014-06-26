@@ -89,7 +89,6 @@
 		}
 	},
 
-
 	// Abstracting the HTML and event identifiers for easy rebranding
 	colorbox = 'colorbox',
 	prefix = 'cbox',
@@ -549,7 +548,7 @@
 	}
 
 	// Don't do anything if Colorbox already exists.
-	if ($.colorbox) {
+	if ($[colorbox]) {
 		return;
 	}
 
@@ -1067,7 +1066,7 @@
 		if (!$box) { return; }
 
 		$box.stop();
-		$.colorbox.close();
+		$[colorbox].close();
 		$box.stop(false, true).remove();
 		$overlay.remove();
 		closing = false;
