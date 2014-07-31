@@ -20,7 +20,7 @@
     Change the following styles to modify the appearance of Colorbox.  They are
     ordered & tabbed in a way that represents the nesting of the generated HTML.
 */
-#cboxOverlay{background:url(images/overlay.png) repeat 0 0;}
+#cboxOverlay{background:url(images/overlay.png) repeat 0 0; opacity: 0.9; filter: alpha(opacity = 90);}
 #colorbox{outline:0;}
     #cboxTopLeft{width:21px; height:21px; background:url(images/controls.png) no-repeat -101px 0;}
     #cboxTopRight{width:21px; height:21px; background:url(images/controls.png) no-repeat -130px 0;}

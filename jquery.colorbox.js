@@ -1,5 +1,5 @@
 /*!
-	Colorbox v1.5.11 - 2014-07-31
+	Colorbox v1.5.12 - 2014-07-31
 	jQuery lightbox and modal window plugin
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -415,8 +415,9 @@
 				}
 			}
 
+			var opacity = parseFloat(settings.get('opacity'));
 			$overlay.css({
-				opacity: parseFloat(settings.get('opacity')),
+				opacity: $.isNumeric(opacity) ? opacity : '',
 				cursor: settings.get('overlayClose') ? 'pointer' : '',
 				visibility: 'visible'
 			}).show();

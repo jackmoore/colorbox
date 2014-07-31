@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.12 - 2014/7/31
+
+* Allowed setting the overlay opacity via CSS, by setting Colorbox's opacity property to false.  References #628.
+
 ### Version 1.5.11 - 2014/7/31
 
 * Fixed bug where setting opacity to 0 was ignored. Fixes #628.
