@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.11 - 2014/7/31
+
+* Fixed bug where setting opacity to 0 was ignored. Fixes #628.
+
 ### Version 1.5.10 - 2014/6/26
 
 * Minor misc. tweaks (merging pull requests #611, #612, #615, #619, #620).
