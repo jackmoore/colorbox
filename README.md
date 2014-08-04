@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.13 - 2014/8/4
+
+* Fixed regression introduced with v1.5.12 with legacy versions of jQuery (1.3x-1.6x).  References #628.
+
 ### Version 1.5.12 - 2014/7/31
 
 * Allowed setting the overlay opacity via CSS, by setting Colorbox's opacity property to false.  References #628.
