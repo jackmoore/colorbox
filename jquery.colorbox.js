@@ -697,7 +697,7 @@
 					}, 1);
 				}
 
-				if (loadedCallback) {
+				if ($.isFunction(loadedCallback)) {
 					loadedCallback();
 				}
 			},
