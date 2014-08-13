@@ -733,6 +733,7 @@
 				scrolltop = $loaded.scrollTop();
 				$loaded.css({height: "auto"});
 				settings.h = $loaded.height();
+				if (settings.h > settings.mh) settings.h=settings.mh;
 			}
 
 			$loaded.css({height: settings.h});
