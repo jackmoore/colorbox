@@ -732,8 +732,7 @@
 			if (!options.innerHeight && !options.height) {
 				scrolltop = $loaded.scrollTop();
 				$loaded.css({height: "auto"});
-				settings.h = $loaded.height();
-				settings.h = Math.min(settings.h, settings.mh);
+				settings.h = Math.min($loaded.height(), settings.mh);
 			}
 
 			$loaded.css({height: settings.h});
