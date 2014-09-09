@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.14 - 2014/9/9
+
+* When opening, append Colorbox to the DOM if it was detached for whatever reason.  Fixes #645.
+
 ### Version 1.5.13 - 2014/8/4
 
 * Fixed regression introduced with v1.5.12 with legacy versions of jQuery (1.3x-1.6x).  References #628.

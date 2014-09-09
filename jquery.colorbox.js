@@ -1,8 +1,7 @@
 /*!
-	Colorbox v1.5.13 - 2014-08-04
-	jQuery lightbox and modal window plugin
-	(c) 2014 Jack Moore - http://www.jacklmoore.com/colorbox
-	license: http://www.opensource.org/licenses/mit-license.php
+	Colorbox 1.5.14
+	license: MIT
+	http://www.jacklmoore.com/colorbox
 */
 (function ($, document, window) {
 	var
@@ -435,7 +434,7 @@
 	// Colorbox's markup needs to be added to the DOM prior to being called
 	// so that the browser will go ahead and load the CSS background images.
 	function appendHTML() {
-		if (!$box && document.body) {
+		if (!$box) {
 			init = false;
 			$window = $(window);
 			$box = $tag(div).attr({
@@ -479,7 +478,8 @@
 			$loadingBay = $tag(div, false, 'position:absolute; width:9999px; visibility:hidden; display:none; max-width:none;');
 			
 			$groupControls = $next.add($prev).add($current).add($slideshow);
-
+		}
+		if (document.body && !$box.parent().length) {
 			$(document.body).append($overlay, $box.append($wrap, $loadingBay));
 		}
 	}
