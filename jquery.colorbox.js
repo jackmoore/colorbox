@@ -435,7 +435,7 @@
 	// Colorbox's markup needs to be added to the DOM prior to being called
 	// so that the browser will go ahead and load the CSS background images.
 	function appendHTML() {
-		if (!$box && document.body) {
+		if ((!$box || !$box.parent().length) && document.body) {
 			init = false;
 			$window = $(window);
 			$box = $tag(div).attr({
