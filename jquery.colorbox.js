@@ -927,7 +927,7 @@
 		
 		loadingTimer = setTimeout(function () {
 			var html = $(settings.el).attr('data-'+prefix+'-onLoadHTML') || settings.get('onLoadHTML');
-			$loadingOverlay.html(html).show();
+			$loadingOverlay.show().first().html(html);
 		}, 100);
 		
 		if (settings.get('inline')) {
