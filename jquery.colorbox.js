@@ -2,6 +2,7 @@
 	Colorbox 1.5.14
 	license: MIT
 	http://www.jacklmoore.com/colorbox
+	modified by Salt Ship Design
 */
 (function ($, document, window) {
 	var
@@ -1001,6 +1002,12 @@
 						photo.style.cursor = 'pointer';
 						photo.onclick = function () {
 							publicMethod.next();
+						};
+					}
+					else {
+						photo.style.cursor = 'pointer';
+						photo.onclick = function () {
+							publicMethod.close();
 						};
 					}
 
