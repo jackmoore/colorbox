@@ -11,7 +11,8 @@
 		"window",
 		"popup",
 		"ui",
-		"jQuery"
+		"jQuery",
+		"jquery-plugin"
 	],
 	"authors": [
 		{
