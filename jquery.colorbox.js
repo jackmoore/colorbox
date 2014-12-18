@@ -80,8 +80,15 @@
 			return this.rel;
 		},
 		href: function() {
-			// using this.href would give the absolute url, when the href may have been inteded as a selector (e.g. '#container')
+			// Using this.href would always give the absolute url, but the href may be
+			// intended as an in-page selector (e.g. '#container')
 			return $(this).attr('href');
+		},
+		sizes: function() {
+			return this.getAttribute('data-cb-sizes');
+		},
+		srcset: function() {
+			return this.getAttribute('data-cb-srcset');
 		},
 		title: function() {
 			return this.title;
@@ -140,7 +147,11 @@
 	div = "div",
 	requests = 0,
 	previousCSS = {},
-	init;
+	init,
+
+	// Any browser that supports 'sizes' will also support 'w' syntax.
+	srcsetWSupported = "sizes" in new Image();
+
 
 	// ****************
 	// HELPER FUNCTIONS
@@ -823,12 +834,20 @@
 						var img,
 							i = $related[this],
 							settings = new Settings(i, $.data(i, colorbox)),
-							src = settings.get('href');
+							src = settings.get('href'),
+							sizes = settings.get('sizes'),
+							srcset = settings.get('srcset');
 
 						if (src && isImage(settings, src)) {
 							src = retinaUrl(settings, src);
 							img = document.createElement('img');
-							img.src = src;
+
+							if (srcset && srcsetWSupported) {
+							  img.sizes = sizes;
+							  img.srcset = srcset;
+							} else {
+							  img.src = src;
+							}
 						}
 					});
 				}
@@ -890,27 +909,27 @@
 
 	function load () {
 		var href, setResize, prep = publicMethod.prep, $inline, request = ++requests;
-		
+
 		active = true;
-		
+
 		photo = false;
-		
+
 		trigger(event_purge);
 		trigger(event_load);
 		settings.get('onLoad');
-		
+
 		settings.h = settings.get('height') ?
 				setSize(settings.get('height'), 'y') - loadedHeight - interfaceHeight :
 				settings.get('innerHeight') && setSize(settings.get('innerHeight'), 'y');
-		
+
 		settings.w = settings.get('width') ?
 				setSize(settings.get('width'), 'x') - loadedWidth - interfaceWidth :
 				settings.get('innerWidth') && setSize(settings.get('innerWidth'), 'x');
-		
+
 		// Sets the minimum dimensions for use in image scaling
 		settings.mw = settings.w;
 		settings.mh = settings.h;
-		
+
 		// Re-evaluate the minimum width and height based on maxWidth and maxHeight values.
 		// If the width or height exceed the maxWidth or maxHeight, use the maximum values instead.
 		if (settings.get('maxWidth')) {
@@ -921,9 +940,11 @@
 			settings.mh = setSize(settings.get('maxHeight'), 'y') - loadedHeight - interfaceHeight;
 			settings.mh = settings.h && settings.h < settings.mh ? settings.h : settings.mh;
 		}
-		
+
 		href = settings.get('href');
-		
+		sizes = settings.get('sizes');
+		srcset = settings.get('srcset');
+
 		loadingTimer = setTimeout(function () {
 			$loadingOverlay.show();
 		}, 100);
@@ -1010,7 +1031,14 @@
 				}, 1);
 			});
 			
-			photo.src = href;
+			if (srcset && srcsetWSupported) {
+				if (sizes) {
+					photo.sizes = sizes;
+				}				
+				photo.srcset = srcset;
+			} else {
+				photo.src = href;
+			}
 
 		} else if (href) {
 			$loadingBay.load(href, settings.get('data'), function (data, status) {
