@@ -754,7 +754,7 @@
 
 		$loaded.remove();
 
-		$loaded = $tag(div, 'LoadedContent').append(object);
+		$loaded = $tag(div, 'LoadedContent').append(object.html());
 		
 		function getWidth() {
 			settings.w = settings.w || $loaded.width();
