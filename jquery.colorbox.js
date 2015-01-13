@@ -617,17 +617,17 @@
 
 		// remove the modal so that it doesn't influence the document width/height
 		$box.css({top: -9e4, left: -9e4});
-
+		
 		scrollTop = $window.scrollTop();
 		scrollLeft = $window.scrollLeft();
 
 		if (settings.get('fixed')) {
-			offset.top -= scrollTop;
-			offset.left -= scrollLeft;
+			top = 0;
+			left = 0;
 			$box.css({position: 'fixed'});
 		} else {
-			top = scrollTop;
-			left = scrollLeft;
+			top = 0;
+			left = 0;
 			$box.css({position: 'absolute'});
 		}
 
@@ -637,6 +637,7 @@
 		} else if (settings.get('left') !== false) {
 			left += setSize(settings.get('left'), 'x');
 		} else {
+			left = scrollLeft;
 			left += Math.round(Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2);
 		}
 		
@@ -645,10 +646,11 @@
 		} else if (settings.get('top') !== false) {
 			top += setSize(settings.get('top'), 'y');
 		} else {
+			top = scrollTop;
 			top += Math.round(Math.max(winheight() - settings.h - loadedHeight - interfaceHeight, 0) / 2);
 		}
 
-		$box.css({top: offset.top, left: offset.left, visibility:'visible'});
+		$box.css({top: top, left: left, visibility:'visible'});
 		
 		// this gives the wrapper plenty of breathing room so it's floated contents can move around smoothly,
 		// but it has to be shrank down around the size of div#colorbox when it's done.  If not,
