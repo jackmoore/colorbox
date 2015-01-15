@@ -791,7 +791,10 @@
 
 		$loaded.hide()
 		.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
-		.css({width: getWidth(), overflow: settings.get('scrolling') ? 'auto' : 'hidden'})
+		.css({
+      width: getWidth(),
+      overflow: settings.get('scrolling') && !settings.get('zoom') ? 'auto' : 'hidden'
+    })
 		.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
 		.prependTo($content);
 
@@ -800,6 +803,15 @@
 		// floating the IMG removes the bottom line-height and fixed a problem where IE miscalculates the width of the parent element as 100% of the document width.
 
 		$(photo).css({'float': 'none'});
+
+    if (settings.get('zoom')) {
+      $(photo).css({
+        'height': 'auto',
+        'position': 'relative',
+        'left': 0,
+        'top': 0
+      })
+    }
 
 		setClass(settings.get('className'));
 
@@ -1085,19 +1097,43 @@
 	};
 
   publicMethod.zoomin = function () {
+    var w = 0,
+        wb = false, // width boolean
+        hb = false; // height boolean
+
+    if ($(photo).width() >= $loaded.width()) {
+      w = $content.width();
+      wb = true;
+    }
+
+    if ($(photo).height() > $loaded.height()) {
+      hb = true;
+    }
+
     $(photo).css({
       'width': $(photo).width() * 2,
-      'height': 'auto',
-      'position': 'relative',
-      'left': 0,
-      'top': 0
+      'left': wb ? (parseInt($(photo).css('left')) * (-2) + w / 2) * (-1) : 0,
+      'top': hb ? (parseInt($(photo).css('top')) * (-2) + w / 2) * (-1) : 0
     });
   };
 
   publicMethod.zoomout = function () {
+    var w = 0,
+        wb = false, // width boolean
+        hb = false; // height boolean
+
+    if ($(photo).width() >= $loaded.width()) {
+      w = $content.width();
+      wb = true;
+    }
+
+    if ($(photo).height() > $loaded.height()) {
+      hb = true;
+    }
     $(photo).css({
       'width': $(photo).width() / 2,
-      'height': 'auto'
+      'left': wb ?  (parseInt($(photo).css('left')) / (-2) - w / 4) * (-1) : 0,
+      'top': hb ? (parseInt($(photo).css('top')) / (-2) - w / 4 ) * (-1) : 0
     });
   };
 
