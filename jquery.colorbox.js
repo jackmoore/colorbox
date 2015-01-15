@@ -603,7 +603,7 @@
 			return $obj;
 		}
 
-		appendHTML();
+
 
 		if (addBindings()) {
 

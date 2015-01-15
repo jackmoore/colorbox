@@ -1,0 +1,14 @@
+$[colorbox]:
+{
+  appendHTML():
+  {
+
+  }
+  addBindings():
+  {
+    $obj.each():
+    {
+
+    }
+  }
+}
