@@ -40,7 +40,7 @@
 		right: false,
 		fixed: false,
 		data: undefined,
-    closeButton: true,
+		closeButton: true,
 		zoom: true,
 		fastIframe: true,
 		open: false,
@@ -65,8 +65,8 @@
 		close: "close",
 		xhrError: "This content failed to load.",
 		imgError: "This image failed to load.",
-    zoomin: "+",
-    zoomout: "-",
+		zoomin: "+",
+		zoomout: "-",
 
 		// accessbility
 		returnFocus: true,
@@ -123,8 +123,8 @@
 	$slideshow,
 	$next,
 	$prev,
-  $close,
-  $zoomin,
+	$close,
+	$zoomin,
 	$zoomout,
 	$groupControls,
 	$events = $('<a/>'), // $({}) would be prefered, but there is an issue with jQuery 1.4.2
@@ -432,13 +432,13 @@
 				$close.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
 			}
 
-      if (settings.get('zoom')) {
-        $zoomin.html(settings.get('zoomin')).appendTo($content);
-        $zoomout.html(settings.get('zoomout')).appendTo($content);
-      } else {
-        $zoomin.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
-        $zoomout.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
-      }
+			if (settings.get('zoom')) {
+				$zoomin.html(settings.get('zoomin')).appendTo($content);
+				$zoomout.html(settings.get('zoomout')).appendTo($content);
+			} else {
+				$zoomin.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
+				$zoomout.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
+			}
 
 
 			load();
@@ -469,8 +469,8 @@
 				$loadingOverlay
 			);
 
-      $close = $('<button type="button"/>').attr({id:prefix+'Close'});
-      $zoomin = $('<button type="button"/>').attr({id:prefix+'Zoomin'});
+			$close = $('<button type="button"/>').attr({id:prefix+'Close'});
+			$zoomin = $('<button type="button"/>').attr({id:prefix+'Zoomin'});
 			$zoomout = $('<button type="button"/>').attr({id:prefix+'Zoomout'});
 
 			$wrap.append( // The 3x3 Grid that makes up Colorbox
@@ -525,12 +525,12 @@
 				$close.click(function () {
 					publicMethod.close();
 				});
-        $zoomin.click(function () {
-          publicMethod.zoomin();
-        });
-        $zoomout.click(function () {
-          publicMethod.zoomout();
-        });
+				$zoomin.click(function () {
+					publicMethod.zoom('in');
+				});
+				$zoomout.click(function () {
+					publicMethod.zoom('out');
+				});
 				$overlay.click(function () {
 					if (settings.get('overlayClose')) {
 						publicMethod.close();
@@ -789,9 +789,9 @@
 		$loaded.hide()
 		.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
 		.css({
-      width: getWidth(),
-      overflow: settings.get('scrolling') && !settings.get('zoom') ? 'auto' : 'hidden'
-    })
+			width: getWidth(),
+			overflow: settings.get('scrolling') && !settings.get('zoom') ? 'auto' : 'hidden'
+		})
 		.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
 		.prependTo($content);
 
@@ -801,14 +801,14 @@
 
 		$(photo).css({'float': 'none'});
 
-    if (settings.get('zoom')) {
-      $(photo).css({
-        'height': 'auto',
-        'position': 'relative',
-        'left': 0,
-        'top': 0
-      })
-    }
+		if (settings.get('zoom')) {
+			$(photo).css({
+				'height': 'auto',
+				'position': 'relative',
+				'left': 0,
+				'top': 0
+			})
+		}
 
 		setClass(settings.get('className'));
 
@@ -1093,46 +1093,35 @@
 		}
 	};
 
-  publicMethod.zoomin = function () {
-    var w = 0,
-        wb = false, // width boolean
-        hb = false; // height boolean
+	// Zoom picture 'in' or 'out'
+	publicMethod.zoom = function (type) {
+		var w = 0,
+				wb = false, // width boolean
+				hb = false; // height boolean
 
-    if ($(photo).width() >= $loaded.width()) {
-      w = $content.width();
-      wb = true;
-    }
+		if ($(photo).width() >= $loaded.width()) {
+			w = $content.width();
+			wb = true;
+		}
 
-    if ($(photo).height() > $loaded.height()) {
-      hb = true;
-    }
+		if ($(photo).height() > $loaded.height()) {
+			hb = true;
+		}
 
-    $(photo).css({
-      'width': $(photo).width() * 2,
-      'left': wb ? (parseInt($(photo).css('left')) * (-2) + w / 2) * (-1) : 0,
-      'top': hb ? (parseInt($(photo).css('top')) * (-2) + w / 2) * (-1) : 0
-    });
-  };
-
-  publicMethod.zoomout = function () {
-    var w = 0,
-        wb = false, // width boolean
-        hb = false; // height boolean
-
-    if ($(photo).width() >= $loaded.width()) {
-      w = $content.width();
-      wb = true;
-    }
-
-    if ($(photo).height() > $loaded.height()) {
-      hb = true;
-    }
-    $(photo).css({
-      'width': $(photo).width() / 2,
-      'left': wb ?  (parseInt($(photo).css('left')) / (-2) - w / 4) * (-1) : 0,
-      'top': hb ? (parseInt($(photo).css('top')) / (-2) - w / 4 ) * (-1) : 0
-    });
-  };
+		if (type === 'in') {
+			$(photo).css({
+				'width': $(photo).width() * 2,
+				'left': wb ? (parseInt($(photo).css('left')) * (-2) + w / 2) * (-1) : 0,
+				'top': hb ? (parseInt($(photo).css('top')) * (-2) + w / 2) * (-1) : 0
+			});
+		} else if (type === 'out') {
+			$(photo).css({
+				'width': $(photo).width() / 2,
+				'left': wb ?  (parseInt($(photo).css('left')) / (-2) - w / 4) * (-1) : 0,
+				'top': hb ? (parseInt($(photo).css('top')) / (-2) - w / 4 ) * (-1) : 0
+			});
+		}
+	};
 
 	// Removes changes Colorbox made to the document, but does not remove the plugin.
 	publicMethod.remove = function () {
