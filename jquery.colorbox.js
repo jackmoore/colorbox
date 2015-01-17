@@ -41,7 +41,7 @@
 		fixed: false,
 		data: undefined,
 		closeButton: true,
-		zoom: true,
+		zoom: false,
 		fastIframe: true,
 		open: false,
 		reposition: true,
@@ -808,7 +808,39 @@
 				'left': 0,
 				'top': 0,
 				'display': 'inline'
-			})
+			});
+
+     // Draggable variables
+      var drag = false,
+          xPos0 = 0,
+          yPos0 = 0;
+
+      // Draggable event on MouseDown
+      $loaded.mousedown(function(e){
+        drag = true;
+        xPos0 = e.pageX;
+        yPos0 = e.pageY;
+      });
+
+      // Draggable event on MouseUp
+      $(document).mouseup(function(e){
+        drag = false;
+      });
+
+      // Draggable event on MouseMove
+      $loaded.mousemove(function(e){
+        if (!drag) return false;
+        e.preventDefault();
+
+        var left = e.pageX - xPos0,
+          top = e.pageY - yPos0;
+
+        xPos0 = e.pageX;
+        yPos0 = e.pageY;
+
+        $(photo).css('left', parseInt($(photo).css('left')) + left + 'px');
+        $(photo).css('top', parseInt($(photo).css('top')) +  top + 'px');
+      });
 		}
 
 		setClass(settings.get('className'));
@@ -1029,7 +1061,7 @@
 						photo.style.marginTop = Math.max(settings.mh - photo.height, 0) / 2 + 'px';
 					}
 
-					if ($related[1] && (settings.get('loop') || $related[index + 1])) {
+					if ($related[1] && (settings.get('loop') || $related[index + 1]) && !settings.get('zoom')) {
 						photo.style.cursor = 'pointer';
 						photo.onclick = function () {
 							publicMethod.next();
