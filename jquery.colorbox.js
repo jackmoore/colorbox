@@ -806,7 +806,8 @@
 				'height': 'auto',
 				'position': 'relative',
 				'left': 0,
-				'top': 0
+				'top': 0,
+				'display': 'inline'
 			})
 		}
 
@@ -1095,30 +1096,20 @@
 
 	// Zoom picture 'in' or 'out'
 	publicMethod.zoom = function (type) {
-		var w = 0,
-				wb = false, // width boolean
-				hb = false; // height boolean
-
-		if ($(photo).width() >= $loaded.width()) {
-			w = $content.width();
-			wb = true;
-		}
-
-		if ($(photo).height() > $loaded.height()) {
-			hb = true;
-		}
+		var	w = $loaded.width();
+				h = $loaded.height();
 
 		if (type === 'in') {
 			$(photo).css({
 				'width': $(photo).width() * 2,
-				'left': wb ? (parseInt($(photo).css('left')) * (-2) + w / 2) * (-1) : 0,
-				'top': hb ? (parseInt($(photo).css('top')) * (-2) + w / 2) * (-1) : 0
+				'left': (parseInt($(photo).css('left')) * (-2) + w / 2) * (-1),
+				'top': (parseInt($(photo).css('top')) * (-2) + h / 2) * (-1)
 			});
 		} else if (type === 'out') {
 			$(photo).css({
 				'width': $(photo).width() / 2,
-				'left': wb ?  (parseInt($(photo).css('left')) / (-2) - w / 4) * (-1) : 0,
-				'top': hb ? (parseInt($(photo).css('top')) / (-2) - w / 4 ) * (-1) : 0
+				'left': (parseInt($(photo).css('left')) / (-2) - w / 4) * (-1),
+				'top': (parseInt($(photo).css('top')) / (-2) - h / 4 ) * (-1)
 			});
 		}
 	};
