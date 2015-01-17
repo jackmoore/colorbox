@@ -568,10 +568,7 @@
 		if ($.isFunction($obj)) { // assume a call to $.colorbox
 			$obj = $('<a/>');
 			options.open = true;
-		} else if (!$obj[0]) { // colorbox being applied to empty collection
-			return $obj;
 		}
-
 
 		if (!$obj[0]) { // colorbox being applied to empty collection
 			return $obj;
