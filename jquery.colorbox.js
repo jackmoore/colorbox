@@ -27,6 +27,7 @@
 		innerHeight: false,
 		maxHeight: false,
 		scalePhotos: true,
+		scaleVectorUp: true,
 		scrolling: true,
 		opacity: 0.9,
 		preloading: true,
@@ -51,6 +52,7 @@
 		slideshowStart: "start slideshow",
 		slideshowStop: "stop slideshow",
 		photoRegex: /\.(gif|png|jp(e|g|eg)|bmp|ico|webp|jxr|svg)((#|\?).*)?$/i,
+		vectorRegex: /\.(svg)((#|\?).*)?$/i,
 
 		// alternate image paths for high-res displays
 		retinaImage: false,
@@ -217,6 +219,10 @@
 	// There is a force photo option (photo: true) for hrefs that cannot be matched by the regex.
 	function isImage(settings, url) {
 		return settings.get('photo') || settings.get('photoRegex').test(url);
+	}
+
+	function isVector(settings, url) {
+		return settings.get('vectorRegex').test(url);
 	}
 
 	function retinaUrl(settings, url) {
@@ -975,18 +981,34 @@
 						photo.width = photo.width / window.devicePixelRatio;
 					}
 
+					var allowUp = isVector(settings, href) && settings.get('scaleVectorUp');
+
 					if (settings.get('scalePhotos')) {
 						setResize = function () {
-							photo.height -= photo.height * percent;
-							photo.width -= photo.width * percent;
+							// Only allow scaling up (percent < 0) when scaleVectorUp was
+							// specified and this is vector image.
+							if (percent > 0 || allowUp){
+								photo.height -= photo.height * percent;
+								photo.width -= photo.width * percent;
+							}
 						};
-						if (settings.mw && photo.width > settings.mw) {
+						if (settings.mw) {
 							percent = (photo.width - settings.mw) / photo.width;
 							setResize();
 						}
-						if (settings.mh && photo.height > settings.mh) {
+						if (settings.mh) {
 							percent = (photo.height - settings.mh) / photo.height;
 							setResize();
+						}
+						if (allowUp) {
+							// If upscaling is allowed, there's a chance that the height scaling
+							// will have pushed the width beyond the max. To correct that, we
+							// scale the width once more, only allowing downscaling.
+							allowUp = false;
+							if (settings.mw) {
+								percent = (photo.width - settings.mw) / photo.width;
+								setResize();
+							}
 						}
 					}
 
