@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+### Version 1.5.15 - 2015/02/25
+
+* Adding to NPM, merged white-space cleanup & new language file.
+
 ### Version 1.5.14 - 2014/9/9
 
 * When opening, append Colorbox to the DOM if it was detached for whatever reason.  Fixes #645.
