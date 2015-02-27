@@ -15,6 +15,7 @@
 		"url": "http://www.jacklmoore.com",
 		"email": "hello@jacklmoore.com"
 	},
+	"main": "jquery.colorbox.js",
 	"license": "MIT",
 	"homepage": "http://www.jacklmoore.com/colorbox",
 	"demo": "http://www.jacklmoore.com/colorbox",
