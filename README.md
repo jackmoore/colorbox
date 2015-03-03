@@ -3,7 +3,15 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
-##### Version 1.5.14 - 2014/9/9
+#### Version 1.6.0 - 2015/03/03
+
+* Added two new properties that expose how <img> and <iframe> elements are created, to give users direct control over those elements. Fixes #700.
+
+#### Version 1.5.15 - 2015/02/25
+
+* Adding to NPM, merged white-space cleanup & new language file.
+
+#### Version 1.5.14 - 2014/9/9
 
 * When opening, append Colorbox to the DOM if it was detached for whatever reason.  Fixes #645.
 
