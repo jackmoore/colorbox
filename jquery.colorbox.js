@@ -1059,9 +1059,8 @@
 			trigger(event_cleanup);
 			settings.get('onCleanup');
 			$window.unbind('.' + prefix);
-			$overlay.fadeTo(settings.get('fadeOut') || 0, 0);
 
-			$box.stop().fadeTo(settings.get('fadeOut') || 0, 0, function () {
+			var closer = function () {
 				$box.hide();
 				$overlay.hide();
 				trigger(event_purge);
@@ -1072,7 +1071,16 @@
 					trigger(event_closed);
 					settings.get('onClosed');
 				}, 1);
-			});
+			};
+
+			var fadeOut = settings.get('fadeOut');
+			if (fadeOut) {
+				$overlay.fadeTo(fadeOut, 0);
+				$box.stop().fadeTo(fadeOut, 0, closer);
+			} else {
+				$box.stop();
+				closer();
+			}
 		}
 	};
 
