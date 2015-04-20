@@ -243,7 +243,8 @@
 
 	// Convert '%' and 'px' values to integers
 	function setSize(size, dimension) {
-		return Math.round((/%/.test(size) ? ((dimension === 'x' ? $window.width() : winheight()) / 100) : 1) * parseInt(size, 10));
+		var viewWidth = ( $window.width() < $(document).width() ) ? $(document).width() : $window.width();
+		return Math.round((/%/.test(size) ? ((dimension === 'x' ? viewWidth : winheight()) / 100) : 1) * parseInt(size, 10));
 	}
 
 	// Checks an href to see if it is a photo.
@@ -641,7 +642,8 @@
 		left = 0,
 		offset = $box.offset(),
 		scrollTop,
-		scrollLeft;
+		scrollLeft,
+		viewWidth = ( $window.width() < $(document).width() ) ? $(document).width() : $window.width();
 
 		$window.unbind('resize.' + prefix);
 
@@ -663,11 +665,11 @@
 
 		// keeps the top and left positions within the browser's viewport.
 		if (settings.get('right') !== false) {
-			left += Math.max($window.width() - settings.w - loadedWidth - interfaceWidth - setSize(settings.get('right'), 'x'), 0);
+			left += Math.max(viewWidth - settings.w - loadedWidth - interfaceWidth - setSize(settings.get('right'), 'x'), 0);
 		} else if (settings.get('left') !== false) {
 			left += setSize(settings.get('left'), 'x');
 		} else {
-			left += Math.round(Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2);
+			left += Math.round(Math.max(viewWidth - settings.w - loadedWidth - interfaceWidth, 0) / 2);
 		}
 
 		if (settings.get('bottom') !== false) {
