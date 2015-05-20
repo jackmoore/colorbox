@@ -1030,15 +1030,13 @@
 			photo.src = href;
 
 		} else if (href) {
-			$loadingBay.load(href, settings.get('data'), function (data, status) {
+			$.get(href, settings.get('data'), function(data){
 				var filter = settings.get('filter');
-				if (request === requests) {
-					if (filter) {
-						filter = $(data).find(filter);
-						prep(status === 'error' ? $tag(div, 'Error').html(settings.get('xhrError')) : (filter.length ? filter : $(this).contents()));
-					} else {
-						prep(status === 'error' ? $tag(div, 'Error').html(settings.get('xhrError')) : $(this).contents());
-					}
+				if (filter) {
+					filter = $(data).find(filter);
+					prep(status === 'error' ? $tag(div, 'Error').html(settings.get('xhrError')) : (filter.length ? filter : $(this).contents()));
+				} else {
+					prep(status === 'error' ? $tag(div, 'Error').html(settings.get('xhrError')) : $(this).contents());
 				}
 			});
 		}
