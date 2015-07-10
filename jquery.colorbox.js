@@ -68,6 +68,7 @@
 		// accessbility
 		returnFocus: true,
 		trapFocus: true,
+		requestFocus: true,
 
 		// callbacks
 		onOpen: false,
@@ -424,7 +425,9 @@
 
 				$groupControls.add($title).hide();
 
-				$box.focus();
+				if (settings.get('requestFocus')) {
+					$box.focus();
+				}
 
 				if (settings.get('trapFocus')) {
 					// Confine focus to the modal
