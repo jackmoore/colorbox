@@ -173,6 +173,7 @@
 	div = "div",
 	requests = 0,
 	previousCSS = {},
+	calledOptions,
 	init;
 
 	// ****************
@@ -385,6 +386,13 @@
 		if (!closing) {
 
 			options = $(element).data(colorbox);
+
+			if (typeof options === 'undefined') {
+				options = calledOptions;
+			} else {
+				calledOptions = $.extend({}, options);
+				delete calledOptions.href;
+			}
 
 			settings = new Settings(element, options);
 
