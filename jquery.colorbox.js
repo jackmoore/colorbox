@@ -1,5 +1,5 @@
 /*!
-	Colorbox 1.6.1
+	Colorbox 1.6.2
 	license: MIT
 	http://www.jacklmoore.com/colorbox
 */
@@ -115,7 +115,7 @@
 				iframe.allowTransparency = "true";
 			}
 			iframe.name = (new Date()).getTime(); // give the iframe a unique name to prevent caching
-			iframe.allowFullScreen = true;
+			iframe.allowFullscreen = true;
 
 			return iframe;
 		}

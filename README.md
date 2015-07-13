@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+##### Version 1.6.2 - 2015/07/13
+
+* Fixed iframe attribute name (allowFullScreen to allowFullscreen). Fixes #737
+
 ##### Version 1.6.1 - 2015/05/14
 
 * Replaced the inline onclick handler for cboxPhoto with a namespaced event for easier unbinding.  Fixes #719.
