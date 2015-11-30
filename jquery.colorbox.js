@@ -735,7 +735,7 @@
 		});
 	};
 
-	publicMethod.resize = function (options) {
+	publicMethod.resize = function (options, callback) {
 		var scrolltop;
 
 		if (open) {
@@ -771,7 +771,7 @@
 				$loaded.scrollTop(scrolltop);
 			}
 
-			publicMethod.position(settings.get('transition') === "none" ? 0 : settings.get('speed'));
+			publicMethod.position(settings.get('transition') === "none" ? 0 : settings.get('speed'), callback);
 		}
 	};
 
