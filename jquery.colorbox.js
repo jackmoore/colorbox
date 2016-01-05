@@ -484,7 +484,7 @@
 				$current = $tag(div, "Current"),
 				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
 				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
-				$slideshow = $tag('button', "Slideshow"),
+				$slideshow = $('<button type="button"/>').attr({id:prefix+'Slideshow'}),
 				$loadingOverlay
 			);
 
