@@ -22,10 +22,12 @@
 		initialWidth: "600",
 		innerWidth: false,
 		maxWidth: false,
+		minWidth: false,
 		height: false,
 		initialHeight: "450",
 		innerHeight: false,
 		maxHeight: false,
+		minHeight: false,
 		scalePhotos: true,
 		scrolling: true,
 		opacity: 0.9,
@@ -788,11 +790,17 @@
 
 		function getWidth() {
 			settings.w = settings.w || $loaded.width();
+			if (settings.get('minWidth') && settings.w < settings.get('minWidth')) {
+				settings.w = setSize(settings.get('minWidth'), 'x');
+			}
 			settings.w = settings.mw && settings.mw < settings.w ? settings.mw : settings.w;
 			return settings.w;
 		}
 		function getHeight() {
 			settings.h = settings.h || $loaded.height();
+			if (settings.get('minHeight') && settings.h < settings.get('minHeight')) {
+			settings.h = setSize(settings.get('minHeight'), 'y');
+			}
 			settings.h = settings.mh && settings.mh < settings.h ? settings.mh : settings.h;
 			return settings.h;
 		}
@@ -1007,8 +1015,8 @@
 						}
 					}
 
-					if (settings.h) {
-						photo.style.marginTop = Math.max(settings.mh - photo.height, 0) / 2 + 'px';
+					if (settings.h || settings.get('minHeight')) {
+						photo.style.marginTop = Math.max((settings.h || settings.get('minHeight')) - photo.height, 0) / 2 + 'px';
 					}
 
 					if ($related[1] && (settings.get('loop') || $related[index + 1])) {
