@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+##### Version 1.6.4 - 2016/05/10
+
+* Fixed bug where using the inline property would duplicate target elements, if the selector matched multiple elements.
+
 ##### Version 1.6.3 - 2015/07/27
 
 * Fixed regression that caused error in IE8 when the calculated initial size was negative. Fixes #741
