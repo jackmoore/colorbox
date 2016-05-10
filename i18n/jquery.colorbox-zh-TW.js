@@ -8,8 +8,8 @@ jQuery.extend(jQuery.colorbox.settings, {
 	previous: "上一頁",
 	next: "下一頁",
 	close: "關閉",
-	xhrError: "此內容加載失敗.",
-	imgError: "此圖片加載失敗.",
+	xhrError: "此內容載入失敗.",
+	imgError: "此圖片加入失敗.",
 	slideshowStart: "開始幻燈片",
 	slideshowStop: "結束幻燈片"
 });
