@@ -803,8 +803,8 @@
 		.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
 		.css({width: getWidth(), overflow: settings.get('scrolling') ? 'auto' : 'hidden'})
 		.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
-		.css({overflowX:settings.get('verticalScrolling') ? 'auto' : 'hidden'})
-		.css({overflowY:settings.get('horizontalScrolling') ? 'auto' : 'hidden'})
+		.css({overflowY:settings.get('verticalScrolling') ? 'auto' : 'hidden'})
+		.css({overflowX:settings.get('horizontalScrolling') ? 'auto' : 'hidden'})
 		.prependTo($content);
 
 		$loadingBay.hide();
