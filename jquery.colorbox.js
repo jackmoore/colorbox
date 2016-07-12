@@ -200,6 +200,10 @@
 		return window.innerHeight ? window.innerHeight : $(window).height();
 	}
 
+    function winwidth() {
+        return window.innerWidth ? window.innerWidth : $(window).width();
+    }
+
 	function Settings(element, options) {
 		if (options !== Object(options)) {
 			options = {};
@@ -243,7 +247,7 @@
 
 	// Convert '%' and 'px' values to integers
 	function setSize(size, dimension) {
-		return Math.round((/%/.test(size) ? ((dimension === 'x' ? $window.width() : winheight()) / 100) : 1) * parseInt(size, 10));
+		return Math.round((/%/.test(size) ? ((dimension === 'x' ? winwidth() : winheight()) / 100) : 1) * parseInt(size, 10));
 	}
 
 	// Checks an href to see if it is a photo.
@@ -663,11 +667,11 @@
 
 		// keeps the top and left positions within the browser's viewport.
 		if (settings.get('right') !== false) {
-			left += Math.max($window.width() - settings.w - loadedWidth - interfaceWidth - setSize(settings.get('right'), 'x'), 0);
+			left += Math.max(winwidth() - settings.w - loadedWidth - interfaceWidth - setSize(settings.get('right'), 'x'), 0);
 		} else if (settings.get('left') !== false) {
 			left += setSize(settings.get('left'), 'x');
 		} else {
-			left += Math.round(Math.max($window.width() - settings.w - loadedWidth - interfaceWidth, 0) / 2);
+			left += Math.round(Math.max(winwidth() - settings.w - loadedWidth - interfaceWidth, 0) / 2);
 		}
 
 		if (settings.get('bottom') !== false) {
