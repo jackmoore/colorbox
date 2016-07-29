@@ -569,12 +569,16 @@
 
 					if ($.isFunction($.fn.on)) {
 						// For jQuery 1.7+
-						$(document).on('click.'+prefix, '.'+boxElement, clickHandler);
+						$(document)
+						.off('click.'+prefix, '.'+boxElement)
+						.on('click.'+prefix, '.'+boxElement, clickHandler);
 					} else {
 						// For jQuery 1.3.x -> 1.6.x
 						// This code is never reached in jQuery 1.9, so do not contact me about 'live' being removed.
 						// This is not here for jQuery 1.9, it's here for legacy users.
-						$('.'+boxElement).live('click.'+prefix, clickHandler);
+						$('.'+boxElement)
+						.die('click.'+prefix)
+						.live('click.'+prefix, clickHandler);
 					}
 				}
 				return true;
@@ -649,7 +653,8 @@
 				}
 			}
 
-			return $obj;
+			publicMethod.target = $obj;
+			return publicMethod;
 		};
 
 		publicMethod.isOpen = function(){
@@ -1126,9 +1131,9 @@
 
 		if(!$[colorbox])
 		 	$.fn[colorbox] = $[colorbox] = publicMethod;
-		
+
 		window.colorbox.push(publicMethod);
-			
+
 		return publicMethod;
 	}
 
