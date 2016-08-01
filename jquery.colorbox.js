@@ -427,7 +427,7 @@
 
 					$box.focus();
 
-					if (settings.get('trapFocus')) {
+					if (settings.get('trapFocus') && !$(document).data('cbox.focus')) {
 						// Confine focus to the modal
 						// Uses event capturing that is not supported in IE8-
 						if (document.addEventListener) {
@@ -437,6 +437,8 @@
 							$events.one(event_closed, function () {
 								document.removeEventListener('focus', trapFocus, true);
 							});
+
+							$(document).data('cbox.focus', true);
 						}
 					}
 
@@ -550,7 +552,7 @@
 					});
 
 					// Key Bindings
-					$(document).bind('keydown.' + prefix, function (e) {
+					$(document).unbind('keydown.' + prefix).bind('keydown.' + prefix, function (e) {
 						var key = e.keyCode;
 						if (open && settings.get('escKey') && key === 27) {
 							e.preventDefault();
