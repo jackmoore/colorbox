@@ -155,7 +155,7 @@
 	$prev,
 	$close,
 	$groupControls,
-	$events = $('<a/>'), // $({}) would be prefered, but there is an issue with jQuery 1.4.2
+	$events = $('<a/>'), // $({}) would be preferred, but there is an issue with jQuery 1.4.2
 
 	// Variables for cached values or use across multiple functions
 	settings,
