@@ -69,6 +69,9 @@
 		returnFocus: true,
 		trapFocus: true,
 
+		// Ajax filter
+		filter: false,
+
 		// callbacks
 		onOpen: false,
 		onLoad: false,
@@ -1028,8 +1031,12 @@
 			photo.src = href;
 
 		} else if (href) {
-			$loadingBay.load(href, settings.get('data'), function (data, status) {
-				if (request === requests) {
+			$.get(href, settings.get('data'), function(data){
+				var filter = settings.get('filter');
+				if (filter) {
+					filter = $(data).find(filter);
+					prep(status === 'error' ? $tag(div, 'Error').html(settings.get('xhrError')) : (filter.length ? filter : $(this).contents()));
+				} else {
 					prep(status === 'error' ? $tag(div, 'Error').html(settings.get('xhrError')) : $(this).contents());
 				}
 			});
