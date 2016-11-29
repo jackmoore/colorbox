@@ -496,17 +496,17 @@
 					$topBorder = $tag(div, "TopCenter"),
 					$tag(div, "TopRight")
 				),
-				$tag(div, false, 'clear:left').append(
+				$tag(div).append(
 					$leftBorder = $tag(div, "MiddleLeft"),
 					$content,
 					$rightBorder = $tag(div, "MiddleRight")
 				),
-				$tag(div, false, 'clear:left').append(
+				$tag(div).append(
 					$tag(div, "BottomLeft"),
 					$bottomBorder = $tag(div, "BottomCenter"),
 					$tag(div, "BottomRight")
 				)
-			).find('div div').css({'float': 'left'});
+			);
 
 			$loadingBay = $tag(div, false, 'position:absolute; width:9999px; visibility:hidden; display:none; max-width:none;');
 
