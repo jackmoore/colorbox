@@ -31,6 +31,7 @@
 		opacity: 0.9,
 		preloading: true,
 		className: false,
+		overlayColor: '#000',
 		overlayClose: true,
 		escKey: true,
 		arrowKey: true,
@@ -449,6 +450,7 @@
 
 			var opacity = parseFloat(settings.get('opacity'));
 			$overlay.css({
+				backgroundColor: settings.get('overlayColor'),
 				opacity: opacity === opacity ? opacity : '',
 				cursor: settings.get('overlayClose') ? 'pointer' : '',
 				visibility: 'visible'
