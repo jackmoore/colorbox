@@ -155,7 +155,7 @@
 	$prev,
 	$close,
 	$groupControls,
-	$events = $('<a/>'), // $({}) would be prefered, but there is an issue with jQuery 1.4.2
+	$events = $('<a/>'), // $({}) would be preferred, but there is an issue with jQuery 1.4.2
 
 	// Variables for cached values or use across multiple functions
 	settings,
@@ -982,7 +982,7 @@
 					return;
 				}
 
-				// A small pause because some browsers will occassionaly report a
+				// A small pause because some browsers will occasionally report a
 				// img.width and img.height of zero immediately after the img.onload fires
 				setTimeout(function(){
 					var percent;

@@ -438,7 +438,7 @@ Files Changed: jquery.colorbox.js/jquery.colorbox-min.js
 
 * Added 'innerWidth' and 'innerHeight' options to allow people to easily set the size dimensions for Colorbox, without having to anticipate the size of the borders and buttons.
 * Renamed 'scrollbars' option to 'scrolling' to be in keeping with the existing HTML attribute. The option now also applies to iframes.
-* Bug fix: In Safari, positioning occassionally incorrect when using '100%' dimensions.
+* Bug fix: In Safari, positioning occasionally incorrect when using '100%' dimensions.
 * Bug fix: In IE6, the background overlay is briefly not full size when first viewing.
 * Bug fix: In Firefox, opening Colorbox causes a split second shift with a small minority of webpage layouts.
 * Simplified code in a few areas.
