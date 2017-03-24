@@ -1,5 +1,5 @@
 /*!
-	Colorbox 1.6.4
+	Colorbox 1.6.5
 	license: MIT
 	http://www.jacklmoore.com/colorbox
 */
@@ -1048,6 +1048,12 @@
 		if (!active && $related[1] && (settings.get('loop') || index)) {
 			index = getIndex(-1);
 			launch($related[index]);
+		}
+	};
+
+	publicMethod.reset = function () {
+		if (!active && $related && $related[0]) {
+			launch($related[0]);
 		}
 	};
 

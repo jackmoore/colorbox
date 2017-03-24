@@ -3,6 +3,10 @@ A customizable lightbox plugin for jQuery.  See the [project page](http://jacklm
 
 ## Changelog:
 
+##### Version 1.6.5 - 2017/03/24
+
+* Added a reset public method to rewind to the first element.
+
 ##### Version 1.6.4 - 2016/05/10
 
 * Fixed bug where using the inline property would duplicate target elements, if the selector matched multiple elements.
