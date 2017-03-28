@@ -318,6 +318,7 @@
 		function start() {
 			$slideshow
 				.html(settings.get('slideshowStop'))
+				.attr('aria-lable', settings.get('slideshowStop'))
 				.unbind(click)
 				.one(click, stop);
 
@@ -337,6 +338,7 @@
 
 			$slideshow
 				.html(settings.get('slideshowStart'))
+				.attr('aria-lable', settings.get('slideshowStart'))
 				.unbind(click)
 				.one(click, function () {
 					publicMethod.next();
@@ -348,7 +350,7 @@
 
 		function reset() {
 			active = false;
-			$slideshow.hide();
+			$slideshow.attr('aria-hidden', 'true').hide();
 			clear();
 			$events
 				.unbind(event_complete, set)
@@ -371,7 +373,7 @@
 					} else {
 						stop();
 					}
-					$slideshow.show();
+					$slideshow.attr('aria-hidden', 'false').show();
 				}
 			}
 		};
@@ -396,7 +398,7 @@
 				setClass(settings.get('className'));
 
 				// Show colorbox so the sizes can be calculated in older versions of jQuery
-				$box.css({visibility:'hidden', display:'block', opacity:''});
+				$box.css({visibility:'hidden', display:'block', opacity:''}).attr('aria-hidden', 'true');
 
 				$loaded = $tag(div, 'LoadedContent', 'width:0; height:0; overflow:hidden; visibility:hidden');
 				$content.css({width:'', height:''}).append($loaded);
@@ -424,7 +426,7 @@
 
 				$groupControls.add($title).hide();
 
-				$box.focus();
+				$box.attr('aria-hidden', 'false').focus();
 
 				if (settings.get('trapFocus')) {
 					// Confine focus to the modal
@@ -455,7 +457,11 @@
 			}).show();
 
 			if (settings.get('closeButton')) {
-				$close.html(settings.get('close')).appendTo($content);
+				$close
+					.html(settings.get('close'))
+					.attr('aria-label', settings.get('close'))
+					.attr('aria-hidden', 'false')
+					.appendTo($content);
 			} else {
 				$close.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
 			}
@@ -474,6 +480,9 @@
 				id: colorbox,
 				'class': $.support.opacity === false ? prefix + 'IE' : '', // class for optional IE8 & lower targeted CSS.
 				role: 'dialog',
+				'aria-hidden': 'true',
+				'aria-labelledby': "cboxTitle",
+				'aria-describedby': "cboxCurrent",
 				tabindex: '-1'
 			}).hide();
 			$overlay = $tag(div, "Overlay").hide();
@@ -482,13 +491,29 @@
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
-				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
-				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
-				$slideshow = $('<button type="button"/>').attr({id:prefix+'Slideshow'}),
+				$prev = $('<button type="button"/>').attr({
+					id: prefix+'Previous',
+					'aria-label': 'previous',
+					'aria-hidden': 'true'
+				}),
+				$next = $('<button type="button"/>').attr({
+					id: prefix+'Next',
+					'aria-label': 'next',
+					'aria-hidden': 'true'
+				}),
+				$slideshow = $('<button type="button"/>').attr({
+					id: prefix+'Slideshow',
+					'aria-label': 'start slideshow',
+					'aria-hidden': 'true'
+				}),
 				$loadingOverlay
 			);
 
-			$close = $('<button type="button"/>').attr({id:prefix+'Close'});
+			$close = $('<button type="button"/>').attr({
+				id: prefix+'Close',
+				'aria-label': 'close',
+				'aria-hidden': 'true'
+			});
 
 			$wrap.append( // The 3x3 Grid that makes up Colorbox
 				$tag(div).append(
@@ -678,7 +703,7 @@
 			top += Math.round(Math.max(winheight() - settings.h - loadedHeight - interfaceHeight, 0) / 2);
 		}
 
-		$box.css({top: offset.top, left: offset.left, visibility:'visible'});
+		$box.css({top: offset.top, left: offset.left, visibility:'visible'}).attr('aria-hidden', 'false');
 
 		// this gives the wrapper plenty of breathing room so it's floated contents can move around smoothly,
 		// but it has to be shrank down around the size of div#colorbox when it's done.  If not,
@@ -842,8 +867,17 @@
 					$current.html(settings.get('current').replace('{current}', index + 1).replace('{total}', total)).show();
 				}
 
-				$next[(settings.get('loop') || index < total - 1) ? "show" : "hide"]().html(settings.get('next'));
-				$prev[(settings.get('loop') || index) ? "show" : "hide"]().html(settings.get('previous'));
+				$showNext = (settings.get('loop') || index < total - 1);
+				$next[$showNext ? 'show' : 'hide']()
+					.html(settings.get('next'))
+					.attr('aria-hidden', $showNext ? 'false' : 'true')
+					.attr('aria-label', settings.get('next'));
+
+				$showPrev = (settings.get('loop') || index);
+				$prev[$showPrev ? 'show' : 'hide']()
+					.html(settings.get('previous'))
+					.attr('aria-hidden', $showPrev ? 'false' : 'true')
+					.attr('aria-label', settings.get('previous'));
 
 				slideshow();
 
@@ -1063,7 +1097,7 @@
 			$overlay.fadeTo(settings.get('fadeOut') || 0, 0);
 
 			$box.stop().fadeTo(settings.get('fadeOut') || 0, 0, function () {
-				$box.hide();
+				$box.hide().attr('aria-hidden', 'true');
 				$overlay.hide();
 				trigger(event_purge);
 				$loaded.remove();
