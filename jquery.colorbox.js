@@ -491,17 +491,17 @@
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
-				$prev = $('<button type="button"/>').attr({
+				$prev = $('<button type="button">previous</button>').attr({
 					id: prefix+'Previous',
 					'aria-label': 'previous',
 					'aria-hidden': 'true'
 				}),
-				$next = $('<button type="button"/>').attr({
+				$next = $('<button type="button">next</button>').attr({
 					id: prefix+'Next',
 					'aria-label': 'next',
 					'aria-hidden': 'true'
 				}),
-				$slideshow = $('<button type="button"/>').attr({
+				$slideshow = $('<button type="button">start slideshow</button>').attr({
 					id: prefix+'Slideshow',
 					'aria-label': 'start slideshow',
 					'aria-hidden': 'true'
@@ -509,7 +509,7 @@
 				$loadingOverlay
 			);
 
-			$close = $('<button type="button"/>').attr({
+			$close = $('<button type="button">close</button>').attr({
 				id: prefix+'Close',
 				'aria-label': 'close',
 				'aria-hidden': 'true'
