@@ -134,6 +134,8 @@
 	event_closed = prefix + '_closed',
 	event_purge = prefix + '_purge',
 
+	events = event_open + ' ' + event_load + ' ' + event_complete + ' ' + event_cleanup + ' ' + event_closed + ' ' + event_purge,
+
 	// Cached jQuery Object Variables
 	$overlay,
 	$box,
@@ -174,6 +176,11 @@
 	requests = 0,
 	previousCSS = {},
 	init;
+
+	// Bind all events on $events and stop propagating them
+	$events.bind(events, function(event) {
+		event.stopPropagation();
+	});
 
 	// ****************
 	// HELPER FUNCTIONS
