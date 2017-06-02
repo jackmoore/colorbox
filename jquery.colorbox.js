@@ -426,7 +426,7 @@
 
 				$groupControls.add($title).hide();
 
-				$box.attr('aria-hidden', 'false').focus();
+				$box.attr('aria-hidden', 'false');
 
 				if (settings.get('trapFocus')) {
 					// Confine focus to the modal
@@ -459,7 +459,6 @@
 			if (settings.get('closeButton')) {
 				$close
 					.html(settings.get('close'))
-					.attr('aria-label', settings.get('close'))
 					.attr('aria-hidden', 'false')
 					.appendTo($content);
 			} else {
@@ -489,21 +488,19 @@
 			$loadingOverlay = $([$tag(div, "LoadingOverlay")[0],$tag(div, "LoadingGraphic")[0]]);
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
-				$title = $tag(div, "Title"),
+				$title = $tag(div, "Title")
+					.attr('aria-live', 'polite'),
 				$current = $tag(div, "Current"),
 				$prev = $('<button type="button">previous</button>').attr({
 					id: prefix+'Previous',
-					'aria-label': 'previous',
 					'aria-hidden': 'true'
 				}),
 				$next = $('<button type="button">next</button>').attr({
 					id: prefix+'Next',
-					'aria-label': 'next',
 					'aria-hidden': 'true'
 				}),
 				$slideshow = $('<button type="button">start slideshow</button>').attr({
 					id: prefix+'Slideshow',
-					'aria-label': 'start slideshow',
 					'aria-hidden': 'true'
 				}),
 				$loadingOverlay
@@ -511,7 +508,6 @@
 
 			$close = $('<button type="button">close</button>').attr({
 				id: prefix+'Close',
-				'aria-label': 'close',
 				'aria-hidden': 'true'
 			});
 
@@ -864,20 +860,30 @@
 
 			if (total > 1) { // handle grouping
 				if (typeof settings.get('current') === "string") {
-					$current.html(settings.get('current').replace('{current}', index + 1).replace('{total}', total)).show();
+					$current.html(settings.get('current').replace('{current}', index + 1).replace('{total}', total))
+						.attr('aria-live', 'polite')
+						.show();
 				}
 
 				$showNext = (settings.get('loop') || index < total - 1);
 				$next[$showNext ? 'show' : 'hide']()
 					.html(settings.get('next'))
-					.attr('aria-hidden', $showNext ? 'false' : 'true')
-					.attr('aria-label', settings.get('next'));
+					.attr('aria-hidden', $showNext ? 'false' : 'true');
 
 				$showPrev = (settings.get('loop') || index);
 				$prev[$showPrev ? 'show' : 'hide']()
 					.html(settings.get('previous'))
-					.attr('aria-hidden', $showPrev ? 'false' : 'true')
-					.attr('aria-label', settings.get('previous'));
+					.attr('aria-hidden', $showPrev ? 'false' : 'true');
+				
+				if (!($prev.is(':focus') || $next.is(':focus') || $close.is(':focus'))) {
+					if ($showPrev) {
+						$prev.focus();
+					} else if ($showNext) {
+						$next.focus();
+					} else {
+						$close.focus();
+					}
+				}
 
 				slideshow();
 
