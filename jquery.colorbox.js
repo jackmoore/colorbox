@@ -65,7 +65,7 @@
 		xhrError: "This content failed to load.",
 		imgError: "This image failed to load.",
 
-		// accessbility
+		// accessibility
 		returnFocus: true,
 		trapFocus: true,
 
@@ -199,6 +199,19 @@
 	function winheight() {
 		return window.innerHeight ? window.innerHeight : $(window).height();
 	}
+	
+	// Helper to enumerate focusable elements
+	function focusableEls ($e) {
+		return $e.find('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]');
+	}
+	
+	function firstFocusableEl($e) {
+		return focusableEls($e).first();
+	}
+	
+	function lastFocusableEl($e) {
+		return focusableEls($e).last();
+	}
 
 	function Settings(element, options) {
 		if (options !== Object(options)) {
@@ -254,13 +267,6 @@
 
 	function retinaUrl(settings, url) {
 		return settings.get('retinaUrl') && window.devicePixelRatio > 1 ? url.replace(settings.get('photoRegex'), settings.get('retinaSuffix')) : url;
-	}
-
-	function trapFocus(e) {
-		if ('contains' in $box[0] && !$box[0].contains(e.target) && e.target !== $overlay[0]) {
-			e.stopPropagation();
-			$box.focus();
-		}
 	}
 
 	function setClass(str) {
@@ -428,19 +434,6 @@
 
 				$box.attr('aria-hidden', 'false');
 
-				if (settings.get('trapFocus')) {
-					// Confine focus to the modal
-					// Uses event capturing that is not supported in IE8-
-					if (document.addEventListener) {
-
-						document.addEventListener('focus', trapFocus, true);
-
-						$events.one(event_closed, function () {
-							document.removeEventListener('focus', trapFocus, true);
-						});
-					}
-				}
-
 				// Return focus on closing
 				if (settings.get('returnFocus')) {
 					$events.one(event_closed, function () {
@@ -482,7 +475,6 @@
 				'aria-hidden': 'true',
 				'aria-labelledby': "cboxTitle",
 				'aria-describedby': "cboxCurrent",
-				tabindex: '-1'
 			}).hide();
 			$overlay = $tag(div, "Overlay").hide();
 			$loadingOverlay = $([$tag(div, "LoadingOverlay")[0],$tag(div, "LoadingGraphic")[0]]);
@@ -583,6 +575,23 @@
 						} else if (key === 39) {
 							e.preventDefault();
 							$next.click();
+						}
+					}
+					if (open && settings.get('trapFocus') && key === 9) {
+						if ( focusableEls($box).length === 1 ) {
+							e.preventDefault();
+						} else {
+							if ( e.shiftKey ) {
+								if ( document.activeElement === firstFocusableEl($box)[0] ) {
+									e.preventDefault();
+									lastFocusableEl($box).focus();
+								}
+							} else {
+								if ( document.activeElement === lastFocusableEl($box)[0] ) {
+									e.preventDefault();
+									firstFocusableEl($box).focus();
+								}
+							}
 						}
 					}
 				});
