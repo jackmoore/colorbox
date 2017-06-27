@@ -324,7 +324,7 @@
 		function start() {
 			$slideshow
 				.html(settings.get('slideshowStop'))
-				.attr('aria-lable', settings.get('slideshowStop'))
+				.attr('aria-label', settings.get('slideshowStop'))
 				.unbind(click)
 				.one(click, stop);
 
@@ -344,7 +344,7 @@
 
 			$slideshow
 				.html(settings.get('slideshowStart'))
-				.attr('aria-lable', settings.get('slideshowStart'))
+				.attr('aria-label', settings.get('slideshowStart'))
 				.unbind(click)
 				.one(click, function () {
 					publicMethod.next();
