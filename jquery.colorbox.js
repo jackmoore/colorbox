@@ -1051,6 +1051,12 @@
 		}
 	};
 
+	publicMethod.redraw = function () {
+		if (!active && $related[index]) {
+			launch($related[index]);
+		}
+	};
+
 	// Note: to use this within an iframe use the following format: parent.jQuery.colorbox.close();
 	publicMethod.close = function () {
 		if (open && !closing) {
