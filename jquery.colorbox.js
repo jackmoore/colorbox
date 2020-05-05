@@ -1052,7 +1052,7 @@
 	};
 
 	publicMethod.redraw = function () {
-		if (!active && $related[index]) {
+		if (open && !active && $related[index]) {
 			launch($related[index]);
 		}
 	};
