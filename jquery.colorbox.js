@@ -558,10 +558,10 @@
 					if (open && settings.get('arrowKey') && $related[1] && !e.altKey) {
 						if (key === 37) {
 							e.preventDefault();
-							$prev.click();
+							$prev.on('click');
 						} else if (key === 39) {
 							e.preventDefault();
-							$next.click();
+							$next.on('click');
 						}
 					}
 				});
