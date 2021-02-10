@@ -318,12 +318,12 @@
 		function start() {
 			$slideshow
 				.html(settings.get('slideshowStop'))
-				.unbind(click)
+				.off(click)
 				.one(click, stop);
 
 			$events
-				.bind(event_complete, set)
-				.bind(event_load, clear);
+				.on(event_complete, set)
+				.on(event_load, clear);
 
 			$box.removeClass(className + "off").addClass(className + "on");
 		}
@@ -332,12 +332,12 @@
 			clear();
 
 			$events
-				.unbind(event_complete, set)
-				.unbind(event_load, clear);
+				.off(event_complete, set)
+				.off(event_load, clear);
 
 			$slideshow
 				.html(settings.get('slideshowStart'))
-				.unbind(click)
+				.off(click)
 				.one(click, function () {
 					publicMethod.next();
 					start();
@@ -351,15 +351,15 @@
 			$slideshow.hide();
 			clear();
 			$events
-				.unbind(event_complete, set)
-				.unbind(event_load, clear);
+				.off(event_complete, set)
+				.off(event_load, clear);
 			$box.removeClass(className + "off " + className + "on");
 		}
 
 		return function(){
 			if (active) {
 				if (!settings.get('slideshow')) {
-					$events.unbind(event_cleanup, reset);
+					$events.off(event_cleanup, reset);
 					reset();
 				}
 			} else {
@@ -549,7 +549,7 @@
 				});
 
 				// Key Bindings
-				$(document).bind('keydown.' + prefix, function (e) {
+				$(document).on('keydown.' + prefix, function (e) {
 					var key = e.keyCode;
 					if (open && settings.get('escKey') && key === 27) {
 						e.preventDefault();
@@ -643,7 +643,7 @@
 		scrollTop,
 		scrollLeft;
 
-		$window.unbind('resize.' + prefix);
+		$window.off('resize.' + prefix);
 
 		// remove the modal so that it doesn't influence the document width/height
 		$box.css({top: -9e4, left: -9e4});
@@ -723,7 +723,7 @@
 
 				if (settings.get('reposition')) {
 					setTimeout(function () {  // small delay before binding onresize due to an IE8 bug.
-						$window.bind('resize.' + prefix, publicMethod.position);
+						$window.on('resize.' + prefix, publicMethod.position);
 					}, 1);
 				}
 
@@ -974,7 +974,7 @@
 
 			$(photo)
 			.addClass(prefix + 'Photo')
-			.bind('error.'+prefix,function () {
+			.on('error.'+prefix,function () {
 				prep($tag(div, 'Error').html(settings.get('imgError')));
 			})
 			.one('load', function () {
@@ -1014,7 +1014,7 @@
 					if ($related[1] && (settings.get('loop') || $related[index + 1])) {
 						photo.style.cursor = 'pointer';
 
-						$(photo).bind('click.'+prefix, function () {
+						$(photo).on('click.'+prefix, function () {
 							publicMethod.next();
 						});
 					}
@@ -1059,7 +1059,7 @@
 			open = false;
 			trigger(event_cleanup);
 			settings.get('onCleanup');
-			$window.unbind('.' + prefix);
+			$window.off('.' + prefix);
 			$overlay.fadeTo(settings.get('fadeOut') || 0, 0);
 
 			$box.stop().fadeTo(settings.get('fadeOut') || 0, 0, function () {
@@ -1091,7 +1091,7 @@
 			.removeData(colorbox)
 			.removeClass(boxElement);
 
-		$(document).unbind('click.'+prefix).unbind('keydown.'+prefix);
+		$(document).off('click.'+prefix).off('keydown.'+prefix);
 	};
 
 	// A method for fetching the current element Colorbox is referencing.
