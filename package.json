@@ -23,7 +23,7 @@
 		"type": "git",
 		"url": "http://github.com/jackmoore/colorbox.git"
 	},
-	"dependencies": {
+	"peerDependencies": {
 		"jquery": ">=1.3.2"
 	}
 }
