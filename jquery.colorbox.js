@@ -45,6 +45,7 @@
 		open: false,
 		reposition: true,
 		loop: true,
+		sideClick: false,
 		slideshow: false,
 		slideshowAuto: true,
 		slideshowSpeed: 2500,
@@ -1014,7 +1015,14 @@
 					if ($related[1] && (settings.get('loop') || $related[index + 1])) {
 						photo.style.cursor = 'pointer';
 
-						$(photo).bind('click.'+prefix, function () {
+						$(photo).bind('click.'+prefix, function (e) {
+							if(settings.get('sideClick')) {
+								var left = Math.round(e.clientX - $(this).offset().left - $window.scrollLeft());
+								if(($(this).width() / 2 - left) > 0) {
+									publicMethod.prev();
+									return;
+								}
+							}
 							publicMethod.next();
 						});
 					}
