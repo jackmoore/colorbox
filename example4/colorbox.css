@@ -64,3 +64,54 @@
 .cboxIE #cboxMiddleRight {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00FFFFFF,endColorstr=#00FFFFFF);
 }
+
+
+/* LAyout style */
+body {
+    color: #2D2D2D;
+    font-size: 16px;
+    background: #FAFAFA;
+    font-family: Verdana, Geneva, sans-serif;
+}
+* {
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+.container {
+    width: 978px;
+    margin: 0 auto;
+}
+#header {
+    background: #2D2D2D;
+    height: 200px;
+    line-height: 200px;
+    text-align: center;
+    width: 100%;
+    color: #fff;
+    margin-bottom: 40px;
+}
+#header h1 { font-size: 46px; }
+h2 {
+    clear: both;
+    font-size: 25px;
+    line-height: 110%;
+    margin: 0 0 10px 0;
+}
+.container p { 
+    float: left; 
+    margin-bottom: 20px;
+}
+.group1, .group2, .group3, .group4, .group5, .retina, .non-retina,
+.ajax, .youtube, .vimeo, .iframe, .inline, .callbacks  {
+    color: #fff;
+    float: left;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    background: #D87300;
+    margin: 0 10px 0 0;
+    display: inline-block;
+}
+.ajax, .youtube, .vimeo, .iframe { margin-bottom: -10px; }
+.callbacks { float: none; }
