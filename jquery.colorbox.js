@@ -586,10 +586,6 @@
 		return;
 	}
 
-	// Append the HTML when the DOM loads
-	$(appendHTML);
-
-
 	// ****************
 	// PUBLIC FUNCTIONS
 	// Usage format: $.colorbox.close();
@@ -611,7 +607,7 @@
 			return $obj;
 		}
 
-		appendHTML();
+		appendHTML(); // Append the HTML when the DOM loads
 
 		if (addBindings()) {
 
