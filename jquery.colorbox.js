@@ -301,7 +301,7 @@
 	var slideshow = (function(){
 		var active,
 			className = prefix + "Slideshow_",
-			click = "click." + prefix,
+			click = "click." + prefix + " touchstart." + prefix,
 			timeOut;
 
 		function clear () {
@@ -533,16 +533,16 @@
 				init = true;
 
 				// Anonymous functions here keep the public method from being cached, thereby allowing them to be redefined on the fly.
-				$next.click(function () {
+				$next.on("click touchstart",function () {
 					publicMethod.next();
 				});
-				$prev.click(function () {
+				$prev.on("click touchstart",function () {
 					publicMethod.prev();
 				});
-				$close.click(function () {
+				$close.on("click touchstart",function () {
 					publicMethod.close();
 				});
-				$overlay.click(function () {
+				$overlay.on("click touchstart",function () {
 					if (settings.get('overlayClose')) {
 						publicMethod.close();
 					}
@@ -568,12 +568,12 @@
 
 				if ($.isFunction($.fn.on)) {
 					// For jQuery 1.7+
-					$(document).on('click.'+prefix, '.'+boxElement, clickHandler);
+					$(document).on('click.'+prefix + ' touchstart.'+prefix, '.'+boxElement, clickHandler);
 				} else {
 					// For jQuery 1.3.x -> 1.6.x
 					// This code is never reached in jQuery 1.9, so do not contact me about 'live' being removed.
 					// This is not here for jQuery 1.9, it's here for legacy users.
-					$('.'+boxElement).live('click.'+prefix, clickHandler);
+					$('.'+boxElement).live('click.'+prefix + ' touchstart.'+prefix, clickHandler);
 				}
 			}
 			return true;
@@ -1014,7 +1014,7 @@
 					if ($related[1] && (settings.get('loop') || $related[index + 1])) {
 						photo.style.cursor = 'pointer';
 
-						$(photo).bind('click.'+prefix, function () {
+						$(photo).bind('click.'+prefix+ ' touchstart.'+prefix, function () {
 							publicMethod.next();
 						});
 					}
@@ -1091,7 +1091,7 @@
 			.removeData(colorbox)
 			.removeClass(boxElement);
 
-		$(document).unbind('click.'+prefix).unbind('keydown.'+prefix);
+		$(document).unbind('click.'+prefix+ ' touchstart.'+prefix).unbind('keydown.'+prefix);
 	};
 
 	// A method for fetching the current element Colorbox is referencing.
