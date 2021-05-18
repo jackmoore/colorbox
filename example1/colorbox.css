@@ -68,3 +68,16 @@
 .cboxIE #cboxMiddleRight {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00FFFFFF,endColorstr=#00FFFFFF);
 }
+
+/* Begin Basic Responsive Styles */
+@media (max-width: 992px) {
+	#colorbox, #cboxPrevious:active, #cboxNext:active, #cboxSlideshow:active, #cboxClose:active {max-width: 100% !important;}
+	#colorbox, #cboxContent, #cboxLoadedContent {max-width: 100% !important;}
+	
+	#cboxContent {border-radius: 4px;}
+	#cboxWrapper {width: 100% !important;}
+	
+	#cboxTopLeft, #cboxMiddleLeft, #cboxBottomLeft, #cboxTopRight, #cboxMiddleRight, #cboxBottomRight, #cboxTopCenter, #cboxBottomCenter {display: none;}
+	#cboxWrapper {box-sizing: border-box; padding: 0 15px;}
+}
+/* End Basic Responsive Styles */
