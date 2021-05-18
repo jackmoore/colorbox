@@ -834,7 +834,7 @@
 			};
 
 
-			$title.html(settings.get('title')).show();
+			$title.text(settings.get('title')).show();
 			$loaded.show();
 
 			if (total > 1) { // handle grouping
