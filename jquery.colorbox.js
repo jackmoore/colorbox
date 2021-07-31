@@ -15,6 +15,7 @@
 		inline: false,
 
 		// behavior and appearance
+		onLoadHTML:undefined,//show this html when ColorBox begin start loading content (or define element attr 'data-'+prefix+'-onLoadHTML')
 		transition: "elastic",
 		speed: 300,
 		fadeOut: 300,
@@ -946,7 +947,8 @@
 		href = settings.get('href');
 
 		loadingTimer = setTimeout(function () {
-			$loadingOverlay.show();
+			var html = $(settings.el).attr('data-'+prefix+'-onLoadHTML') || settings.get('onLoadHTML');
+			$loadingOverlay.show().first().html(html);
 		}, 100);
 
 		if (settings.get('inline')) {
