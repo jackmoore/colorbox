@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'/>
+		<title>Colorbox_map Examples</title>
+		<style>
+			body{font:12px/1.2 Verdana, sans-serif; padding:0 10px;}
+			a:link, a:visited{text-decoration:none; color:#416CE5; border-bottom:1px solid #416CE5;}
+			h2{font-size:13px; margin:15px 0 0 0;}
+		</style>
+		<link rel="stylesheet" href="colorbox.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="../jquery.colorbox.js"></script>
+		<script>
+			$(document).ready(function(){
+			$(".single").colorbox({single:true, maxwidth:"100%",maxHeight:"100%"});
+			$(".iframe").colorbox({iframe:true, width:"640", height:"480"});
+			$('#sample_map area').colorbox({ rel: 'sample' });
+			$(window).resize(function(){
+   			$.colorbox.resize({maxWidth:'100%',maxHeight:'100%'});
+			});
+			});
+		</script>
+
+	</head>
+		<h1>Colorbox Map Demonstration</h1>
+		<h2>Clik number icon</h2><br>
+
+		<img src="map/sample_map.png" name="sample_map" usemap="#sample_map">
+
+		<map id='sample_map' name="sample_map">
+		<area shape="rect" coords="24,34,130,140" href="../content/ohoopee1.jpg"  alt="sample1" title="sample1" >
+
+		<area shape="rect" coords="148,148,255,255" href="../content/ohoopee2.jpg"  alt="sample2" title="sample2" >
+
+		<area shape="rect" coords="269,259,375,364" href="../content/ohoopee3.jpg"  alt="sample3" title="sample3" >
+		</map>
+
+		
+</html>
+
+
+
+
