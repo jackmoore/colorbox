@@ -72,6 +72,8 @@
 		// callbacks
 		onOpen: false,
 		onLoad: false,
+		onPrev: false,
+		onNext: false,
 		onComplete: false,
 		onCleanup: false,
 		onClosed: false,
@@ -129,6 +131,8 @@
 	// Events
 	event_open = prefix + '_open',
 	event_load = prefix + '_load',
+	event_prev = prefix + '_prev',
+	event_next = prefix + '_next',
 	event_complete = prefix + '_complete',
 	event_cleanup = prefix + '_cleanup',
 	event_closed = prefix + '_closed',
@@ -1041,6 +1045,7 @@
 		if (!active && $related[1] && (settings.get('loop') || $related[index + 1])) {
 			index = getIndex(1);
 			launch($related[index]);
+			trigger(event_next, settings.onNext);
 		}
 	};
 
@@ -1048,6 +1053,7 @@
 		if (!active && $related[1] && (settings.get('loop') || index)) {
 			index = getIndex(-1);
 			launch($related[index]);
+			trigger(event_prev, settings.onPrev);
 		}
 	};
 
