@@ -41,6 +41,7 @@
 		fixed: false,
 		data: undefined,
 		closeButton: true,
+		zoom: false,
 		fastIframe: true,
 		open: false,
 		reposition: true,
@@ -64,6 +65,8 @@
 		close: "close",
 		xhrError: "This content failed to load.",
 		imgError: "This image failed to load.",
+		zoomin: "+",
+		zoomout: "-",
 
 		// accessbility
 		returnFocus: true,
@@ -154,6 +157,8 @@
 	$next,
 	$prev,
 	$close,
+	$zoomin,
+	$zoomout,
 	$groupControls,
 	$events = $('<a/>'), // $({}) would be preferred, but there is an issue with jQuery 1.4.2
 
@@ -460,6 +465,15 @@
 				$close.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
 			}
 
+			if (settings.get('zoom')) {
+				$zoomin.html(settings.get('zoomin')).appendTo($content);
+				$zoomout.html(settings.get('zoomout')).appendTo($content);
+			} else {
+				$zoomin.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
+				$zoomout.appendTo('<div/>'); // replace with .detach() when dropping jQuery < 1.4
+			}
+
+
 			load();
 		}
 	}
@@ -489,6 +503,8 @@
 			);
 
 			$close = $('<button type="button"/>').attr({id:prefix+'Close'});
+			$zoomin = $('<button type="button"/>').attr({id:prefix+'Zoomin'});
+			$zoomout = $('<button type="button"/>').attr({id:prefix+'Zoomout'});
 
 			$wrap.append( // The 3x3 Grid that makes up Colorbox
 				$tag(div).append(
@@ -541,6 +557,12 @@
 				});
 				$close.click(function () {
 					publicMethod.close();
+				});
+				$zoomin.click(function () {
+					publicMethod.zoom('in');
+				});
+				$zoomout.click(function () {
+					publicMethod.zoom('out');
 				});
 				$overlay.click(function () {
 					if (settings.get('overlayClose')) {
@@ -799,7 +821,10 @@
 
 		$loaded.hide()
 		.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
-		.css({width: getWidth(), overflow: settings.get('scrolling') ? 'auto' : 'hidden'})
+		.css({
+			width: getWidth(),
+			overflow: settings.get('scrolling') && !settings.get('zoom') ? 'auto' : 'hidden'
+		})
 		.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
 		.prependTo($content);
 
@@ -808,6 +833,48 @@
 		// floating the IMG removes the bottom line-height and fixed a problem where IE miscalculates the width of the parent element as 100% of the document width.
 
 		$(photo).css({'float': 'none'});
+
+		if (settings.get('zoom')) {
+			$(photo).css({
+				'height': 'auto',
+				'position': 'relative',
+				'left': 0,
+				'top': 0,
+				'display': 'inline'
+			});
+
+     // Draggable variables
+      var drag = false,
+          xPos0 = 0,
+          yPos0 = 0;
+
+      // Draggable event on MouseDown
+      $loaded.mousedown(function(e){
+        drag = true;
+        xPos0 = e.pageX;
+        yPos0 = e.pageY;
+      });
+
+      // Draggable event on MouseUp
+      $(document).mouseup(function(e){
+        drag = false;
+      });
+
+      // Draggable event on MouseMove
+      $loaded.mousemove(function(e){
+        if (!drag) return false;
+        e.preventDefault();
+
+        var left = e.pageX - xPos0,
+          top = e.pageY - yPos0;
+
+        xPos0 = e.pageX;
+        yPos0 = e.pageY;
+
+        $(photo).css('left', parseInt($(photo).css('left')) + left + 'px');
+        $(photo).css('top', parseInt($(photo).css('top')) +  top + 'px');
+      });
+		}
 
 		setClass(settings.get('className'));
 
@@ -1011,7 +1078,7 @@
 						photo.style.marginTop = Math.max(settings.mh - photo.height, 0) / 2 + 'px';
 					}
 
-					if ($related[1] && (settings.get('loop') || $related[index + 1])) {
+					if ($related[1] && (settings.get('loop') || $related[index + 1]) && !settings.get('zoom')) {
 						photo.style.cursor = 'pointer';
 
 						$(photo).bind('click.'+prefix, function () {
@@ -1073,6 +1140,26 @@
 					trigger(event_closed);
 					settings.get('onClosed');
 				}, 1);
+			});
+		}
+	};
+
+	// Zoom picture 'in' or 'out'
+	publicMethod.zoom = function (type) {
+		var	w = $loaded.width();
+				h = $loaded.height();
+
+		if (type === 'in') {
+			$(photo).css({
+				'width': $(photo).width() * 2,
+				'left': (parseInt($(photo).css('left')) * (-2) + w / 2) * (-1),
+				'top': (parseInt($(photo).css('top')) * (-2) + h / 2) * (-1)
+			});
+		} else if (type === 'out') {
+			$(photo).css({
+				'width': $(photo).width() / 2,
+				'left': (parseInt($(photo).css('left')) / (-2) - w / 4) * (-1),
+				'top': (parseInt($(photo).css('top')) / (-2) - h / 4 ) * (-1)
 			});
 		}
 	};
