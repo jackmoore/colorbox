@@ -4,6 +4,15 @@
 	http://www.jacklmoore.com/colorbox
 */
 (function ($, document, window) {
+
+	function sanitizeHTML(str) {
+		if (typeof str !== 'string') return str;
+
+		var div = document.createElement('div');
+		div.textContent = str;
+		return div.innerHTML;
+	}
+
 	var
 	// Default settings object.
 	// See http://jacklmoore.com/colorbox for details.
@@ -228,7 +237,19 @@
 
 		this.get = function(key) {
 			var value = this.value(key);
-			return $.isFunction(value) ? value.call(this.el, this) : value;
+			var result = $.isFunction(value) ? value.call(this.el, this) : value;
+
+			if (typeof result === 'string' && (key === 'title' || key === 'current' || key === 'next' || key === 'previous' || key === 'close')) {
+				result = sanitizeHTML(result);
+			}
+
+			if (key === 'href' && typeof result === 'string') {
+				if (result.toLowerCase().indexOf('javascript:') === 0) {
+					return '#';
+				}
+			}
+
+			return result;
 		};
 	}
 
@@ -834,12 +855,15 @@
 			};
 
 
-			$title.html(settings.get('title')).show();
+			$title.html(sanitizeHTML(settings.get('title'))).show();
 			$loaded.show();
 
 			if (total > 1) { // handle grouping
 				if (typeof settings.get('current') === "string") {
-					$current.html(settings.get('current').replace('{current}', index + 1).replace('{total}', total)).show();
+					var currentText = sanitizeHTML(settings.get('current'))
+						.replace('{current}', index + 1)
+						.replace('{total}', total);
+					$current.html(currentText).show();
 				}
 
 				$next[(settings.get('loop') || index < total - 1) ? "show" : "hide"]().html(settings.get('next'));
